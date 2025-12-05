@@ -1,0 +1,50 @@
+<h3 class="heading">Authors List</h3>
+<table mat-table [dataSource]="authors" class="mat-elevation-z8 full-width-table">
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> ID </th>
+    <td mat-cell *matCellDef="let author"> {{ author.id }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let author"> {{ author.name }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nationality">
+    <th mat-header-cell *matHeaderCellDef> Nationality </th>
+    <td mat-cell *matCellDef="let author"> {{ author.nationality }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="date_of_birth">
+    <th mat-header-cell *matHeaderCellDef> Born </th>
+    <td mat-cell *matCellDef="let author"> {{ author.date_of_birth | date:'mediumDate' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="date_of_death">
+    <th mat-header-cell *matHeaderCellDef> Died </th>
+    <td mat-cell *matCellDef="let author"> {{ author.date_of_death | date:'mediumDate' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="photo">
+    <th mat-header-cell *matHeaderCellDef> Photo </th>
+    <td mat-cell *matCellDef="let author">
+      <img *ngIf="author.photo" [src]="author.photo" width="60" height="60" style="border-radius: 50%;" />
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let author">
+      <button mat-icon-button color="primary" (click)="onEdit(author)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="onDelete(author.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

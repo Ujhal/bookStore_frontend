@@ -1,0 +1,91 @@
+/* Container for the form */
+.book-form-container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 24px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Form headings */
+.book-form-container h3.heading {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #3f51b5;
+}
+
+/* Rows to group half-width fields */
+.row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap; /* For small screens */
+}
+
+/* Half-width fields */
+.half-width {
+  flex: 1 1 48%; /* grow/shrink with base 48% */
+  min-width: 200px;
+}
+
+/* Full-width fields */
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* File input container */
+.photo-upload {
+  margin-bottom: 20px;
+}
+
+.file-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+/* Style the file input */
+input[type="file"] {
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Submit button */
+button[type="submit"] {
+  background-color: #3f51b5;
+  color: white;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #303f9f;
+}
+
+button[type="submit"]:disabled {
+  background-color: #9fa8da;
+  cursor: not-allowed;
+}
+
+/* Responsive tweaks for small screens */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+  .half-width {
+    flex-basis: 100%;
+  }
+}

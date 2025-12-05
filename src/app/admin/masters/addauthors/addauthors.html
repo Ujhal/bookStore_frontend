@@ -1,0 +1,64 @@
+<div class="author-form-container">
+  <h3 class="heading">Add Author</h3>
+  <form [formGroup]="authorForm" (ngSubmit)="onSubmit()">
+
+    <!-- Name + Nationality in one row -->
+    <div class="row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Author Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter author name" />
+        <mat-error *ngIf="authorForm.get('name')?.hasError('required')">
+          Author name is required
+        </mat-error>
+        <mat-error *ngIf="authorForm.get('name')?.hasError('minlength')">
+          Minimum 3 characters required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Nationality</mat-label>
+        <input matInput formControlName="nationality" placeholder="Enter nationality" />
+      </mat-form-field>
+    </div>
+
+    <!-- DOB + DOD in one row -->
+    <div class="row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput [matDatepicker]="dobPicker" formControlName="date_of_birth" />
+        <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dobPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Date of Death</mat-label>
+        <input matInput [matDatepicker]="dodPicker" formControlName="date_of_death" />
+        <mat-datepicker-toggle matSuffix [for]="dodPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dodPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- Biography -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Biography</mat-label>
+      <textarea
+        matInput
+        formControlName="biography"
+        rows="4"
+        placeholder="Enter biography">
+      </textarea>
+    </mat-form-field>
+
+    <!-- Photo Upload -->
+    <div class="photo-upload">
+      <label for="photo" class="file-label">Select Author Photo:</label>
+      <input type="file" id="photo" (change)="onFileSelected($event)" accept="image/*" />
+    </div>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="authorForm.invalid">
+      Add Author
+    </button>
+  </form>
+</div>
+
+

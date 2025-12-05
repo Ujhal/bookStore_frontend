@@ -1,0 +1,80 @@
+.table-container {
+  background-color: white;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  padding-bottom: 16px;
+}
+.table-scroll-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+.table-inner {
+  min-width: 1000px; /* Ensure the entire block is wide enough */
+}
+
+.table-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 16px;
+  background-color: #4487c6; 
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.mat-form-field {
+  width: 300px;
+}
+
+/* Table itself */
+table {
+  width: 100%;
+  background-color: #e6f4ff;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Header row */
+.mat-header-row {
+  position: sticky;
+  top: 0;
+  background-color: #004e92;
+  color: white;
+  font-weight: bold;
+  z-index: 1;
+}
+
+/* Header cell text color */
+.mat-header-cell {
+  color: white !important;
+}
+
+/* Regular cells */
+.mat-cell {
+  background-color: #ffffff;
+  color: #333;
+}
+
+/* Row hover */
+.mat-row:hover {
+  background-color: #d0e9ff;
+}
+
+/* Padding */
+.mat-header-cell,
+.mat-cell {
+  padding: 16px;
+}
+
+/* Table shadow */
+.mat-elevation-z8 {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}

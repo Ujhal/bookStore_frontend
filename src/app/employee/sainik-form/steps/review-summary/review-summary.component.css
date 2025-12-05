@@ -1,0 +1,107 @@
+.review-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.review-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f5f5f5;
+  color: #3f51b5;
+  padding: 1rem;
+}
+.esm-records {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Space between each esm card */
+}
+
+.esm-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.card-icon {
+  margin-right: 8px;
+}
+
+.two-column-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.detail-label {
+  font-weight: bold;
+  min-width: 160px;
+  color: #0a0a0a;
+}
+
+.detail-value {
+  flex: 1;
+  font-size: 16px;
+}
+
+.image-preview {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.preview-image {
+  max-width: 200px;
+  max-height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.no-data-message {
+  padding: 1rem;
+  color: #666;
+  text-align: center;
+}
+
+.dependents-grid, .awards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.dependent-card, .award-card {
+  margin-bottom: 1rem;
+}
+
+.expansion-content {
+  padding: 1rem;
+}
+
+.mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+  align-items: center;
+}
+
+.review-title {
+  color: #3f51b5; 
+  font-weight: 600;
+  margin-bottom: 1rem;
+}

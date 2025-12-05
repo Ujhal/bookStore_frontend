@@ -1,0 +1,52 @@
+/* Container styling */
+.category-form-container {
+  padding: 16px;
+  max-width: 500px;
+  margin-bottom: 32px;
+}
+
+.category-table-container {
+  padding: 16px;
+}
+
+/* Heading styling */
+.heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Form layout */
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.form-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Full width input */
+.full-width {
+  width: 100%;
+}
+
+/* Responsive table */
+table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Button styling */
+button {
+  margin-top: 16px;
+}
+
+/* Optional: responsive adjustments */
+@media (max-width: 600px) {
+  .form-field {
+    min-width: 100%;
+  }
+}

@@ -1,0 +1,221 @@
+/* General container layout (same structure as account page) */
+.account-container {
+  display: flex;
+  gap: 20px;
+  font-family: "Poppins", sans-serif;
+  margin: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  border-right: 1px solid #ddd;
+  padding-right: 15px;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.sidebar a:hover {
+  color: #4254f5;
+}
+
+/* Cart content area */
+.content {
+  flex: 1;
+}
+
+/* Header section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.header h2 {
+  font-size: 20px;
+}
+
+.header button {
+  background: #4254f5;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.header button:hover {
+  background: #3655b5;
+}
+
+/* Cart Item Cards */
+.cart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cart-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.cart-card img {
+  width: 100px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.cart-info {
+  flex: 1;
+}
+
+.cart-info h3 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.cart-info p {
+  margin: 3px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Quantity Controls */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.quantity-controls button {
+  background: #eee;
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.quantity-controls button:hover {
+  background: #ddd;
+}
+
+/* Subtotal */
+.subtotal {
+  font-weight: 600;
+  color: #333;
+  margin-top: 5px;
+}
+
+/* Remove Button */
+.remove-btn {
+  background: none;
+  border: none;
+  color: #e53935;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-btn:hover {
+  color: #c62828;
+}
+
+/* Cart Summary Section */
+.cart-summary {
+  margin-top: 25px;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+  text-align: right;
+}
+
+.cart-summary h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.checkout-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.checkout-btn:hover {
+  background: #45a049;
+}
+
+/* Empty Cart State */
+.empty-cart {
+  text-align: center;
+  color: #777;
+  margin-top: 60px;
+  font-size: 16px;
+}
+
+.empty-cart button {
+  background: #4254f5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.empty-cart button:hover {
+  background: #3655b5;
+}
+
+/* Responsive Layout */
+@media screen and (max-width: 768px) {
+  .account-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    padding-right: 0;
+  }
+
+  .cart-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-summary {
+    text-align: center;
+  }
+}

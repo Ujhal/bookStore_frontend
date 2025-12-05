@@ -1,0 +1,62 @@
+<mat-sidenav-container class="dashboard-container">
+  <!-- SIDEBAR -->
+  <mat-sidenav
+    #sidenav="matSidenav"
+    class="mat-elevation-z8 custom-sidenav"
+    fixedTopGap="56"
+    [(opened)]="toggleSidebar"
+    mode="side"
+    style="background-color: #ffffff;"
+  >
+    <!-- Dashboard Link -->
+    <button mat-button class="menu-button" routerLink="/publisher" routerLinkActive="router-link-active">
+      <mat-icon>home</mat-icon>
+      <span>Dashboard</span>
+    </button>
+
+    <!-- Book Management -->
+    <mat-expansion-panel class="custom-expansion" style="background-color: #f9f9f9; border-radius: 8px;">
+      <mat-expansion-panel-header class="panel-header">
+        <mat-icon>book</mat-icon>
+        <span>Book Management</span>
+      </mat-expansion-panel-header>
+      <ng-container *ngFor="let item of bookMenu">
+        <button mat-button class="submenu-button" [routerLink]="item.link" routerLinkActive="router-link-active">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </button>
+      </ng-container>
+    </mat-expansion-panel>
+
+    <!-- Author Management -->
+    <mat-expansion-panel class="custom-expansion" style="background-color: #f9f9f9; border-radius: 8px;">
+      <mat-expansion-panel-header class="panel-header">
+        <mat-icon>person</mat-icon>
+        <span>Author Management</span>
+      </mat-expansion-panel-header>
+      <ng-container *ngFor="let item of authorMenu">
+        <button mat-button class="submenu-button" [routerLink]="item.link" routerLinkActive="router-link-active">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </button>
+      </ng-container>
+    </mat-expansion-panel>
+
+     <mat-expansion-panel class="custom-expansion" style="background-color: #f9f9f9; border-radius: 8px;">
+      <mat-expansion-panel-header class="panel-header">
+        <mat-icon>person</mat-icon>
+        <span>Order Management</span>
+      </mat-expansion-panel-header>
+      <ng-container *ngFor="let item of orderMenu">
+        <button mat-button class="submenu-button" [routerLink]="item.link" routerLinkActive="router-link-active">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </button>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-sidenav>
+<div class="dashboard-content">
+      <router-outlet></router-outlet>
+    </div>
+
+</mat-sidenav-container>

@@ -1,0 +1,105 @@
+<!-- Report Section Header and Collapse -->
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Report Generation
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-card-content>
+      <h4>Select Columns for Report:</h4>
+      <div class="checkbox-grid">
+        <mat-checkbox *ngFor="let col of availableColumns" [(ngModel)]="col.selected">
+          {{ col.header }}
+        </mat-checkbox>
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <button mat-raised-button color="primary" (click)="exportToExcel()">
+          <mat-icon>download</mat-icon>
+          Generate Report
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<br />
+
+<!-- ✅ NEW: Sainik List Header -->
+<div class="table-header" style="margin-top: 2rem;">
+  <h2>Sainik List</h2>
+</div>
+
+
+<div class="table-container mat-elevation-z8" *ngIf="dataSource.data.length > 0">
+  <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+    <!-- Serial No -->
+    <ng-container matColumnDef="sl_no">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Serial No</th>
+      <td mat-cell *matCellDef="let element">{{ element.serial_no }}</td>
+    </ng-container>
+
+    <!-- Personal Number -->
+    <ng-container matColumnDef="id_ic">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Personal Number</th>
+      <td mat-cell *matCellDef="let element">{{ element.id_ic }}</td>
+    </ng-container>
+
+    <!-- Rank -->
+    <ng-container matColumnDef="rank">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Rank</th>
+      <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+    </ng-container>
+
+    <!-- Name -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+
+    <!-- DOE -->
+    <ng-container matColumnDef="doe">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Of Enrollment</th>
+      <td mat-cell *matCellDef="let element">{{ element.start_date | date }}</td>
+    </ng-container>
+
+    <!-- DOR -->
+    <ng-container matColumnDef="dor">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Of Retirement</th>
+      <td mat-cell *matCellDef="let element">{{ element.end_date | date }}</td>
+    </ng-container>
+
+    <!-- Unit -->
+    <ng-container matColumnDef="unit">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Unit</th>
+      <td mat-cell *matCellDef="let element">{{ element.unit }}</td>
+    </ng-container>
+
+    <!-- District -->
+    <ng-container matColumnDef="district">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>District</th>
+      <td mat-cell *matCellDef="let element">{{ element.district_name }}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <!-- Paginator - Add length binding like in the working component -->
+  <mat-paginator 
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+    [pageSize]="5"
+    [length]="dataSource.data.length">
+  </mat-paginator>
+</div>
+
+<!-- No Data Message -->
+<div *ngIf="dataSource.data.length === 0">
+  <mat-card>
+    <mat-card-content>
+      <p>No data to display. Apply filters to view results.</p>
+    </mat-card-content>
+  </mat-card>
+</div>

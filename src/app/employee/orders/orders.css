@@ -1,0 +1,131 @@
+/* General container styles - same as address */
+.account-container {
+  display: flex;
+  gap: 20px;
+  font-family: "Poppins", sans-serif;
+  margin: 20px;
+}
+
+/* Sidebar styles - same as address */
+.sidebar {
+  width: 220px;
+  border-right: 1px solid #ddd;
+  padding-right: 15px;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.sidebar a:hover {
+  color: #4254f5;
+}
+
+/* Content section */
+.content {
+  flex: 1;
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-btn {
+  background: #4254f5;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-btn:hover {
+  background: #3655b5;
+}
+
+/* Orders list */
+.orders-list {
+  margin-top: 20px;
+}
+
+.order-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Selected order details */
+.order-details {
+  margin-top: 20px;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.order-details h3, .order-details h4 {
+  margin-top: 0;
+}
+
+/* Back button */
+.order-details button {
+  margin-bottom: 15px;
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.order-details button:hover {
+  background: #c62828;
+}
+
+/* No orders state */
+.no-orders {
+  text-align: center;
+  color: #777;
+  margin-top: 40px;
+  font-size: 16px;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .account-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding-right: 0;
+    border-bottom: 1px solid #ddd;
+  }
+}

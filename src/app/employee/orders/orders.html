@@ -1,0 +1,44 @@
+<div class="account-container">
+  <div class="sidebar">
+    <h2>Account</h2>
+    <ul>
+      <li><a href="#">Overview</a></li>
+      <li><a href="#">Orders & Returns</a></li>
+      <li><a href="#">Saved Address</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="header">
+      <h2>My Orders</h2>
+    </div>
+
+    <div class="orders-list" *ngIf="orders.length > 0">
+      <div class="order-card" *ngFor="let order of orders" (click)="viewOrderDetails(order)">
+        <p><strong>Order #:</strong> {{ order.id }}</p>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p><strong>Total:</strong> {{ order.total_amount }} {{ order.currency }}</p>
+        <p><strong>Date:</strong> {{ order.order_date | date:'medium' }}</p>
+      </div>
+    </div>
+
+    <div class="no-orders" *ngIf="orders.length === 0">
+      <p>You have no orders yet.</p>
+    </div>
+
+    <!-- Order Details Modal/Section -->
+    <div class="order-details" *ngIf="selectedOrder">
+      <button mat-button color="warn" (click)="closeOrderDetails()">Back</button>
+      <h3>Order #{{ selectedOrder.id }}</h3>
+      <p><strong>Status:</strong> {{ selectedOrder.status }}</p>
+      <p><strong>Total Amount:</strong> {{ selectedOrder.total_amount }} {{ selectedOrder.currency }}</p>
+      <p><strong>Transaction ID:</strong> {{ selectedOrder.transaction_id }}</p>
+      <p><strong>Order Date:</strong> {{ selectedOrder.order_date | date:'medium' }}</p>
+
+      <h4>Items:</h4>
+      <div *ngFor="let item of selectedOrder.order_items">
+        <p>{{ item.book_title }} x {{ item.quantity }} = {{ item.total_price }}</p>
+      </div>
+    </div>
+  </div>
+</div>

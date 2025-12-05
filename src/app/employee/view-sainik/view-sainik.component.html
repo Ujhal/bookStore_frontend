@@ -1,0 +1,9 @@
+
+<ng-container *ngIf="sainikData; else loading">
+  <app-application-view [data]="sainikData"></app-application-view>
+</ng-container>
+
+
+    <ng-template #loading>
+      <p>Loading Sainik details...</p>
+    </ng-template>

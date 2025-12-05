@@ -1,0 +1,105 @@
+<div *ngIf="order" class="order-details-container">
+
+  <h2 class="page-title">Order #{{ order.id }}</h2>
+
+  <!-- ORDER SUMMARY -->
+  <section class="box">
+    <h3>Order Summary</h3>
+
+    <div class="row">
+      <p><strong>Transaction ID:</strong> {{ order.transaction_id || '—' }}</p>
+     <!-- Status Field -->
+<p><strong>Status:</strong>
+  <mat-form-field appearance="fill" class="status-field">
+    <mat-select [(ngModel)]="order.status">
+      <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Show Tracking Number input only if status is Shipped -->
+  <mat-form-field *ngIf="order.status === 'Shipped'" appearance="fill" class="tracking-field">
+    <mat-label>Tracking Number</mat-label>
+    <input matInput [(ngModel)]="order.tracking_number" placeholder="Enter tracking number">
+  </mat-form-field>
+<!-- Remarks Field -->
+<mat-form-field appearance="fill" class="remarks-field">
+  <mat-label>Remarks</mat-label>
+  <textarea matInput [(ngModel)]="order.remarks" placeholder="Add remarks (optional)"></textarea>
+</mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="updateStatus()">
+    Update
+  </button>
+</p>
+
+      <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+      <p><strong>Order Date:</strong> {{ order.order_date | date:'medium' }}</p>
+      <p><strong>Remakrs:</strong> {{ order.remarks }}</p>
+    </div>
+  </section>
+
+  <!-- CUSTOMER INFO -->
+  <section class="box">
+    <h3>Customer Info</h3>
+
+    <div class="row">
+      <p><strong>Username:</strong> {{ order.user.username }}</p>
+      <p><strong>Email:</strong> {{ order.user.email }}</p>
+      <p><strong>Role:</strong> {{ order.user.role === 1 ? 'Admin' : 'Customer' }}</p>
+      <p><strong>Phone:</strong> {{ order.user.phone_number || 'N/A' }}</p>
+    </div>
+  </section>
+
+  <!-- SHIPPING ADDRESS -->
+  <section class="box" *ngIf="order.shipping_address">
+    <h3>Shipping Address</h3>
+
+    <div class="address">
+      <p>{{ order.shipping_address.address_line_1 }}</p>
+      <p *ngIf="order.shipping_address.address_line_2">
+        {{ order.shipping_address.address_line_2 }}
+      </p>
+      <p><strong>Landmark:</strong> {{ order.shipping_address.landmark }}</p>
+      <p>{{ order.shipping_address.city }}, {{ order.shipping_address.state }}</p>
+      <p><strong>Pincode:</strong> {{ order.shipping_address.pincode }}</p>
+      <p><strong>Phone:</strong> {{ order.shipping_address.phone_number }}</p>
+    </div>
+  </section>
+
+  
+ <!-- ORDER ITEMS LIST -->
+<section class="box">
+  <h3>Order Items</h3>
+
+  <table class="items-table" *ngIf="order.order_items.length > 0; else noItems">
+    <thead>
+      <tr>
+        <th>Book</th>
+        <th>Qty</th>
+        <th>Price/Unit</th>
+        <th>Total</th>
+        <th>Type</th> <!-- NEW COLUMN -->
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of order.order_items">
+        <td>{{ item.book.title }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>₹{{ item.price_per_unit }}</td>
+        <td>₹{{ item.total_price }}</td>
+        <td>
+          <span *ngIf="item.is_admin_book; else publisherItem">Admin</span>
+          <ng-template #publisherItem>Publisher</ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noItems>
+    <p>No items in this order.</p>
+  </ng-template>
+</section>
+
+
+</div>

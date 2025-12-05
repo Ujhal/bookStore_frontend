@@ -1,0 +1,90 @@
+<mat-horizontal-stepper [linear]="true">
+   <mat-step [stepControl]="personalForm" label="Personal Details">
+    <app-personal-details [formGroup]="personalForm"></app-personal-details>
+    <button mat-button matStepperNext>Next</button>
+  </mat-step>
+
+<mat-step label="Service Details">
+  <app-service-details
+    [formGroup]="serviceForm"
+    [serviceRecords]="serviceRecords"
+    (addRecord)="addServiceRecord()"
+  ></app-service-details>
+  <div class="stepper-nav">
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-button matStepperNext>Next</button>
+    <!--    <button mat-button matStepperNext [disabled]="serviceRecords.length === 0">Next</button>
+-->
+  </div>
+</mat-step>
+<mat-step label="Bank Details">
+  <app-bank-details [formGroup]="bankForm" [bankRecords]="bankRecords"
+    (addRecord)="addBankRecord()"></app-bank-details>
+  <div class="step-actions">
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-button matStepperNext >Next</button>
+    <!--    <button mat-button matStepperNext [disabled]="bankRecords.length === 0">Next</button>
+-->
+  </div>
+</mat-step>
+
+<mat-step label="Dependent Details">
+  <app-dependent-details
+    [formGroup]="dependentForm"
+    [dependentRecords]="dependentRecords"
+    (addRecord)="addDependentRecord()">
+  </app-dependent-details>
+  <div class="step-actions">
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-button matStepperNext >Next</button>
+    <!--    <button mat-button matStepperNext [disabled]="dependentRecords.length === 0">Next</button>
+-->
+  </div>
+</mat-step>
+ <mat-step label="Education Details">
+    <app-education-details
+  [formGroup]="educationForm"
+  [educationRecords]="educationRecords"
+    (addRecord)="addEducationRecord()"
+>
+</app-education-details>
+
+    <div class="step-actions">
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+      <!--<button mat-button matStepperNext [disabled]="additionalForm.invalid">Next</button>-->
+    </div>
+  </mat-step>
+ <mat-step label="Additional Details">
+    <app-additional-details
+  [formGroup]="additionalForm"
+  [awardForm]="awardForm"
+  [awardRecords]="awardRecords"
+  (addAward)="addAwardRecord()"
+  [esmInfoForm]="esmInfoForm"
+  [esmInfoRecords]="esmInfoRecords"
+  (addEsm)="addEsmRecord()"
+>
+</app-additional-details>
+
+    <div class="step-actions">
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+      <!--<button mat-button matStepperNext [disabled]="additionalForm.invalid">Next</button>-->
+    </div>
+  </mat-step>
+  <mat-step>
+   <app-review-summary
+    [personal]="personalForm.value"
+    [serviceRecords]="serviceRecords"
+    [bankRecords]="bankRecords"
+    [dependentRecords]="dependentRecords"
+    [additionalDetails]="additionalForm.value"
+    [esmInfoRecords]="esmInfoRecords"
+    [educationRecords]="educationRecords"
+    [awardRecords]="awardRecords"
+  >
+  </app-review-summary>
+    <button mat-button matStepperPrevious>Back</button>
+<button mat-raised-button color="primary" (click)="submitForm()">Submit</button>  </mat-step>
+</mat-horizontal-stepper>

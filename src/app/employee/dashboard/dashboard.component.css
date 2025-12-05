@@ -1,0 +1,291 @@
+/* General Page Styling */
+body {
+  background-color: #fff;
+  color: #222;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.landing-page {
+  padding-inline: 20px;
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Hero Section */
+.hero-image {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+/* =======================
+   Categories Section
+   ======================= */
+.categories-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.categories-section h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.categories-section p {
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.categories-grid {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.category-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: 200px;
+  overflow: hidden;
+  color: white;
+  position: relative;
+  flex: 1 1 45%;
+  min-width: 280px;
+}
+
+/* Left Side of Category Card */
+.category-info {
+  z-index: 2;
+  max-width: 50%;
+}
+
+.category-info .label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.category-info h3 {
+  margin: 0.5rem 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.category-info button {
+  margin-top: 4rem;
+  padding: 0.8rem 1.4rem;
+  border: none;
+  border-radius: 50px;
+  background-color: white;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-info button:hover {
+  transform: translateY(-5px);
+  background-color: #f1f1f1;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Right Image of Category */
+.category-image {
+  position: relative;
+  max-width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.category-image img {
+  height: 140px;
+  object-fit: contain;
+  transform: rotate(-10deg);
+  transition: transform 0.3s ease;
+}
+
+.category-image img:hover {
+  transform: rotate(-5deg) scale(1.05);
+}
+
+/* Category Colors */
+.blue {
+  background-color: #5dade2;
+}
+
+.light-grey {
+  background-color: #39c873;
+  color: #000;
+}
+
+/* Hover Button Colors */
+.category-card.blue .category-info button:hover {
+  background-color: #eaf6ff;
+}
+
+.category-card.light-grey .category-info button:hover {
+  background-color: #fff3cd;
+}
+
+/* =======================
+   Features Section
+   ======================= */
+.features-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 3rem;
+  gap: 1rem;
+}
+
+.feature {
+  flex: 1 1 220px;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-4px);
+}
+
+.feature h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+/* =======================
+   Books Section
+   ======================= */
+.books-section {
+  margin: 60px 0;
+  text-align: center;
+}
+
+.books-section h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* Grid layout */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 25px;
+  justify-items: center;
+}
+
+/* Each Book Card */
+.book-card {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 10px;
+  width: 180px;
+  transition: transform 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Image Container */
+.book-image-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Book Cover */
+.book-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Hover Overlay */
+.book-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay button {
+  background: #ff0077;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.overlay button:hover {
+  background: #e6006a;
+}
+
+/* Book Info */
+.book-info {
+  margin-top: 12px;
+  text-align: left;
+}
+
+.book-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 5px;
+}
+
+.book-author {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.book-category {
+  font-size: 0.85rem;
+  color: #777;
+}

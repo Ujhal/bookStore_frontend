@@ -1,0 +1,45 @@
+<h3 class="heading">Publishers List</h3>
+
+<table mat-table [dataSource]="publishers" class="mat-elevation-z8 full-width-table">
+
+  <!-- Serial No -->
+  <ng-container matColumnDef="serial">
+    <th mat-header-cell *matHeaderCellDef> # </th>
+    <td mat-cell *matCellDef="let pub; let i = index">
+      {{ i + 1 }}
+    </td>
+  </ng-container>
+
+  <!-- Name -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let pub"> {{ pub.first_name }} {{ pub.last_name }} </td>
+  </ng-container>
+
+  <!-- Email -->
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef> Email </th>
+    <td mat-cell *matCellDef="let pub"> {{ pub.email }} </td>
+  </ng-container>
+
+  <!-- Phone -->
+  <ng-container matColumnDef="phone_number">
+    <th mat-header-cell *matHeaderCellDef> Phone </th>
+    <td mat-cell *matCellDef="let pub"> {{ pub.phone_number }} </td>
+  </ng-container>
+
+  <!-- Verified -->
+  <ng-container matColumnDef="is_verified">
+    <th mat-header-cell *matHeaderCellDef> Verified </th>
+    <td mat-cell *matCellDef="let pub">
+      <span [class.verified]="pub.is_verified"
+            [class.not-verified]="!pub.is_verified">
+        {{ pub.is_verified ? 'Yes' : 'No' }}
+      </span>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>

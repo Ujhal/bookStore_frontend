@@ -1,0 +1,18 @@
+.address-selector-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+.address-selector-panel {
+  background:#fff;
+  padding:16px;
+  border-radius:6px;
+  width:420px;
+}
+.addr-row { display:flex; gap:8px; padding:8px 0; align-items:flex-start; }
+.addr-details { font-size:13px; }
+.actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }

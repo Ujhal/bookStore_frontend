@@ -1,0 +1,237 @@
+<div [formGroup]="formGroup" class="additional-details-container">
+  <h2 class="section-header">Additional Details</h2>
+
+  <!-- Benefits Section -->
+  <div class="form-section">
+    <h3 class="section-subheader">Benefits Status</h3>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Canteen Smart Card</mat-label>
+        <mat-select formControlName="canteen_smart_card">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>ECHS</mat-label>
+        <mat-select formControlName="echs">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>CoI</mat-label>
+        <mat-select formControlName="coi">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Resident Certificate</mat-label>
+        <mat-select formControlName="resident_certificate">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      
+    </div>
+  </div>
+
+<div class="form-section">
+  <h3 class="section-subheader">ESM ID Card Information</h3>
+
+  <form [formGroup]="esmInfoForm" class="esm-info-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label> ID Card Number</mat-label>
+        <input matInput formControlName="esm_number" placeholder="Enter ESM Number">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>ID Card Issue Date</mat-label>
+        <input matInput [matDatepicker]="esmDatePicker" formControlName="esm_issue_date" placeholder="Choose date" [max]="today">
+        <mat-datepicker-toggle matSuffix [for]="esmDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #esmDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Place of Issue</mat-label>
+        <mat-select formControlName="esm_place_of_issue">
+          <mat-option *ngFor="let place of esmIssuePlaces" [value]="place.id">{{ place.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Issue Number</mat-label>
+        <mat-select formControlName="issue_number" placeholder="Select Issue Number">
+          <mat-option *ngFor="let option of issueOptions" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+    <div class="form-row">
+      <div class="form-field button-field">
+        <button mat-raised-button color="primary" (click)="onAddEsmClick()" type="button" class="add-button">
+          <mat-icon>add</mat-icon> Add ESM Info
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- ESM Records Table -->
+  <div class="esm-table-container" *ngIf="esmInfoRecords.length > 0; else noEsmRecords">
+    <mat-table [dataSource]="esmDataSource" class="esm-table">
+      <ng-container matColumnDef="esm_number">
+        <th mat-header-cell *matHeaderCellDef> ESM Number </th>
+        <td mat-cell *matCellDef="let record"> {{ record.esm_number }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="esm_issue_date">
+        <th mat-header-cell *matHeaderCellDef> Issue Date </th>
+        <td mat-cell *matCellDef="let record"> {{ record.esm_issue_date | date:'mediumDate' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="esm_place_of_issue">
+        <th mat-header-cell *matHeaderCellDef> Place of Issue </th>
+        <td mat-cell *matCellDef="let record">
+          {{ getEsmPlaceName(record.esm_place_of_issue) }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="issue_number">
+        <th mat-header-cell *matHeaderCellDef> Issue Number </th>
+        <td mat-cell *matCellDef="let record"> {{ record.issue_number }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let record; let i = index">
+          <button mat-icon-button color="warn" (click)="onRemoveEsmClick(i)" matTooltip="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="esmDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: esmDisplayedColumns;"></tr>
+    </mat-table>
+  </div>
+
+  <ng-template #noEsmRecords>
+    <div class="no-records">
+      <p>No ESM records added yet.</p>
+    </div>
+  </ng-template>
+</div>
+
+
+  <!-- Awards Section -->
+  <div class="form-section">
+    <h3 class="section-subheader">Awards & Certificates</h3>
+    
+    <form [formGroup]="awardForm" class="award-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="category">
+            <mat-option *ngFor="let category of awardCategories" [value]="category.id">{{ category.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="award_type">
+            <mat-option *ngFor="let type of awardTypes" [value]="type.id">{{ type.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Award Name Dropdown (Shown only if 'Award' is selected in category) -->
+          <mat-form-field appearance="outline" class="form-field" *ngIf="showAwardNameDropdown">
+            <mat-label>Award Name</mat-label>
+            <mat-select formControlName="award_name">
+              <mat-option *ngFor="let award of filteredAwards" [value]="award.id">
+                {{ award.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+<!-- Certificate Name Input (Shown only if 'Certificate' is selected in category) -->
+          <mat-form-field appearance="outline" class="form-field" *ngIf="showCertificateNameInput">
+            <mat-label>Certificate Name</mat-label>
+            <input matInput formControlName="certificate_name" placeholder="Enter certificate name" />
+          </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Received Date</mat-label>
+          <input matInput [matDatepicker]="awardDate" formControlName="received_date" placeholder="Choose date" [max]="today">
+          <mat-datepicker-toggle matSuffix [for]="awardDate"></mat-datepicker-toggle>
+          <mat-datepicker #awardDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field wide-field">
+          <mat-label>Award/Certificate Image</mat-label>
+          <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden />
+          <input matInput [value]="selectedFileName" readonly (click)="fileInput.click()" placeholder="Choose a file" />
+          <button mat-icon-button matSuffix (click)="fileInput.click()" type="button" aria-label="Select file">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field wide-field">
+          <mat-label>Remarks</mat-label>
+          <input matInput formControlName="remarks" placeholder="Enter remarks">
+        </mat-form-field>
+
+        <div class="form-field button-field">
+          <button mat-raised-button color="primary" (click)="onAddAwardClick()" type="button" class="add-button">
+            <mat-icon>add</mat-icon> Add Award
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Awards Table -->
+    <div class="awards-table-container">
+      <div *ngIf="awardRecords.length > 0; else noRecords">
+        <mat-table [dataSource]="dataSource" class="awards-table">
+          <ng-container matColumnDef="award/certificate">
+            <th mat-header-cell *matHeaderCellDef> Award/Certificate </th>
+            <td mat-cell *matCellDef="let record"> {{ getAwardCategoryName(record.category) }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="civil/service">
+            <th mat-header-cell *matHeaderCellDef> Type </th>
+            <td mat-cell *matCellDef="let record"> {{ getAwardTypeName(record.award_type) }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let record; let i = index">
+              <button mat-icon-button color="warn" (click)="onRemoveAwardClick(i)" matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </mat-table>
+      </div>
+
+      <ng-template #noRecords>
+        <div class="no-records">
+          <p>No award records added yet.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

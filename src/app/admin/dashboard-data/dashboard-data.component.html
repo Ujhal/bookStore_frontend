@@ -1,0 +1,70 @@
+<mat-sidenav-content>
+  <mat-toolbar color="primary" class="dashboard-toolbar" 
+    style="background-color: #ffffff; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <button mat-icon-button (click)="toggleSidebar = !toggleSidebar">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span class="toolbar-title">Admin Dashboard</span>
+  </mat-toolbar>
+
+  <!-- Dashboard Cards -->
+  <div class="dashboard-content" style="padding: 20px; display: flex; flex-wrap: wrap; gap: 20px;">
+
+    <mat-card class="dashboard-card">
+      <mat-card-header><mat-icon>book</mat-icon><span>Total Books</span></mat-card-header>
+      <mat-card-content><h2>{{ totalBooks }}</h2></mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-header><mat-icon>person</mat-icon><span>Total Authors</span></mat-card-header>
+      <mat-card-content><h2>{{ totalAuthors }}</h2></mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-header><mat-icon>category</mat-icon><span>Total Categories</span></mat-card-header>
+      <mat-card-content><h2>{{ totalCategories }}</h2></mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-header><mat-icon>subdirectory_arrow_right</mat-icon><span>Total Subcategories</span></mat-card-header>
+      <mat-card-content><h2>{{ totalSubcategories }}</h2></mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-header><mat-icon>rate_review</mat-icon><span>Total Reviews</span></mat-card-header>
+      <mat-card-content><h2>{{ totalReviews }}</h2></mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- Category-wise Books -->
+  <div class="category-section" style="padding: 20px;">
+    <h3>📚 Books by Category</h3>
+    <div class="category-cards" style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px;">
+      <mat-card *ngFor="let item of categoryWiseBooks" class="category-card">
+        <mat-card-header><mat-icon>folder</mat-icon><span>{{ item.name }}</span></mat-card-header>
+        <mat-card-content><h3>{{ item.book_count }} books</h3></mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Subcategory-wise Books -->
+  <div class="subcategory-section" style="padding: 20px;">
+    <h3>📂 Books by Subcategory</h3>
+    <div class="subcategory-cards" style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px;">
+      <mat-card *ngFor="let item of subcategoryWiseBooks" class="subcategory-card">
+        <mat-card-header>
+          <mat-icon>folder_open</mat-icon>
+          <span>{{ item.name }} ({{ item.category__name }})</span>
+        </mat-card-header>
+        <mat-card-content>
+          <h3>{{ item.book_count }} books</h3>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <router-outlet></router-outlet>
+  </div>
+</mat-sidenav-content>

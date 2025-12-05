@@ -1,0 +1,23 @@
+
+
+.main-container {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+ 
+}
+
+mat-sidenav-content {
+  flex-grow: 1;
+  overflow-y: hidden;
+  padding: 0; /* remove the gap */
+  min-height: 0;
+}
+/* styles.css or app.component.css */
+
+html, body {
+  height: auto;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}

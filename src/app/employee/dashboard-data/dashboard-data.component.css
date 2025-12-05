@@ -1,0 +1,175 @@
+/* General Styling */
+body {
+  background-color: #fff;
+  color: #222;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Limit page width */
+.content-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
+}
+
+/* ===================================== */
+/*         BLACK & WHITE SECTIONS        */
+/* ===================================== */
+.bw-section {
+  filter: grayscale(100%);
+  opacity: 0.85;
+}
+
+.bw-section:hover {
+  filter: grayscale(90%);
+  opacity: 1;
+  transition: 0.3s ease;
+}
+
+/* ===================================== */
+/*            BOOKS SECTION TOP          */
+/* ===================================== */
+.books-section {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 25px;
+}
+
+.book-card {
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: 0.2s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+}
+
+.book-image-container {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.book-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hover overlay for backend books */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s ease;
+}
+
+.book-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay button {
+  background: #ff0077;
+  border: none;
+  padding: 8px 18px;
+  color: white;
+  border-radius: 5px;
+}
+
+/* ===================================== */
+/*          COMING SOON CARDS            */
+/* ===================================== */
+.book-image-container.bw img {
+  filter: grayscale(100%);
+  opacity: 0.8;
+}
+
+.coming-label {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: black;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+
+.coming-soon-title {
+  margin-top: 50px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+/* Disable overlay for static cards */
+.book-card.coming-soon .overlay {
+  display: none !important;
+}
+
+/* ===================================== */
+/* HERO IMAGE */
+/* ===================================== */
+.hero-image img {
+  width: 100%;
+  border-radius: 12px;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+/* ===================================== */
+/* CATEGORIES */
+/* ===================================== */
+.categories-section {
+  text-align: center;
+}
+
+.categories-grid {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.category-card {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 45%;
+  height: 200px;
+  color: white;
+}
+
+.blue { background: #5dade2; }
+.light-grey { background: #39c873; }
+
+/* ===================================== */
+/* FEATURES */
+/* ===================================== */
+.features-section {
+  margin-top: 3rem;
+  display: flex;
+  background-color: #9fc1d8;
+  gap: 1rem;
+  padding:10px;
+}
+
+.feature {
+  flex: 1;
+  background: #d4f0f9;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}

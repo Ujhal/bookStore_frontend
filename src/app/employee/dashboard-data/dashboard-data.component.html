@@ -1,0 +1,92 @@
+<div class="landing-page">
+  <div class="content-container">
+
+    <!-- ========================================= -->
+    <!--       FEATURED BOOKS - MOVED TO TOP      -->
+    <!-- ========================================= -->
+    <section class="books-section">
+      <h2>📚 Featured Books</h2>
+
+      <div class="books-grid">
+        <div class="book-card" *ngFor="let book of books">
+          <div class="book-image-container">
+            <img [src]="book.cover_image" [alt]="book.title" class="book-cover" />
+            <div class="overlay">
+              <button (click)="viewBook(book.id)">View Book</button>
+            </div>
+          </div>
+
+          <div class="book-info">
+            <h3 class="book-title">{{ book.title }}</h3>
+            <p class="book-author">by {{ book.author_name }}</p>
+            <p class="book-category">{{ book.category_name }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+ <section class="features-section">
+      <div class="feature">
+        <h4>🚚 Fast Shipping</h4>
+        <p>Fast Shipping On All Orders</p>
+      </div>
+      <div class="feature">
+        <h4>🔄 Replacement Guarantee</h4>
+        <p>30 Day Money Back</p>
+      </div>
+      <div class="feature">
+        <h4>🎧 Online Support 24/7</h4>
+        <p>Technical Support 24/7</p>
+      </div>
+      <div class="feature">
+        <h4>💳 Secure Payment</h4>
+        <p>All Cards Accepted</p>
+      </div>
+    </section>
+    <!-- ========================================= -->
+    <!--            HERO IMAGE (BW)                -->
+    <!-- =========================================
+    <div class="hero-image bw-section">
+      <img src="../../../assets/images/banner1.png" alt="Hero Banner" />
+    </div>
+ -->
+
+    <!-- ========================================= -->
+    <!--            CATEGORIES (BW)                
+    
+    <section class="categories-section bw-section">
+      <h2>Explore Categories</h2>
+      <p>Explore our top listed categories in our catalogue</p>
+
+      <div class="categories-grid">
+        <div class="category-card blue">
+          <div class="category-info">
+            <span class="label">Novellicious</span>
+            <h3>Fiction</h3>
+            <button>Browse</button>
+          </div>
+          <div class="category-image">
+            <img src="../../../assets/images/Fiction.png" alt="Fiction Category" />
+          </div>
+        </div>
+
+        <div class="category-card light-grey">
+          <div class="category-info">
+            <span class="label">Insightful</span>
+            <h3>Non Fiction</h3>
+            <button>Browse</button>
+          </div>
+          <div class="category-image">
+            <img src="../../../assets/images/Non-Fiction.png" alt="Non Fiction Category" />
+          </div>
+        </div>
+      </div>
+    </section>!-->
+
+
+    <!-- ========================================= -->
+    <!--              FEATURES (BW)                -->
+    <!-- ========================================= -->
+   
+  </div>
+</div>

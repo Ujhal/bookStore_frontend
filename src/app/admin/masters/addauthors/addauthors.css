@@ -1,0 +1,24 @@
+.row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 250px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.photo-upload {
+  margin: 16px 0;
+}
+
+.file-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+}

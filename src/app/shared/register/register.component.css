@@ -1,0 +1,97 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.form-container {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 30px;
+  width: 550px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+.name-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.name-container input {
+  width: 32%;
+}
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 15px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-container .terms {
+  font-size: 0.85em;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.form-container .terms a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.form-container .bottom-text {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 0.9em;
+}
+
+.form-container .bottom-text a {
+  color: #007BFF;
+  text-decoration: none;
+}
+.role-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.role-container button {
+  width: 48%;
+  padding: 10px;
+  background-color: #e8e8e8;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.role-container button.active {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}

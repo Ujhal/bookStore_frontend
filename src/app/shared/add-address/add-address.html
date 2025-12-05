@@ -1,0 +1,30 @@
+<div class="address-selector-backdrop">
+  <div class="address-selector-panel">
+    <h3>Choose Delivery Address</h3>
+
+    <div *ngIf="addresses?.length; else noAddr">
+      <label *ngFor="let a of addresses" class="addr-row">
+        <input type="radio" name="addr" [value]="a.id" (change)="selectedId = a.id" />
+        <div class="addr-details">
+          <strong>{{ a.line1 }}</strong>
+          <div *ngIf="a.line2">{{ a.line2 }}</div>
+          <div>{{ a.city }}{{ a.state ? ', ' + a.state : '' }} {{ a.zip || '' }}</div>
+        </div>
+      </label>
+
+      <div class="actions">
+        <button (click)="choose()">Use selected address</button>
+        <button (click)="addNewAddress()">Add New Address</button>
+        <button (click)="cancel.emit()">Cancel</button>
+      </div>
+    </div>
+
+    <ng-template #noAddr>
+      <p>No saved addresses yet.</p>
+      <div class="actions">
+        <button (click)="addNewAddress()">Add New Address</button>
+        <button (click)="cancel.emit()">Close</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

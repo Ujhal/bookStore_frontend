@@ -1,0 +1,50 @@
+<body>
+  <div class="form-container">
+    <h2>Register</h2>
+
+    <!-- Toggle buttons for role -->
+    <div class="role-container">
+      <button type="button"
+              [class.active]="selectedRole === 2"
+              (click)="selectRole(2)">
+        Join as Customer
+      </button>
+
+      <button type="button"
+              [class.active]="selectedRole === 3"
+              (click)="selectRole(3)">
+        Join as Publisher / Author
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="name-container">
+        <input type="text" placeholder="First Name" formControlName="first_name">
+        <input type="text" placeholder="Middle Name" formControlName="middleName">
+        <input type="text" placeholder="Last Name" formControlName="last_name">
+      </div>
+
+      <!-- Email & Phone (Only one required) -->
+      <div class="username-container">
+        <input type="text" placeholder="Email" formControlName="email" *ngIf="isEmailRequired">
+        <input type="text" placeholder="Phone Number" formControlName="phone_number" *ngIf="isPhoneRequired">
+      </div>
+
+      <input type="password" placeholder="Password" formControlName="password">
+      <input type="password" placeholder="Confirm Password" formControlName="confirmPassword">
+
+      <div class="terms">
+        By signing up, you agree to the 
+        <a href="#">terms of use</a> and 
+        <a href="#">privacy policy</a>.
+      </div>
+
+      <button type="submit" [disabled]="form.invalid">Register</button>
+    </form>
+
+    <div class="bottom-text">
+      Already have an account? <a (click)="login()">Sign In</a>
+    </div>
+  </div>
+</body>

@@ -1,0 +1,168 @@
+<!-- Qualification Container -->
+<div class="qualification-container">
+  <!-- Form Section -->
+  <div class="form-section">
+    <h2 class="section-header">Qualification Details</h2>
+    <form [formGroup]="formGroup" class="qualification-form">
+      <!-- First Row: Qualification Level + Dynamic Qualification -->
+      <div class="form-row">
+        <!-- Qualification Level Dropdown -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Qualification Level</mat-label>
+          <mat-select formControlName="qualificationLevel" required>
+            <mat-option *ngFor="let lvl of qualificationLevels" [value]="lvl.id">
+              {{ lvl.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.get('qualificationLevel')?.hasError('required')">
+            Qualification level is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Dynamic Qualification Fields -->
+        <div class="dynamic-fields">
+          <!-- Class XII Stream -->
+          <ng-container *ngIf="getQualificationLevelName(formGroup.get('qualificationLevel')?.value) === 'Class XII'">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Class XII Stream</mat-label>
+              <mat-select formControlName="qualification" required>
+                <mat-option *ngFor="let s of class12Streams" [value]="s.name">
+                  {{ s.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formGroup.get('qualification')?.hasError('required')">
+                Stream is required
+              </mat-error>
+            </mat-form-field>
+          </ng-container>
+
+          <!-- UG Degree -->
+          <ng-container *ngIf="getQualificationLevelName(formGroup.get('qualificationLevel')?.value) === 'UnderGraduate'">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>UG Degree</mat-label>
+              <mat-select formControlName="qualification" required>
+                <mat-option *ngFor="let u of undergraduateDegrees" [value]="u.name">
+                  {{ u.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formGroup.get('qualification')?.hasError('required')">
+                Degree is required
+              </mat-error>
+            </mat-form-field>
+          </ng-container>
+
+          <!-- PG Degree -->
+          <ng-container *ngIf="getQualificationLevelName(formGroup.get('qualificationLevel')?.value) === 'PostGraduate'">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>PG Degree</mat-label>
+              <mat-select formControlName="qualification" required>
+                <mat-option *ngFor="let p of postgraduateDegrees" [value]="p.name">
+                  {{ p.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formGroup.get('qualification')?.hasError('required')">
+                Degree is required
+              </mat-error>
+            </mat-form-field>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Second Row: Institution Name + Year of Passing + Grade -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Institution Name</mat-label>
+          <input matInput formControlName="institution" required>
+          <mat-error *ngIf="formGroup.get('institution')?.hasError('required')">Institution name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Year of Passing</mat-label>
+          <input matInput [matDatepicker]="yearPicker" formControlName="yearOfPassing" required readonly>
+          <mat-datepicker-toggle matSuffix [for]="yearPicker"></mat-datepicker-toggle>
+          <mat-datepicker #yearPicker startView="multi-year" (yearSelected)="chosenYearHandler($event, yearPicker)" panelClass="year-only-picker"></mat-datepicker>
+          <mat-error *ngIf="formGroup.get('yearOfPassing')?.hasError('required')">Year is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Marks/Grade</mat-label>
+          <input matInput formControlName="marks" required>
+          <mat-error *ngIf="formGroup.get('marks')?.hasError('required')">Marks are required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Third Row: Remarks -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field full-width">
+          <mat-label>Remarks</mat-label>
+          <input matInput formControlName="remarks">
+          <mat-hint>Additional information about this qualification</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" (click)="add()" [disabled]="!formGroup.valid">
+          {{ editingIndex !== null ? 'Update Qualification' : '+Add Qualification Record' }}
+        </button>
+        <button mat-button color="warn" (click)="clearForm()" type="button">
+          Clear
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Records Section -->
+  <div class="records-section">
+    <h2 class="section-header">Qualification List</h2>
+
+    <div *ngIf="educationRecords.length > 0; else noRecords" class="records-table">
+      <mat-table [dataSource]="dataSource" class="qualifications-table" matSort>
+
+        <ng-container matColumnDef="qualificationLevel">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Qualification Level</th>
+          <td mat-cell *matCellDef="let record">{{ getQualificationLevelName(record.qualificationLevel) }}</td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="institution">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Institution</th>
+          <td mat-cell *matCellDef="let record">{{ record.institution || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="yearOfPassing">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Year</th>
+          <td mat-cell *matCellDef="let record">{{ record.yearOfPassing | date: 'yyyy' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="marks">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Grade</th>
+          <td mat-cell *matCellDef="let record">{{ record.marks || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let record; let i = index" class="actions-cell">
+            <button mat-icon-button color="primary" (click)="editRecord(i)" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteRecord(i)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </mat-table>
+    </div>
+
+    <ng-template #noRecords>
+      <div class="no-records-message">
+        <p>No qualification records added yet</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+
+

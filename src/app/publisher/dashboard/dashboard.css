@@ -1,0 +1,90 @@
+/* Sidebar Styles */
+.custom-sidenav {
+  width: 250px;
+  background-color: #ffffff;
+  color: #333;
+  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
+  padding-top: 20px;
+}
+
+.menu-button {
+  font-size: 16px;
+  padding: 10px 20px;
+  text-transform: none;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.menu-button mat-icon {
+  margin-right: 10px;
+}
+
+/* Submenu Button */
+.submenu-button {
+  font-size: 14px;
+  padding: 10px 20px;
+  text-transform: none;
+  color: #444;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: transparent;
+}
+
+.submenu-button:hover {
+  background-color: #e7f3ff;
+  color: #007bff;
+}
+
+/* Expansion Panel Header */
+.panel-header {
+  background-color: #f4f6f9;
+  color: #333;
+  font-weight: bold;
+  font-size: 16px;
+  padding-left: 20px;
+}
+
+/* Dashboard Toolbar */
+.dashboard-toolbar {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 20px;
+}
+
+.toolbar-title {
+  font-size: 20px;
+  color: #333;
+  font-weight: bold;
+  margin-left: 10px;
+  display: inline-block;
+}
+
+/* Content Section */
+.dashboard-content {
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.mat-sidenav-content {
+  background-color: #ffffff;
+}
+
+/* Hover Effects for Expansion Panel Buttons */
+.mat-expansion-panel-header {
+  transition: background-color 0.3s ease;
+}
+
+.mat-expansion-panel-header:hover {
+  background-color: #e7f3ff;
+}
+
+/* Add smooth transition for sidebar toggle */
+.mat-sidenav-container {
+  transition: all 0.3s ease;
+}
+.dashboard-content{
+  min-height:70vh;
+}

@@ -1,0 +1,89 @@
+<div class="book-details-page">
+  <div class="book-image-container">
+    <img [src]="book?.cover_image" [alt]="book?.title" />
+  </div>
+
+  <div class="book-info-container">
+    <div class="book-header">
+      <h1>{{ book?.title }}</h1>
+      <p class="author">by {{ book?.author_name }}</p>
+      <p class="category">Category: {{ book?.category_name }}</p>
+    </div>
+
+    <div class="price-section">
+      <span class="price">Rs. {{ book?.price }}</span>
+      <span class="currency">{{ book?.currency }}</span>
+      <span class="sale-tag">Sale</span>
+    </div>
+
+    <!-- Quantity Section -->
+    <div class="quantity-section">
+      <label>Quantity</label>
+      <div class="quantity-controls">
+        <button (click)="decreaseQty()">−</button>
+        <span>{{ quantity }}</span>
+        <button (click)="increaseQty()">+</button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions">
+      <button 
+        class="place-order" 
+        *ngIf="isLoggedIn; else loginPrompt" 
+        (click)="placeOrder()">
+        Place Your Order
+      </button>
+
+      <ng-template #loginPrompt>
+        <button class="place-order" (click)="openCheckoutForm()">Buy Now</button>
+      </ng-template>
+    </div>
+
+    <hr />
+
+    <div class="description">
+      <h3>About the Book</h3>
+      <p>{{ book?.description }}</p>
+    </div>
+
+    <div class="author-info">
+      <h3>About the Author</h3>
+      <p>{{ book?.author_name }} is a renowned author in the field of {{ book?.subcategory_name }}.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout Popup -->
+<div class="checkout-popup" *ngIf="showCheckoutForm">
+  <div class="popup-content">
+
+    <h2>Complete Your Order</h2>
+
+    <form (ngSubmit)="placeOrderWithRegistration()">
+
+      <h3>Personal Details</h3>
+      <input type="text" placeholder="First Name" [(ngModel)]="form.first_name" name="first_name" required />
+      <input type="text" placeholder="Last Name" [(ngModel)]="form.last_name" name="last_name" required />
+
+      <input type="email" placeholder="Email" [(ngModel)]="form.email" name="email" />
+      <input type="text" placeholder="Phone Number" [(ngModel)]="form.phone_number" name="phone_number" required />
+
+      <input type="password" placeholder="Create Password" [(ngModel)]="form.password" name="password" required />
+
+      <h3>Address Details</h3>
+      <input type="text" placeholder="Address Line 1" [(ngModel)]="form.address_line_1" name="address_line_1" required />
+      <input type="text" placeholder="Address Line 2" [(ngModel)]="form.address_line_2" name="address_line_2" />
+      <input type="text" placeholder="Landmark" [(ngModel)]="form.landmark" name="landmark" />
+      <input type="text" placeholder="Pincode" [(ngModel)]="form.pincode" name="pincode" required />
+      <input type="text" placeholder="City" [(ngModel)]="form.city" name="city" required />
+      <input type="text" placeholder="State" [(ngModel)]="form.state" name="state" required />
+
+      <br />
+      <button type="submit" class="submit-btn">Place Order & Register</button>
+      <button type="button" class="close-btn" (click)="closeCheckoutForm()">Cancel</button>
+
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="landing-page">
+  <div class="content-container">
+
+
+    <section class="books-section">
+      <h2>📚 Featured Books</h2>
+
+      <div class="books-grid">
+        <div class="book-card" *ngFor="let book of books">
+          <div class="book-image-container">
+            <img [src]="book.cover_image" [alt]="book.title" class="book-cover" />
+            <div class="overlay">
+              <button (click)="viewBook(book.id)">View Book</button>
+            </div>
+          </div>
+
+          <div class="book-info">
+            <h3 class="book-title">{{ book.title }}</h3>
+            <p class="book-author">by {{ book.author_name }}</p>
+            <p class="book-category">{{ book.category_name }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+ <section class="features-section">
+      <div class="feature">
+        <h4>🚚 Fast Shipping</h4>
+        <p>Fast Shipping On All Orders</p>
+      </div>
+      <div class="feature">
+        <h4>🔄 Replacement Guarantee</h4>
+        <p>30 Day Money Back</p>
+      </div>
+      <div class="feature">
+        <h4>🎧 Online Support 24/7</h4>
+        <p>Technical Support 24/7</p>
+      </div>
+      <div class="feature">
+        <h4>💳 Secure Payment</h4>
+        <p>All Cards Accepted</p>
+      </div>
+    </section>
+  

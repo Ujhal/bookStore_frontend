@@ -1,0 +1,454 @@
+<div *ngIf="data" class="details-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h1 class="veteran-name">{{ data.first_name }} {{ data.middle_name || '' }} {{ data.last_name }}</h1>
+    <div class="id-badge">
+      <span class="badge-id">ID: {{ data.id_ic }}</span>
+      <span class="badge-status" [ngClass]="{'alive': data.is_alive, 'deceased': !data.is_alive}">
+        {{ data.is_alive ? 'Active' : 'Deceased' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="details-grid">
+    <!-- Personal Details Card -->
+    <mat-card class="detail-card personal-card">
+  <mat-card-header>
+    <mat-card-title class="card-title">
+      <mat-icon>person</mat-icon> Personal Details
+    </mat-card-title>
+  </mat-card-header>
+
+  <!-- Flex container for image + content -->
+  <mat-card-content class="personal-details-container">
+    <!-- Left: Personal  details -->
+    <div class="personal-info">
+      <div class="detail-row">
+        <mat-icon class="detail-icon">calendar_today</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Date of Birth</span>
+          <span class="detail-value">{{ data.date_of_birth | date:'mediumDate' }}</span>
+        </div>
+      </div>
+      
+      <div class="detail-row">
+        <mat-icon class="detail-icon">location_on</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Address</span>
+          <span class="detail-value">{{ data.address + ', ' + data.address_line_2 + ', ' + data.village + ', ' + data.post_office }}</span>
+        </div>
+        <div class="detail-text">
+          <span class="detail-label">Post Office</span>
+          <span class="detail-value">{{ data.post_office + ' ,' + data.pin_code  + ' ,' + data.district_name }}</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <mat-icon class="detail-icon">phone</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Contact</span>
+          <span class="detail-value">{{ data.phone_number }} | {{ data.email }}</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <mat-icon class="detail-icon">fingerprint</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Aadhar Number</span>
+          <span class="detail-value">{{ data.aadhar_number }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="data.expiry_date" class="detail-row">
+        <mat-icon class="detail-icon">event_busy</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Expiry Date</span>
+          <span class="detail-value">{{ data.expiry_date | date:'mediumDate' }}</span>
+        </div>
+      </div>
+    </div>
+     <!-- Right: Photo Info -->
+      <div class="sainik-photo" *ngIf="data.sainik_photo">
+      <img [src]="environment.base_url + data.sainik_photo" alt="Sainik Photo" class="profile-image" />
+      <span class="view-full">
+  <a [href]="environment.base_url + data.sainik_photo" target="_blank">View Full Image</a>
+</span>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+    <!-- Service Details Card -->
+ <mat-card class="detail-card service-card">
+  <mat-card-header>
+    <mat-card-title class="card-title">
+      <mat-icon>military_tech</mat-icon> Service Details
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngFor="let service of data.service_details" class="service-item">
+      <div class="service-header">
+        <span class="service-corps">{{ service.corps_name }}</span>
+        <span class="service-dates">
+          {{ service.start_date | date:'yyyy' }} - {{ service.end_date | date:'yyyy' }}
+        </span>
+      </div>
+       <div class="service-details">
+        <span class="service-period">
+          {{ service.start_date | date:'mediumDate' }} to {{ service.end_date | date:'mediumDate' }}
+        </span>
+      </div>
+      <!-- 🏅 Rank label -->
+      <div class="detail-row">
+        <mat-icon class="detail-icon">star</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Rank</span>
+          <span class="detail-value">{{ service.commission_name }} - {{ service.description }}</span>
+        </div>
+      </div>
+
+      <!-- 🪖 Unit/Paltan label -->
+      <div class="detail-row">
+        <mat-icon class="detail-icon">groups</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Unit/Paltan</span>
+          <span class="detail-value">{{ service.unit }}</span>
+        </div>
+      </div>
+
+      <!-- 📝 Service Period -->
+     
+
+      <!-- 📄 PPO Number -->
+      <div class="detail-row">
+        <mat-icon class="detail-icon">assignment</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">PPO Number</span>
+          <span class="detail-value">{{ service.ppo_number || 'Not provided' }}</span>
+        </div>
+      </div>
+
+      <!-- 🖼️ PPO Image -->
+      <div class="detail-row" *ngIf="service.ppo_image">
+        <mat-icon class="detail-icon">image</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">PPO Image</span>
+          <img
+            [src]="environment.base_url + service.ppo_image"
+            alt="PPO Image"
+            class="ppo-photo"
+          />
+          <span class="view-full">
+            <a [href]="environment.base_url + service.ppo_image" target="_blank">View Full Image</a>
+          </span>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+    <!-- Bank Details Card -->
+    <mat-card class="detail-card bank-card">
+      <mat-card-header>
+        <mat-card-title class="card-title">
+          <mat-icon>account_balance</mat-icon> Bank Details
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngFor="let bank of data.bank_details">
+          <div class="bank-item-container">
+            <div class="bank-details">
+              <div class="bank-header">
+                      <span class="bank-name">{{ bank.bank_name }} ,{{bank.branch_name}}</span>
+
+                    </div>
+                    <div class="detail-row">
+                      <mat-icon class="detail-icon">credit_card</mat-icon>
+                      <div class="detail-text">
+                        <span class="detail-label">Account Number</span>
+                        <span class="detail-value">{{ bank.account_number  }}</span>
+                      </div>
+                    </div>
+                    <div class="detail-row">
+                      <mat-icon class="detail-icon">receipt</mat-icon>
+                      <div class="detail-text">
+                        <span class="detail-label">PAN Number</span>
+                        <span class="detail-value">{{ bank.pan_number | uppercase }}</span>
+                      </div>
+                    </div>
+                    <div class="detail-row">
+                      <mat-icon class="detail-icon">code</mat-icon>
+                      <div class="detail-text">
+                        <span class="detail-label">IFSC Code</span>
+                        <span class="detail-value">{{ bank.ifsc_code | uppercase }}</span>
+                      </div>
+                    </div>
+                    
+            </div>
+          </div>
+         
+          <mat-divider></mat-divider>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Dependents Card -->
+    <mat-card class="detail-card dependents-card">
+      <mat-card-header>
+        <mat-card-title class="card-title">
+          <mat-icon>family_restroom</mat-icon> Dependents
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngFor="let dep of data.dependents" class="dependent-item">
+          <div class="dependent-avatar">
+            <mat-icon>person_outline</mat-icon>
+          </div>
+          <div class="dependent-details">
+            <span class="dependent-name">{{ dep.first_name }} {{ dep.last_name }}</span>
+            <span class="dependent-relation">{{ dep.relation }}</span>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+        <div *ngIf="!data.dependents || data.dependents.length === 0" class="no-data">
+          No dependents registered
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Education Details Card -->
+  
+<mat-card class="detail-card education-card">
+  <mat-card-header>
+    <mat-card-title class="card-title">
+      <mat-icon>menu_book</mat-icon> Education Details
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+
+    <!-- Loop through education entries -->
+    <div *ngFor="let edu of data.education_details" class="detail-section">
+      <div class="detail-row">
+        <mat-icon class="detail-icon">school</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Qualification Level</span>
+          <span class="detail-value">{{ edu.qualificationLevel_name || 'Not provided' }}</span>
+        </div>
+
+        <mat-icon class="detail-icon">assignment</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Qualification</span>
+          <span class="detail-value">{{ edu.qualification || 'Not provided' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <mat-icon class="detail-icon">school</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Institution</span>
+          <span class="detail-value">{{ edu.institution || 'Not provided' }}</span>
+        </div>
+
+        <mat-icon class="detail-icon">calendar_today</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Year of Passing</span>
+          <span class="detail-value">{{ edu.yearOfPassing || 'Not provided' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <mat-icon class="detail-icon">grade</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Grade</span>
+          <span class="detail-value">{{ edu.marks || 'Not provided' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-row" *ngIf="edu.remarks">
+        <mat-icon class="detail-icon">comment</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Remarks</span>
+          <span class="detail-value">{{ edu.remarks }}</span>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+    </div>
+
+    <!-- No data case -->
+    <div *ngIf="!data.education_details || data.education_details.length === 0" class="no-data">
+      No education details registered
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+
+
+
+    <!-- Additional Details Card -->
+    <mat-card class="detail-card additional-card">
+  <mat-card-header>
+    <mat-card-title class="card-title">
+      <mat-icon>list_alt</mat-icon> Additional Details
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+   <div class="badges-container">
+  <!-- First Row: ECHS + Canteen Smart Card -->
+  <div class="badge-row">
+    <!-- ECHS -->
+    <span class="status-badge" *ngIf="data.additional_details.echs; else noECHS">
+      <mat-icon>local_hospital</mat-icon> ECHS
+    </span>
+    <ng-template #noECHS>
+      <span class="status-badge disabled">
+        <mat-icon>local_hospital</mat-icon> ECHS: Not Present
+      </span>
+    </ng-template>
+
+    <!-- Canteen Smart Card -->
+    <span class="status-badge" *ngIf="data.additional_details.canteen_smart_card; else noCanteen">
+      <mat-icon>credit_card</mat-icon> Canteen Smart Card
+    </span>
+    <ng-template #noCanteen>
+      <span class="status-badge disabled">
+        <mat-icon>credit_card</mat-icon> Canteen Smart Card: Not Present
+      </span>
+    </ng-template>
+  </div>
+
+  <!-- Second Row: COI + Resident Certificate -->
+  <div class="badge-row">
+    <!-- COI -->
+    <span class="status-badge" *ngIf="data.additional_details.coi; else noCOI">
+      <mat-icon>verified</mat-icon> COI
+    </span>
+    <ng-template #noCOI>
+      <span class="status-badge disabled">
+        <mat-icon>verified</mat-icon> COI: Not Present
+      </span>
+    </ng-template>
+
+    <!-- Resident Certificate -->
+    <span class="status-badge" *ngIf="data.additional_details.resident_certificate; else noResident">
+      <mat-icon>home</mat-icon> Resident Certificate
+    </span>
+    <ng-template #noResident>
+      <span class="status-badge disabled">
+        <mat-icon>home</mat-icon> Resident Certificate: Not Present
+      </span>
+    </ng-template>
+  </div>
+</div>
+
+
+
+    <!-- Loop through ESM Info -->
+    <div *ngFor="let esm of data.esm_info" class="esm-entry">
+      <div class="detail-row">
+        <mat-icon class="detail-icon">military_tech</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">ESM Number ({{ esm.issue_number }})</span>
+          <span class="detail-value">{{ esm.esm_number || 'Not provided' }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="esm.esm_issue_date" class="detail-row">
+        <mat-icon class="detail-icon">event</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Issue Date</span>
+          <span class="detail-value">{{ esm.esm_issue_date | date:'mediumDate' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <mat-icon class="detail-icon">place</mat-icon>
+        <div class="detail-text">
+          <span class="detail-label">Place of Issue</span>
+          <span class="detail-value">{{ esm.esm_place_of_issue_name || 'Not provided' }}</span>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+
+  <mat-card class="detail-card awards-card" *ngIf="data.awards && data.awards.length > 0">
+  <mat-card-header>
+    <mat-card-title class="card-title">
+      <mat-icon>military_tech</mat-icon> Awards & Honors
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div *ngFor="let award of data.awards">
+      
+      <div class="award-item-container">
+     <div class="award-details">
+        <div class="detail-row">
+          <div class="detail-text">
+            <span class="detail-label">Award/Certificate</span>
+          <span class="award-type">
+            {{ award.award_type_name }} {{ award.category_name }},
+            <ng-container *ngIf="award.category_name === 'Certificate'; else showAwardName">
+              {{ award.certificate_name }}
+            </ng-container>
+            <ng-template #showAwardName>
+              {{ award.award_name_display }}
+            </ng-template>
+          </span>
+
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-text">
+            <span class="detail-label">Award/Certificate Received Date</span>
+            <span class="award-date" *ngIf="award.received_date">
+              {{ award.received_date | date:'mediumDate' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-row" *ngIf="award.remarks">
+          <div class="detail-text">
+            <span class="detail-label">Remarks</span>
+            <span class="award-remarks">{{ award.remarks }}</span>
+          </div>
+        </div>
+      </div>
+ <!-- Left: Award Image -->
+      <div class="award-image" *ngIf="award.award_image">
+        <img [src]="environment.base_url + award.award_image" alt="Award Image" class="award-photo" />
+        <span class="view-full">
+  <a [href]="environment.base_url + award.award_image" target="_blank">View Full Image</a>
+</span>
+      </div>
+      
+
+    </div>
+
+      <!-- Right: Award Details -->
+      
+     
+      <mat-divider></mat-divider>
+      <br>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+
+
+  </div>
+</div>
