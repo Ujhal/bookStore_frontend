@@ -30,6 +30,6 @@ export class DashboardDataComponent
     });
   }
   viewBook(id: number): void {
-  this.router.navigate(['/customer/viewbook', id]);
+  this.router.navigate(['customer/viewbook', id]);
 }
 }

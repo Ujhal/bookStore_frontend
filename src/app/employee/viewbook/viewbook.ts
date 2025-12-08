@@ -27,7 +27,7 @@ export class Viewbook implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(' i am from shared')
+    console.log(' i am from customers dashboard view book component');
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.loadBookDetails(id);
@@ -57,6 +57,27 @@ export class Viewbook implements OnInit {
       error: (err) => console.error('Error loading addresses', err)
     });
   }
+addToCart(): void {
+  if (!this.book) {
+    alert('No book selected!');
+    return;
+  }
+
+  const payload = {
+    book_id: this.book.id,
+    quantity: this.quantity
+  };
+
+  this.employeeService.addToCart(payload).subscribe({
+    next: (res) => {
+      alert(`${this.book.title} added to cart successfully!`);
+    },
+    error: (err) => {
+      console.error('Error adding to cart', err);
+      alert('Failed to add book to cart.');
+    }
+  });
+}
 
   openAddressSelector() {
     if (this.savedAddresses.length > 0) {

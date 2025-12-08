@@ -96,12 +96,13 @@ getBooks(): Observable<any[]> {
 getBookById(id: number) {
   return this.http.get(`${this.apiUrl}/api/books/${id}/`);
 }
-getOrderById(orderId: number): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}/api/admin/orders/${orderId}/`);
-}
 
-getOrderByStatus(status: string): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}/api/admin/orders-by-status/`, { params: { status } });
+
+getSubOrderByStatus(status: string): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/api/publisher/suborders/status/`, { params: { status } });
+}
+getSubOrderById(orderId: number): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/api/publisher/suborders/${orderId}/`);
 }
 
 

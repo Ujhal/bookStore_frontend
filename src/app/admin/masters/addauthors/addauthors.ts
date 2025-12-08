@@ -76,6 +76,7 @@ export class AddAuthors implements OnInit {
       ...authorData,
       date_of_birth: this.formatDate(authorData.date_of_birth),
       date_of_death: this.formatDate(authorData.date_of_death),
+      is_publisher: false
     };
 
     if (this.isEditMode && this.currentAuthorId) {

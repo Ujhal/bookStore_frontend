@@ -8,7 +8,7 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
       {
-        path: '',  // /customer
+        path: '', 
         loadComponent: () => import('./dashboard-data/dashboard-data.component')
                                .then(m => m.DashboardDataComponent)
       },

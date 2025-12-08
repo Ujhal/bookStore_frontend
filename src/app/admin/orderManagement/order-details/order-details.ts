@@ -16,7 +16,10 @@ export class OrderDetails implements OnInit {
 
   orderId!: number;
   order: any;
+
   statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+
+  forwardedCount = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,49 +33,55 @@ export class OrderDetails implements OnInit {
 
   loadOrder() {
     this.adminService.getOrderById(this.orderId).subscribe({
-      next: (data) => this.order = data,
+      next: (data) => {
+        this.order = data;
+        this.forwardedCount = data.order_items.filter((i: any) => i.forwarded).length;
+      },
       error: (err) => console.error('Error loading order:', err)
     });
   }
 
-updateStatus() {
-  // Prepare payload
-  const payload: any = { status: this.order.status };
+  // ----------------------------------------
+  // FORWARD ORDER
+  // ----------------------------------------
+  forwardOrder() {
 
-  // If shipped, include tracking number
-  if (this.order.status === 'Shipped') {
-    if (!this.order.tracking_number) {
-      Swal.fire('Error', 'Please enter a tracking number before shipping.', 'error');
-      return;
-    }
-    payload.tracking_number = this.order.tracking_number;
-  }
+    Swal.fire({
+      title: 'Forward Order?',
+      text: 'Once forwarded, publishers will handle their items.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Forward'
+    }).then(r => {
+      if (!r.isConfirmed) return;
 
-  // Include remarks if present
-  if (this.order.remarks) {
-    payload.remarks = this.order.remarks;
-  }
-
-  Swal.fire({
-    title: 'Update Order Status?',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonText: 'Update',
-  }).then(result => {
-    if (result.isConfirmed) {
-      this.adminService.updateOrderStatus(this.orderId, payload)
-      .subscribe({
-        next: (res: any) => {
-          // res should include counts of admin items and forwarded items from backend
-          Swal.fire('Updated!', `Order updated. Admin items: ${res.admin_items_count}, Forwarded: ${res.forwarded_items_count}`, 'success');
+      this.adminService.forwardOrderToPublisher(this.orderId).subscribe({
+        next: () => {
+          Swal.fire('Success', 'Order forwarded to publishers.', 'success');
           this.loadOrder();
         },
-        error: (err) => Swal.fire('Error', 'Failed to update status.', 'error')
+        error: () => Swal.fire('Error', 'Failed to forward order.', 'error')
       });
+    });
+  }
 
+  // ----------------------------------------
+  // UPDATE ITEM STATUS (admin only)
+  // ----------------------------------------
+  updateItemStatus(item: any) {
+    const payload: any = { status: item.status };
+
+    if (item.status === 'Shipped' && !item.tracking_number) {
+      Swal.fire('Error', 'Tracking number required', 'error');
+      return;
     }
-  });
-}
 
+    if (item.tracking_number) payload.tracking_number = item.tracking_number;
+
+    this.adminService.updateOrderItemStatus(item.id, payload).subscribe({
+      next: () => Swal.fire('Updated', 'Item updated successfully', 'success'),
+      error: () => Swal.fire('Error', 'Failed to update item', 'error')
+    });
+  }
 
 }

@@ -84,7 +84,7 @@ getAuthorById(id: number) {
   return this.http.get(`${this.apiUrl}/api/authors/${id}/`);
 }
   saveBooks(data: { name: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/books/`, data);
+    return this.http.post(`${this.apiUrl}/api/admin/books/create/`, data);
   }
 
  deleteBook(id: number) {
@@ -111,12 +111,17 @@ getOrderByStatus(status: string): Observable<any> {
 updateOrderStatus(orderId: number, payload: any): Observable<any> {
   return this.http.patch<any>(`${this.apiUrl}/api/admin/order-update/${orderId}/`, payload);
 }
+forwardOrderToPublisher(orderId: number): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/api/admin/orders/${orderId}/forward/`, {});
+}
 
+
+   updateOrderItemStatus(orderItemId: number, payload: any): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/order-items/${orderItemId}/update-status/`, payload);
+  }
 
 getCount(): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}/api/stats/`);
+  return this.http.get<any>(`${this.apiUrl}/api/stats/`); 
 }
-forwardOrderToPublisher(orderId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}${orderId}/forward/`, {});
-  }
+
 }

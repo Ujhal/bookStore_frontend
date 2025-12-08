@@ -4,40 +4,59 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../mat-element';
 import { EmployeeService } from '../employee-service';
 import { Router } from '@angular/router';
+import { Address, AddAddress } from '../../shared/add-address/add-address';
+import { CommonService } from '../../shared/shared_service/common.service'; // for placeOrder
+
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, MaterialModule],
+  imports: [CommonModule, MaterialModule, AddAddress],
   templateUrl: './cart.html',
   styleUrl: './cart.css'
 })
-export class Cart implements OnInit {
-  cartItems: any[] = [];
+export class Cart implements OnInit {cartItems: any[] = [];
   totalAmount: number = 0;
 
-  constructor(private employeeService: EmployeeService, private router: Router) {}
+  savedAddresses: Address[] = [];
+  selectedAddress?: Address;
+  showAddressSelector: boolean = false;  
+  isAddressSelected: boolean = false;  
+
+  constructor(
+    private employeeService: EmployeeService, 
+    private commonService: CommonService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadCart();
+    this.loadAddresses();
+  }
+
+  loadAddresses(): void {
+    this.employeeService.getAddresses().subscribe({
+      next: (res: any) => this.savedAddresses = res.map((a: any) => ({
+        id: String(a.id),
+        line1: a.address_line_1,
+        line2: a.address_line_2,
+        city: a.city,
+        state: a.state,
+        zip: a.pincode,
+        phone_number: a.phone_number
+      })),
+      error: (err) => console.error('Error loading addresses', err)
+    });
   }
 
   loadCart(): void {
-    // If using backend:
     this.employeeService.getCart().subscribe({
       next: (res) => {
         this.cartItems = res.items || [];
         this.calculateTotal();
       },
-      error: (err) => {
-        console.error('Error loading cart:', err);
-      }
+      error: (err) => console.error('Error loading cart:', err)
     });
-
-    // 👉 If still using localStorage for guest users:
-    // const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    // this.cartItems = cart;
-    // this.calculateTotal();
   }
 
   calculateTotal(): void {
@@ -61,16 +80,10 @@ export class Cart implements OnInit {
 
   removeItem(item: any): void {
     if (confirm(`Remove ${item.book?.title || item.title} from cart?`)) {
-      this.employeeService.deleteCartItem(item.book?.id || item.id).subscribe({
+      this.employeeService.removeFromCart(item.book?.id || item.id).subscribe({
         next: () => this.loadCart(),
         error: (err) => console.error('Error removing item:', err)
       });
-
-      // 👉 LocalStorage fallback
-      // let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      // cart = cart.filter((b: any) => b.id !== item.id);
-      // localStorage.setItem('cart', JSON.stringify(cart));
-      // this.loadCart();
     }
   }
 
@@ -82,14 +95,51 @@ export class Cart implements OnInit {
       next: () => this.calculateTotal(),
       error: (err) => console.error('Error updating cart item:', err)
     });
-
-    // 👉 LocalStorage fallback
-    // localStorage.setItem('cart', JSON.stringify(this.cartItems));
-    // this.calculateTotal();
   }
 
-  checkout(): void {
-    alert('Proceeding to checkout!');
-    this.router.navigate(['/checkout']);
+  /*** Checkout & Address Selection ***/
+  openAddressSelector(): void {
+    if (this.savedAddresses.length > 0) {
+      this.showAddressSelector = true;
+    } else {
+      alert('Please add an address to proceed!');
+    }
+  }
+
+  cancelAddressSelection(): void {
+    this.showAddressSelector = false;
+  }
+
+  onAddressSelected(addr: Address): void {
+    this.selectedAddress = addr;
+    this.isAddressSelected = true;
+    this.showAddressSelector = false;
+  }
+
+  placeOrder(): void {
+    if (!this.selectedAddress || this.cartItems.length === 0) {
+      alert('Please select an address and ensure your cart has items.');
+      return;
+    }
+
+    // Prepare payload for backend
+    const payload = {
+      address_id: this.selectedAddress.id,
+      items: this.cartItems.map(item => ({
+        book_id: item.book?.id || item.id,
+        quantity: item.quantity
+      }))
+    };
+
+    this.commonService.placeOrder(payload).subscribe({
+      next: (res) => {
+        alert('Order placed successfully!');
+        this.router.navigate(['/orders']); // redirect to orders page
+      },
+      error: (err) => {
+        console.error('Error placing order:', err);
+        alert('Failed to place order.');
+      }
+    });
   }
 }

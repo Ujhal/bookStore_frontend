@@ -27,10 +27,12 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="actions">
-      <button *ngIf="!showAddressSelector && !isAddressSelected" class="place-order" (click)="openAddressSelector()">Place Your Order</button>
-      <button *ngIf="isAddressSelected" class="place-order" (click)="placeOrder()">Confirm Order</button>
-    </div>
+  <div class="actions">
+  <button class="add-to-cart" (click)="addToCart()">Add to Cart</button>
+
+  <button *ngIf="!showAddressSelector && !isAddressSelected" class="place-order" (click)="openAddressSelector()">Place Your Order</button>
+  <button *ngIf="isAddressSelected" class="place-order" (click)="placeOrder()">Confirm Order</button>
+</div>
 
     <!-- Address selector panel / modal -->
     <app-add-address

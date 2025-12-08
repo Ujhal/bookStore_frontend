@@ -45,17 +45,21 @@ getBookById(id: number) {
   }
 // employee-service.ts
 
-getCart() {
-  return this.http.get<any>(`${this.apiUrl}/api/cart/`);
-}
+ getCart(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/cart/`);
+  }
 
-addToCart(data: any) {
-  return this.http.post(`${this.apiUrl}/api/cart/`, data);
-}
+  addToCart(payload: { book_id: number; quantity: number }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/cart/`, payload);
+  }
 
-deleteCartItem(bookId: number) {
-  return this.http.delete(`${this.apiUrl}/api/cart/${bookId}/`);
-}
+  removeFromCart(book_id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/api/cart/remove/${book_id}/`);
+  }
+
+  clearCart(): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/api/cart/clear/`);
+  }
 
 
 
