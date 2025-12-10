@@ -74,6 +74,11 @@ const routes: Routes = [
         loadComponent: () => import('./orderManagement/pending-orders/pending-orders').then(m => m.PendingOrders),
       },
       {
+        path: 'orders/myOrders',
+        canActivate: [AuthGuard],
+        loadComponent: () => import('./orderManagement/myorders/myorders').then(m => m.Myorders),
+      },
+      {
         path: 'orders/shipped-Orders',
         canActivate: [AuthGuard],
         loadComponent: () => import('./orderManagement/shipped-orders/shipped-orders').then(m => m.ShippedOrders),
