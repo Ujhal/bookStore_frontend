@@ -71,9 +71,9 @@ export class AdminService {
    getPublisher(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/api/auth/publishers/`);
   }
-   getAllOrders(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/api/admin/orders`);
-  }
+  getAllOrders(page: number = 1): Observable<any> {
+  return this.http.get(`${this.apiUrl}/api/admin/orders/?page=${page}`);
+}
   deleteAuthor(id: number) {
   return this.http.delete(`${this.apiUrl}/api/authors/${id}/`);
 }
@@ -103,8 +103,16 @@ getOrderById(orderId: number): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/api/admin/orders/${orderId}/`);
 }
 
-getOrderByStatus(status: string): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}/api/admin/orders-by-status/`, { params: { status } });
+getOrderByStatus(status: string, page: number): Observable<any> {
+  return this.http.get<any>(
+    `${this.apiUrl}/api/admin/orders-by-status/`,
+    {
+      params: {
+        status,
+        page
+      }
+    }
+  );
 }
 
 

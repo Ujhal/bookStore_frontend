@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminService } from '../admin-service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { MaterialModule } from '../../mat-element';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-orders',
@@ -17,11 +17,15 @@ import Swal from 'sweetalert2';
 })
 export class Orders implements OnInit {
   orders: any[] = [];
-  displayedColumns: string[] = ['id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
+  displayedColumns: string[] = ['sl_no','id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
 
   dataSource = new MatTableDataSource<any>(this.orders);
 
-  @ViewChild(MatSort) sort: MatSort | undefined;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  currentPage = 1;
+  totalItems = 0;
 
   constructor(private adminService: AdminService, private router: Router) {}
 
@@ -30,20 +34,23 @@ export class Orders implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.sort) {
-      this.dataSource.sort = this.sort;
-    }
+    this.dataSource.sort = this.sort;
   }
 
   loadOrders(): void {
-    this.adminService.getAllOrders().subscribe({
-      next: (data) => {
-        this.orders = data;
+    this.adminService.getAllOrders(this.currentPage).subscribe({
+      next: (response) => {
+        this.orders = response.results;
         this.dataSource.data = this.orders;
-        this.dataSource._updateChangeSubscription(); // Ensure the table gets updated
+        this.totalItems = response.count;
       },
       error: (err) => console.error('Error loading orders:', err)
     });
+  }
+
+  pageChanged(event: any) {
+    this.currentPage = event.pageIndex + 1; // paginator is 0-indexed
+    this.loadOrders();
   }
 
   onEdit(order: any): void {

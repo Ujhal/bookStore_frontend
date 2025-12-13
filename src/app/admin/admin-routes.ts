@@ -98,7 +98,12 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         loadComponent: () => import('./orderManagement/order-details/order-details').then(m => m.OrderDetails),  // Lazy load the component
       },
-    
+     {
+        path: 'orders/my-orders/:id',
+        canActivate: [AuthGuard],
+        loadComponent: () => import('./orderManagement/my-order-details/my-order-details').then(m => m.MyOrderDetails),
+      },
+   
 
    
     ]

@@ -13,7 +13,10 @@ import Swal from 'sweetalert2';
 })
 export class PendingOrders implements OnInit {
   orders: any[] = [];
-  displayedColumns: string[] = ['id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
+  displayedColumns: string[] = ['sl_no','id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
+
+  currentPage = 1;
+  totalItems = 0;
 
   constructor(private adminService: AdminService, private router: Router) {}
 
@@ -21,13 +24,24 @@ export class PendingOrders implements OnInit {
     this.loadOrders();
   }
 
-  loadOrders(): void {
-    const status = 'Pending'; // Filter only pending orders
-    this.adminService.getOrderByStatus(status).subscribe({
-      next: (data) => (this.orders = data),
-      error: (err) => console.error('Error loading orders:', err)
-    });
-  }
+loadOrders(): void {
+  const status = 'Pending';
+
+  this.adminService.getOrderByStatus(status, this.currentPage).subscribe({
+    next: (res) => {
+      this.orders = res.results;     // ✅ actual data
+      this.totalItems = res.count;   // ✅ paginator length
+    },
+    error: (err) => console.error('Error loading orders:', err)
+  });
+}
+
+
+pageChanged(event: any) {
+  this.currentPage = event.pageIndex + 1; // paginator is 0-based
+  this.loadOrders();
+}
+
 
   onEdit(order: any): void {
     this.router.navigate(['/admin/orders', order.id]);

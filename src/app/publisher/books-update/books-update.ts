@@ -22,7 +22,7 @@ export class BooksUpdate implements OnInit {
   }
 
   loadBooks(): void {
-    this.adminService.getBooks().subscribe({
+    this.adminService.getMyBooks().subscribe({
       next: (data) => (this.books = data),
       error: (err) => console.error('Error loading books:', err)
     });

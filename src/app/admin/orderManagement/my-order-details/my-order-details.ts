@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PublisherService } from '../../publisher.service';
+import { PublisherService } from '../../../publisher/publisher.service';
 import { MaterialModule} from '../../../mat-element';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-order-details',
+  selector: 'app-my-order-details',
   imports: [MaterialModule, CommonModule,FormsModule],
-  templateUrl: './order-details.html',
-  styleUrl: './order-details.css'
+  templateUrl: './my-order-details.html',
+  styleUrl: './my-order-details.css'
 })
-export class OrderDetails implements OnInit {
+export class MyOrderDetails implements OnInit {
 
   subOrderId!: number;
   subOrder: any;
@@ -49,3 +49,4 @@ export class OrderDetails implements OnInit {
   }
 
 }
+

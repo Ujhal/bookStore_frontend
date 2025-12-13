@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class PendingOrders implements OnInit {
   orders: any[] = [];
-  displayedColumns: string[] = ['id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
+  displayedColumns: string[] = ['sl_no','id', 'transaction_id', 'status', 'order_date', 'actions'];
 
   constructor(private publisherService: PublisherService, private router: Router) {}
 

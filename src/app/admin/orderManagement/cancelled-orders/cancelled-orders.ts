@@ -12,8 +12,9 @@ import Swal from 'sweetalert2';
 })
 export class CancelledOrders  implements OnInit {
   orders: any[] = [];
-  displayedColumns: string[] = ['id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
-
+  displayedColumns: string[] = ['sl_no','id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
+ currentPage = 1;
+  totalItems = 0;
   constructor(private adminService: AdminService, private router: Router) {}
 
   ngOnInit(): void {
@@ -21,12 +22,21 @@ export class CancelledOrders  implements OnInit {
   }
 
   loadOrders(): void {
-    const status = 'Cancelled'; // Filter only pending orders
-    this.adminService.getOrderByStatus(status).subscribe({
-      next: (data) => (this.orders = data),
-      error: (err) => console.error('Error loading orders:', err)
-    });
-  }
+  const status = 'Cancelled';
+
+  this.adminService.getOrderByStatus(status, this.currentPage).subscribe({
+    next: (res) => {
+      this.orders = res.results;     // ✅ actual data
+      this.totalItems = res.count;   // ✅ paginator length
+    },
+    error: (err) => console.error('Error loading orders:', err)
+  });
+}
+pageChanged(event: any) {
+  this.currentPage = event.pageIndex + 1; // paginator is 0-based
+  this.loadOrders();
+}
+
 
   onEdit(order: any): void {
     this.router.navigate(['/admin/orders', order.id]);

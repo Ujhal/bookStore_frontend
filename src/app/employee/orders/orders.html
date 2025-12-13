@@ -13,31 +13,55 @@
       <h2>My Orders</h2>
     </div>
 
+    <!-- Orders List -->
     <div class="orders-list" *ngIf="orders.length > 0">
-      <div class="order-card" *ngFor="let order of orders" (click)="viewOrderDetails(order)">
-        <p><strong>Order #:</strong> {{ order.id }}</p>
-        <p><strong>Status:</strong> {{ order.status }}</p>
-        <p><strong>Total:</strong> {{ order.total_amount }} {{ order.currency }}</p>
-        <p><strong>Date:</strong> {{ order.order_date | date:'medium' }}</p>
+      <div class="order-card" *ngFor="let order of orders">
+        <div class="order-main" (click)="viewOrderDetails(order)">
+          <p><strong>Order #:</strong> {{ order.id }}</p>
+          <p><strong>Status:</strong> {{ order.status }}</p>
+          <p><strong>Total:</strong> {{ order.total_amount }} {{ order.currency || 'USD' }}</p>
+          <p><strong>Date:</strong> {{ order.order_date | date:'medium' }}</p>
+        </div>
+
+        <!-- Sub-orders inside main order -->
+        <div class="sub-orders" *ngIf="order.sub_orders?.length > 0">
+          <h4>Sub-orders:</h4>
+          <div class="sub-order-card" *ngFor="let sub of order.sub_orders">
+            <p><strong>Publisher:</strong> {{ sub.publisher.username }}</p>
+            <p><strong>Status:</strong> {{ sub.status }}</p>
+            <div class="sub-order-items">
+              <p *ngFor="let item of sub.items">
+                {{ item.book__title }} x {{ item.quantity }} = {{ item.total_price }}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- No orders -->
     <div class="no-orders" *ngIf="orders.length === 0">
       <p>You have no orders yet.</p>
     </div>
 
-    <!-- Order Details Modal/Section -->
+    <!-- Selected Order Details Modal/Section -->
     <div class="order-details" *ngIf="selectedOrder">
       <button mat-button color="warn" (click)="closeOrderDetails()">Back</button>
       <h3>Order #{{ selectedOrder.id }}</h3>
       <p><strong>Status:</strong> {{ selectedOrder.status }}</p>
-      <p><strong>Total Amount:</strong> {{ selectedOrder.total_amount }} {{ selectedOrder.currency }}</p>
+      <p><strong>Total Amount:</strong> {{ selectedOrder.total_amount }} {{ selectedOrder.currency || 'USD' }}</p>
       <p><strong>Transaction ID:</strong> {{ selectedOrder.transaction_id }}</p>
       <p><strong>Order Date:</strong> {{ selectedOrder.order_date | date:'medium' }}</p>
 
-      <h4>Items:</h4>
-      <div *ngFor="let item of selectedOrder.order_items">
-        <p>{{ item.book_title }} x {{ item.quantity }} = {{ item.total_price }}</p>
+      <h4>Sub-orders:</h4>
+      <div *ngFor="let sub of selectedOrder.sub_orders" class="sub-order-card">
+        <p><strong>Publisher:</strong> {{ sub.publisher.username }}</p>
+        <p><strong>Status:</strong> {{ sub.status }}</p>
+        <div class="sub-order-items">
+          <p *ngFor="let item of sub.items">
+            {{ item.book__title }} x {{ item.quantity }} = {{ item.total_price }}
+          </p>
+        </div>
       </div>
     </div>
   </div>

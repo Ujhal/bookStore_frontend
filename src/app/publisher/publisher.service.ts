@@ -90,8 +90,11 @@ getAuthorById(id: number) {
 updateBook(id: number, data: any) {
   return this.http.put(`${this.apiUrl}/api/publisher/books/${id}/update/`, data);
 }
-getBooks(): Observable<any[]> {
+getMyBooks(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/api/publisher/books/`);
+  }
+getAllBooks(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/api/books/`);
   }
 getBookById(id: number) {
   return this.http.get(`${this.apiUrl}/api/books/${id}/`);
@@ -106,10 +109,9 @@ getSubOrderById(orderId: number): Observable<any> {
 }
 
 
-updateOrderStatus(orderId: number, payload: any): Observable<any> {
-  return this.http.patch<any>(`${this.apiUrl}/api/admin/order-update/${orderId}/`, payload);
-}
-
+updateSubOrder(subOrderId: number, payload: any): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/api/publisher/suborder/${subOrderId}/update/`, payload);
+  }
 
 getCount(): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/api/stats/`);

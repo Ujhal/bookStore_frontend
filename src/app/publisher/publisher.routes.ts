@@ -23,9 +23,14 @@ const routes: Routes = [
         loadComponent: () => import('./add-books/add-books').then(m => m.AddBooks),
       },
        {
-        path: 'all-books',
+        path: 'my-books',
         canActivate: [AuthGuard],
         loadComponent: () => import('./books-update/books-update').then(m => m.BooksUpdate),
+      },
+      {
+        path: 'all-books',
+        canActivate: [AuthGuard],
+        loadComponent: () => import('./all-books/all-books').then(m => m.AllBooks),
       },
        {
         path: 'all-authors',
@@ -42,7 +47,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         loadComponent: () => import('./order-management/order-details/order-details').then(m => m.OrderDetails),
       },
-   
+      
     ]
   }
 ];

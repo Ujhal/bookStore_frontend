@@ -16,6 +16,7 @@ export class Dashboard implements OnInit {
 
   // Menu items for Book Management
   bookMenu = [
+    { label: 'My Books', icon: 'book', link: '/publisher/my-books' },
     { label: 'All Books', icon: 'book', link: '/publisher/all-books' },
     { label: 'Add New Book', icon: 'add_circle', link: '/publisher/add-books' },
     

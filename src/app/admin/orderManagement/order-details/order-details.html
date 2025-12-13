@@ -1,126 +1,82 @@
 <div *ngIf="order" class="order-details-container">
 
-  <h2 class="page-title">
-    Order #{{ order.id }}
-  </h2>
+  <!-- HEADER -->
+  <div class="header">
+    <h2>Order #{{ order.id }}</h2>
+    <p>Placed on {{ order.order_date | date:'medium' }}</p>
+  </div>
 
-  <!-- ORDER SUMMARY -->
-  <section class="box">
-    <h3>Order Summary</h3>
+  <!-- ORDER & CUSTOMER -->
+  <div class="grid-2">
 
-    <div class="row">
-      <p><strong>Transaction ID:</strong> {{ order.transaction_id || '—' }}</p>
-      <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
-      <p><strong>Order Date:</strong> {{ order.order_date | date:'medium' }}</p>
-      <p><strong>Remarks:</strong> {{ order.remarks || '—' }}</p>
-      <p><strong>Forwarded:</strong> {{ forwardedCount }} items forwarded</p>
+    <!-- Order Summary -->
+    <section class="card">
+      <h3>Order Summary</h3>
+      <div class="info-row"><span>Transaction ID:</span><strong>{{ order.transaction_id }}</strong></div>
+      <div class="info-row"><span>Status:</span><span class="status">{{ order.status }}</span></div>
+      <div class="info-row"><span>Total Amount:</span><strong>₹{{ order.total_amount }}</strong></div>
+      <div class="info-row"><span>Created:</span>{{ order.created_at | date:'medium' }}</div>
+      <div class="info-row"><span>Updated:</span>{{ order.updated_at | date:'medium' }}</div>
+      <div class="info-row"><span>Remarks:</span><strong>{{ order.remarks || '—' }}</strong></div>
+    </section>
 
-      <!-- FORWARD BUTTON -->
-      <button 
-        mat-raised-button 
-        color="warn"
-        (click)="forwardOrder()"
-        [disabled]="forwardedCount > 0">
-        Forward to Publishers
-      </button>
-    </div>
-  </section>
+    <!-- Customer Info -->
+    <section class="card">
+      <h3>Customer Details</h3>
+      <div class="info-row"><span>Username:</span><strong>{{ order.user.username }}</strong></div>
+      <div class="info-row"><span>Email:</span><strong>{{ order.user.email }}</strong></div>
+      <div class="info-row"><span>Phone:</span><strong>{{ order.user.phone_number || '—' }}</strong></div>
+      <div class="info-row"><span>Role:</span><strong>{{ order.user.role }}</strong></div>
+    </section>
 
+  </div>
 
-  <!-- CUSTOMER INFO -->
-  <section class="box">
-    <h3>Customer Info</h3>
-
-    <div class="row">
-      <p><strong>Username:</strong> {{ order.user.username }}</p>
-      <p><strong>Email:</strong> {{ order.user.email }}</p>
-      <p><strong>Phone:</strong> {{ order.user.phone_number || 'N/A' }}</p>
-    </div>
-  </section>
-
-  <!-- SHIPPING ADDRESS -->
-  <section class="box" *ngIf="order.shipping_address">
+  <!-- Shipping Address -->
+  <section class="card">
     <h3>Shipping Address</h3>
-
-    <div class="address">
+    <div class="address-box">
       <p>{{ order.shipping_address.address_line_1 }}</p>
-      <p *ngIf="order.shipping_address.address_line_2">
-        {{ order.shipping_address.address_line_2 }}
-      </p>
-      <p><strong>Landmark:</strong> {{ order.shipping_address.landmark }}</p>
+      <p>{{ order.shipping_address.address_line_2 || '' }}</p>
+      <p>{{ order.shipping_address.landmark }}</p>
       <p>{{ order.shipping_address.city }}, {{ order.shipping_address.state }}</p>
       <p><strong>Pincode:</strong> {{ order.shipping_address.pincode }}</p>
       <p><strong>Phone:</strong> {{ order.shipping_address.phone_number }}</p>
     </div>
   </section>
 
+  <!-- SUB ORDERS -->
+  <section class="card">
+    <h3>Sub-Orders ({{ order.sub_orders.length }})</h3>
 
+    <div *ngFor="let sub of order.sub_orders" class="sub-card">
+      <div class="sub-header">
+        <h4>{{ sub.publisher.username }} ({{ sub.publisher.email }})</h4>
+        <span class="status">{{ sub.status }}</span>
+      </div>
 
-  <!-- ORDER ITEMS LIST -->
-  <section class="box">
-    <h3>Order Items</h3>
+      <div class="info-row"><span>Tracking No:</span><strong>{{ sub.tracking_number || '—' }}</strong></div>
+      <div class="info-row"><span>Remarks:</span><strong>{{ sub.remarks || '—' }}</strong></div>
+      <div class="info-row"><span>Created:</span>{{ sub.created_at | date:'medium' }}</div>
 
-    <table class="items-table" *ngIf="order.order_items.length > 0; else noItems">
-      <thead>
-        <tr>
-          <th>Book</th>
-          <th>Qty</th>
-          <th>Total</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Tracking</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+      <h5>Items ({{ sub.items.length }})</h5>
+      <table class="items-table sub-items">
+        <thead>
+          <tr>
+            <th>Book</th>
+            <th>Qty</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of sub.items">
+            <td>{{ item.book__title }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.total_price }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-      <tbody>
-        <tr *ngFor="let item of order.order_items">
-
-          <td>{{ item.book.title }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>₹{{ item.total_price }}</td>
-
-          <!-- ADMIN / PUBLISHER TYPE -->
-          <td>
-            <span *ngIf="item.is_admin_book; else publisherItem">Admin</span>
-            <ng-template #publisherItem>Publisher</ng-template>
-          </td>
-
-          <!-- STATUS FIELD (Only editable for Admin items) -->
-          <td>
-            <mat-form-field appearance="fill" class="table-status-field">
-              <mat-select [(ngModel)]="item.status" [disabled]="!item.is_admin_book">
-                <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-
-          <!-- TRACKING NUMBER -->
-          <td>
-            <mat-form-field *ngIf="item.status === 'Shipped' && item.is_admin_book" appearance="fill">
-              <input matInput [(ngModel)]="item.tracking_number" placeholder="Tracking No.">
-            </mat-form-field>
-            <span *ngIf="!item.is_admin_book">—</span>
-          </td>
-
-          <!-- ACTIONS -->
-          <td>
-            <button 
-              mat-button 
-              color="primary" 
-              (click)="updateItemStatus(item)"
-              [disabled]="!item.is_admin_book">
-              Update
-            </button>
-          </td>
-
-        </tr>
-      </tbody>
-    </table>
-
-    <ng-template #noItems>
-      <p>No items in this order.</p>
-    </ng-template>
   </section>
 
 </div>

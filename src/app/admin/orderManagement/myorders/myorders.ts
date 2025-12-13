@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class Myorders implements OnInit {
   orders: any[] = [];
-  displayedColumns: string[] = ['id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
+  displayedColumns: string[] = ['sl_no','id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
 
   constructor(private adminService: AdminService, private router: Router) {}
 
@@ -30,6 +30,6 @@ export class Myorders implements OnInit {
   }
 
   onEdit(order: any): void {
-    this.router.navigate(['/admin/orders', order.id]);
+    this.router.navigate(['/admin/orders/my-orders/', order.id]);
   }
 }
