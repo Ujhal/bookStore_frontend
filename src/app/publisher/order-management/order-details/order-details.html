@@ -32,41 +32,49 @@
 
   <!-- SHIPPING ADDRESS -->
   <section class="card">
-    <h3>Shipping Address</h3>
+  <h3>Shipping Address</h3>
 
-    <div class="info-row">
-      <span>Address:</span>
-      <strong>
-        {{ subOrder.shipping_address.address_line_1 }},
-        {{ subOrder.shipping_address.address_line_2 }}
-      </strong>
-    </div>
+  <div class="info-row">
+    <span>Address:</span>
+    <strong>
+      {{ subOrder.shipping_address.address_line_1 }},
+      {{ subOrder.shipping_address.address_line_2 }}
+    </strong>
+  </div>
 
-    <div class="info-row">
-      <span>Landmark:</span>
-      <strong>{{ subOrder.shipping_address.landmark }}</strong>
-    </div>
+  <div class="info-row">
+    <span>Landmark:</span>
+    <strong>{{ subOrder.shipping_address.landmark }}</strong>
+  </div>
 
-    <div class="info-row">
-      <span>City:</span>
-      <strong>{{ subOrder.shipping_address.city }}</strong>
-    </div>
+  <div class="info-row">
+    <span>City:</span>
+    <strong>{{ subOrder.shipping_address.city }}</strong>
+  </div>
 
-    <div class="info-row">
-      <span>State:</span>
-      <strong>{{ subOrder.shipping_address.state }}</strong>
-    </div>
+  <div class="info-row">
+    <span>State:</span>
+    <strong>{{ subOrder.shipping_address.state }}</strong>
+  </div>
 
-    <div class="info-row">
-      <span>Pincode:</span>
-      <strong>{{ subOrder.shipping_address.pincode }}</strong>
-    </div>
+  <div class="info-row">
+    <span>Pincode:</span>
+    <strong>{{ subOrder.shipping_address.pincode }}</strong>
+  </div>
 
-    <div class="info-row">
-      <span>Phone:</span>
-      <strong>{{ subOrder.shipping_address.phone_number }}</strong>
-    </div>
-  </section>
+  <div class="info-row">
+    <span>Phone:</span>
+    <strong>{{ subOrder.shipping_address.phone_number }}</strong>
+  </div>
+
+  <!-- ✅ Print button -->
+  <div class="info-row">
+    <button mat-raised-button color="accent" (click)="printShippingAddress()">
+      Print Shipping Address
+    </button>
+  </div>
+</section>
+
 
   <!-- SUB-ORDER STATUS -->
   <section class="card">

@@ -27,22 +27,33 @@
 
     <div class="user-actions">
       <!-- Conditionally show My Account icon and Add to Cart -->
-      <div *ngIf="isLoggedIn" class="user-action-item" (mouseenter)="showModal = true" (mouseleave)="showModal = false">
-        <mat-icon>account_circle</mat-icon>
-        <span>My Account</span>
+       <div *ngIf="isLoggedIn && isCustomer"
+          class="user-action-item"
+          (mouseenter)="showModal = true"
+          (mouseleave)="showModal = false"
+        >
+          <mat-icon>account_circle</mat-icon>
+          <span>My Account</span>
 
-        <!-- Modal content (visible on hover) -->
-        <div class="account-modal" *ngIf="showModal">
-          <div class="modal-content">
-            <h3>Hello, {{ UserName }}</h3>
-            <ul>
-              <li (click)="goToOrders()">Orders</li>
-              <li (click)="goToAddresses()">Address</li>
-              <li (click)="goToAccount()">Account</li>
-            </ul>
+          <div class="account-modal" *ngIf="showModal">
+            <div class="modal-content">
+              <ul>
+                <li (click)="goToOrders()">Orders</li>
+                <li (click)="goToAddresses()">Address</li>
+                <li (click)="goToAccount()">Account</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      
+       <div *ngIf="isLoggedIn && (isAdmin || isPublisher)"
+          class="user-action-item"
+          (click)="goToAccount()"
+        >
+          <mat-icon>account_circle</mat-icon>
+          <span>My Account</span>
+        </div>
+
 
       <div *ngIf="isLoggedIn && showCartAndBooks" class="user-action-item" (click)="goToCart()">
         <mat-icon>shopping_cart</mat-icon>

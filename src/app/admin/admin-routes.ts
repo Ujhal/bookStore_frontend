@@ -103,6 +103,10 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         loadComponent: () => import('./orderManagement/my-order-details/my-order-details').then(m => m.MyOrderDetails),
       },
+       {
+        path: 'myaccount', 
+        loadComponent: () => import('../shared/my-account/my-account').then(m => m.MyAccount)
+      },
    
 
    

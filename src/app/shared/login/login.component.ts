@@ -60,36 +60,27 @@ export class LoginComponent {
         password: formData.password
       };
 
-      this.authService.login(loginData).subscribe(
-        (response) => {
-          console.log(response.user.role)
-          const userRole = response.user.role;
-          if (userRole) {
-            // Save the isLoggedIn status to localStorage
-            localStorage.setItem('isLoggedIn', 'true');
-            
-            switch (userRole) {
-              case 1:
-                this.router.navigate(['/admin']);
-                break;
-              case 2:
-                this.router.navigate(['/customer']);
-                break;
-              case 3:
-                this.router.navigate(['/publisher']);
-                break;  
-              default:
-                this.router.navigate(['/']);
-                break;
-            }
-          }
-        },
-        (error) => {
-          console.error('Login error:', error);
-          this.toaster.error('Invalid Credentials');
-          this.form.reset();  // Reset the form if there's an error
-        }
-      );
+      this.authService.login(loginData).subscribe((response: any) => {
+  // Store the token for API calls
+  localStorage.setItem('token', response.access_token);
+  
+  // Store the whole user object
+  localStorage.setItem('user', JSON.stringify(response.user));
+
+  // Navigate based on role
+  switch (response.user.role) {
+    case 1:
+      this.router.navigate(['/admin']);
+      break;
+    case 2:
+      this.router.navigate(['/customer']);
+      break;
+    case 3:
+      this.router.navigate(['/publisher']);
+      break;
+  }
+});
+
     } else {
       console.log('Form is invalid');
     }

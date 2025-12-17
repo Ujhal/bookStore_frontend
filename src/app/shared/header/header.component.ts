@@ -20,6 +20,9 @@ export class HeaderComponent implements OnInit {
   showModal: boolean = false;
   userRole: number = 0; // Store user role
   showCartAndBooks: boolean = false; // Flag to show Cart and Books links
+  isCustomer = false;
+  isPublisher = false;
+  isAdmin = false;
 
   constructor(
     private authService: CommonService,
@@ -29,21 +32,29 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  // Check if the user is logged in from localStorage
-  const loggedInStatus = localStorage.getItem('isLoggedIn');
-  this.isLoggedIn = loggedInStatus === 'true'; // true if logged in, false otherwise
+  // Subscribe to header login updates
+  this.authService.headerLogin$.subscribe((status: boolean) => {
+    this.isLoggedIn = status;
 
-  if (this.isLoggedIn) {
-    // Retrieve the username and role from localStorage if logged in
-    this.UserName = localStorage.getItem('username') || 'User'; // Default to 'User' if no name found
-    this.userRole = Number(localStorage.getItem('role')) || 0; // Default to 0 if no role found
+    if (status) {
+      this.UserName = localStorage.getItem('userName') || 'User';
+      const role = Number(localStorage.getItem('role')) || 0;
 
-    // Show Cart and Books only if the role is 2
-    this.showCartAndBooks = this.userRole === 2;
-  }
+      this.isCustomer = role === 2;
+      this.isPublisher = role === 3;
+      this.isAdmin = role === 1;
 
-  // Manually trigger change detection
-  this.cdRef.detectChanges();  // This ensures that Angular updates the view after `localStorage` values are set.
+      this.showCartAndBooks = this.isCustomer;
+    } else {
+      this.UserName = '';
+      this.isCustomer = false;
+      this.isPublisher = false;
+      this.isAdmin = false;
+      this.showCartAndBooks = false;
+    }
+
+    this.cdRef.detectChanges();
+  });
 }
 
 
@@ -74,10 +85,18 @@ export class HeaderComponent implements OnInit {
     this.showModal = false; // close modal after navigation
   }
 
-  goToAccount() {
+ goToAccount() {
+  if (this.isCustomer) {
     this.router.navigate(['/customer/my/account']);
-    this.showModal = false; // close modal after navigation
+  } else if (this.isPublisher) {
+    this.router.navigate(['/publisher/myaccount']);
+  } else if (this.isAdmin) {
+    this.router.navigate(['/admin/myaccount']);
   }
+
+  this.showModal = false;
+}
+
 
   goToCart() {
     this.router.navigate(['/customer/my/cart']);

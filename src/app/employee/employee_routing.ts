@@ -22,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'my/account',  // /customer/my/orders
-        loadComponent: () => import('./myaccount/myaccount').then(m => m.Myaccount)
+        loadComponent: () => import('../shared/my-account/my-account').then(m => m.MyAccount)
       },
       {
         path: 'my/cart',  // /customer/my/orders

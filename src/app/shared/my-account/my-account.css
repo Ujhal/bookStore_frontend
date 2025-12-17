@@ -1,0 +1,43 @@
+.account-container {
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+.account-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.role-section {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.admin {
+  background: #e3f2fd;
+}
+
+.customer {
+  background: #e8f5e9;
+}
+
+.publisher {
+  background: #fff3e0;
+}
+
+.delete-btn {
+  margin-top: 25px;
+  width: 100%;
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.verified {
+  color: green;
+  font-weight: bold;
+}

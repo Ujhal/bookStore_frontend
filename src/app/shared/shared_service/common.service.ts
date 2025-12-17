@@ -24,6 +24,9 @@ export class CommonService {
   private FirstName = 'first_name';
   private LastName = 'last_name';
 
+  
+  private headerLoginSubject = new BehaviorSubject<boolean>(this.hasToken());
+  public headerLogin$ = this.headerLoginSubject.asObservable();
 
 
   public loggedIn = new BehaviorSubject<boolean>(this.hasToken());
@@ -34,7 +37,9 @@ export class CommonService {
 
 
   
-
+public updateHeaderLogin(status: boolean) {
+  this.headerLoginSubject.next(status);
+}
 
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -80,6 +85,7 @@ checkoutAndRegister(data: any) {
           this.setTokens(response.access_token, response.refresh_token, response.user.username, response.user.role, response.first_name, response.last_name);
           console.log(this.setTokens)
           this.loggedIn.next(true);
+          this.updateHeaderLogin(true);
         }
         return response;
       })
@@ -126,11 +132,16 @@ getCart() {
 }
 
   logout(): void {
-    this.removeTokens();
-    this.loggedIn.next(false);
-    this.router.navigate(['/']);
-    console.log('Logged out, loggedIn:', this.loggedIn.value);
-  }
+  this.removeTokens();
+  this.loggedIn.next(false);
+
+  // New: Notify header about logout
+  this.updateHeaderLogin(false);
+
+  this.router.navigate(['/']);
+  console.log('Logged out, loggedIn:', this.loggedIn.value);
+}
+
 
   private hasToken(): boolean {
     return !!localStorage.getItem(this.accessTokenKey);
@@ -214,6 +225,12 @@ getCart() {
   }
   
   
-  
+   getMyProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/api/auth/me/`);
+  }
+
+  deleteMyAccount(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/api/auth/users/delete-self/`);
+  }
 
 }

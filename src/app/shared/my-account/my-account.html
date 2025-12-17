@@ -1,0 +1,51 @@
+<div *ngIf="user" class="account-container">
+
+  <h2>My Account</h2>
+
+  <div class="account-card">
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+    <p><strong>Email:</strong> {{ user.email || 'N/A' }}</p>
+    <p><strong>Phone:</strong> {{ user.phone_number || 'N/A' }}</p>
+    <p><strong>Role:</strong> {{ user.role_display }}</p>
+    <p>
+      <strong>Status:</strong>
+      <span [class.verified]="user.is_verified">
+        {{ user.is_verified ? 'Verified' : 'Not Verified' }}
+      </span>
+    </p>
+  </div>
+
+  <!-- ADMIN INFO -->
+  <div *ngIf="isAdmin" class="role-section admin">
+    <h3>Admin Panel</h3>
+    <p>You have administrative privileges.</p>
+    <a routerLink="/admin">Go to Admin Dashboard</a>
+  </div>
+
+  <!-- CUSTOMER INFO -->
+  <div *ngIf="isCustomer" class="role-section customer">
+    <h3>Customer Account</h3>
+    <p>You can manage your orders and addresses.</p>
+    <a routerLink="/customer">Go to Customer Dashboard</a>
+  </div>
+
+  <!-- PUBLISHER INFO -->
+  <div *ngIf="isPublisher" class="role-section publisher">
+    <h3>Publisher Account</h3>
+    <p>You can manage your published content.</p>
+    <a routerLink="/publisher">Go to Publisher Dashboard</a>
+  </div>
+
+  <button 
+    class="delete-btn"
+    (click)="deleteAccount()"
+    [disabled]="loading">
+    {{ loading ? 'Deleting...' : 'Delete Account' }}
+  </button>
+
+</div>
+
+<div *ngIf="!user">
+  Loading profile...
+</div>
