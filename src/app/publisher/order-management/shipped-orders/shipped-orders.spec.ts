@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SharedTableViewComponent } from './shared-table-view.component';
+import { ShippedOrders } from './shipped-orders';
 
-describe('SharedTableViewComponent', () => {
-  let component: SharedTableViewComponent;
-  let fixture: ComponentFixture<SharedTableViewComponent>;
+describe('ShippedOrders', () => {
+  let component: ShippedOrders;
+  let fixture: ComponentFixture<ShippedOrders>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedTableViewComponent]
+      imports: [ShippedOrders]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SharedTableViewComponent);
+    fixture = TestBed.createComponent(ShippedOrders);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -7,7 +7,6 @@
     <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
     <p><strong>Email:</strong> {{ user.email || 'N/A' }}</p>
     <p><strong>Phone:</strong> {{ user.phone_number || 'N/A' }}</p>
-    <p><strong>Role:</strong> {{ user.role_display }}</p>
     <p>
       <strong>Status:</strong>
       <span [class.verified]="user.is_verified">
@@ -37,12 +36,7 @@
     <a routerLink="/publisher">Go to Publisher Dashboard</a>
   </div>
 
-  <button 
-    class="delete-btn"
-    (click)="deleteAccount()"
-    [disabled]="loading">
-    {{ loading ? 'Deleting...' : 'Delete Account' }}
-  </button>
+ 
 
 </div>
 

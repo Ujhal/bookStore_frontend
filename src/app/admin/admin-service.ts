@@ -134,5 +134,7 @@ forwardOrderToPublisher(orderId: number): Observable<any> {
 getCount(): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/api/stats/`); 
 }
-
+getAllSubOrder(page: number = 1): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/api/publisher/suborders/?page=${page}`);
+}
 }

@@ -10,9 +10,13 @@
         {{ i + 1 }}
       </td>
     </ng-container>
-    <ng-container matColumnDef="id">
+      <ng-container matColumnDef="order_id">
       <th mat-header-cell *matHeaderCellDef> Order ID </th>
-      <td mat-cell *matCellDef="let order"> {{ order.id }} </td>
+      <td mat-cell *matCellDef="let order"> {{ order.order_id }} </td>
+    </ng-container>
+    <ng-container matColumnDef="suborder_id">
+      <th mat-header-cell *matHeaderCellDef> Suborder ID </th>
+      <td mat-cell *matCellDef="let order"> {{ order.suborder_id }} </td>
     </ng-container>
 
     <!-- Transaction ID Column -->

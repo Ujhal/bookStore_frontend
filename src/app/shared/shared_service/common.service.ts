@@ -53,6 +53,48 @@ getBookById(id: number) {
 placeOrder(payload: any) {
   return this.http.post(`${this.apiUrl}/api/orders/`, payload);
 }
+
+createPayment(orderId: number): Observable<any> {
+    const payload = { order_id: orderId };
+    return this.http.post(`${this.apiUrl}/api/payments/create/`, payload);
+}
+
+
+  // Verify Razorpay payment signature
+  verifyPayment(data: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/api/payments/verify/`, data);
+  }
+
+  // 2️⃣ Create Payment (WITH TOKEN)
+  createPaymentGuest(orderId: number, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.post(
+      `${this.apiUrl}/api/payments/create/`,
+      { order_id: orderId },
+      { headers }
+    );
+  }
+
+  // 3️⃣ Verify PaymentGuest (WITH TOKEN)
+  verifyPaymentGuest(data: any, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.post(
+      `${this.apiUrl}/api/payments/verify/`,
+      data,
+      { headers }
+    );
+  }
+
 getmyOrders(): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/api/orders/`);
 }
@@ -232,5 +274,7 @@ getCart() {
   deleteMyAccount(): Observable<any> {
     return this.http.delete(`${this.apiUrl}/api/auth/users/delete-self/`);
   }
-
+getStates(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/api/auth/states/`);
+  }
 }

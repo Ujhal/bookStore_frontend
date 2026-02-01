@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { Address, AddAddress } from '../../shared/add-address/add-address';
 import { EmployeeService } from '../../employee/employee-service';
 
+declare var Razorpay: any;
+
 @Component({
   selector: 'app-viewbook',
   imports: [CommonModule, AddAddress],
@@ -17,84 +19,72 @@ export class Viewbook implements OnInit {
 
   savedAddresses: Address[] = [];
   selectedAddress?: Address;
-  showAddressSelector: boolean = false;  // Controls visibility of address selector
-  isAddressSelected: boolean = false;  // Flag to check if an address has been selected
+  showAddressSelector: boolean = false;
+  isAddressSelected: boolean = false;
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private commonService: CommonService,
-    private employeeService: EmployeeService,
+    private employeeService: EmployeeService
   ) {}
 
   ngOnInit(): void {
-    console.log(' i am from customers dashboard view book component');
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) {
-      this.loadBookDetails(id);
-    }
+    if (id) this.loadBookDetails(id);
 
-    this.loadAddresses(); // Always load addresses
+    this.loadAddresses();
   }
 
   loadBookDetails(id: number): void {
     this.commonService.getBookById(id).subscribe({
-      next: (data) => this.book = data,
-      error: (err) => console.error('Error loading book:', err)
+      next: (data) => (this.book = data),
+      error: (err) => console.error(err)
     });
   }
 
   loadAddresses(): void {
     this.employeeService.getAddresses().subscribe({
-      next: (res: any) => this.savedAddresses = res.map((a: any) => ({
-        id: String(a.id),
-        line1: a.address_line_1,
-        line2: a.address_line_2,
-        city: a.city,
-        state: a.state,
-        zip: a.pincode,
-        phone_number: a.phone_number
-      })),
-      error: (err) => console.error('Error loading addresses', err)
+      next: (res: any) =>
+        (this.savedAddresses = res.map((a: any) => ({
+          id: String(a.id),
+          line1: a.address_line_1,
+          line2: a.address_line_2,
+          city: a.city,
+          state: a.state,
+          zip: a.pincode,
+          phone_number: a.phone_number
+        }))),
+      error: (err) => console.error(err)
     });
   }
-addToCart(): void {
-  if (!this.book) {
-    alert('No book selected!');
-    return;
+
+  addToCart(): void {
+    if (!this.book) return alert('No book selected!');
+
+    this.employeeService
+      .addToCart({ book_id: this.book.id, quantity: this.quantity })
+      .subscribe({
+        next: () => alert(`${this.book.title} added to cart successfully!`),
+        error: (err) => {
+          console.error(err);
+          alert('Failed to add book to cart.');
+        }
+      });
   }
 
-  const payload = {
-    book_id: this.book.id,
-    quantity: this.quantity
-  };
-
-  this.employeeService.addToCart(payload).subscribe({
-    next: (res) => {
-      alert(`${this.book.title} added to cart successfully!`);
-    },
-    error: (err) => {
-      console.error('Error adding to cart', err);
-      alert('Failed to add book to cart.');
-    }
-  });
-}
-
   openAddressSelector() {
-    if (this.savedAddresses.length > 0) {
-      this.showAddressSelector = true;  // Show address selector when "Place Your Order" is clicked
-    } else {
-      alert('Please add an address to proceed!');
-    }
+    if (this.savedAddresses.length) this.showAddressSelector = true;
+    else alert('Please add an address to proceed!');
   }
 
   cancelAddressSelection() {
-    this.showAddressSelector = false;  // Close address selector without selecting
+    this.showAddressSelector = false;
   }
 
   onAddressSelected(addr: Address) {
     this.selectedAddress = addr;
-    this.isAddressSelected = true;  // Address has been selected
-    this.showAddressSelector = false;  // Close address selector after selecting address
+    this.isAddressSelected = true;
+    this.showAddressSelector = false;
   }
 
   increaseQty(): void {
@@ -105,21 +95,104 @@ addToCart(): void {
     if (this.quantity > 1) this.quantity--;
   }
 
-  placeOrder(): void {
-    if (!this.book || !this.selectedAddress) {
-      alert('Please select an address before placing the order.');
-      return;
-    }
+  // 🔥 NEW METHOD: Place order AND trigger Razorpay
+ placeOrderAndPay(): void {
+  console.log('[Order] placeOrderAndPay triggered');
 
-    const payload = {
-      book_id: this.book.id,
-      quantity: this.quantity,
-      address_id: this.selectedAddress?.id,  // Use selected address
-    };
-
-    this.commonService.placeOrder(payload).subscribe({
-      next: () => alert('Order placed successfully!'),
-      error: (err) => console.error('Error placing order', err)
+  if (!this.book || !this.selectedAddress) {
+    console.warn('[Order] Missing book or address', {
+      book: this.book,
+      address: this.selectedAddress
     });
+    return alert('Please select an address!');
+  }
+
+  const payload = {
+  address_id: this.selectedAddress.id,
+  items: [
+    {
+      book_id: this.book.id,
+      quantity: this.quantity
+    }
+  ]
+};
+
+
+  console.log('[Order] Payload prepared:', payload);
+
+  // Step 1: Create Order
+  this.commonService.placeOrder(payload).subscribe({
+    next: (res: any) => {
+      console.log('[Order] Order created successfully:', res);
+
+      const orderId = res.order_id;
+      const totalAmount = res.total_amount;
+
+      console.log('[Order] Order ID:', orderId);
+      console.log('[Order] Total Amount:', totalAmount);
+
+      // Step 2: Create Razorpay Order
+      const paymentPayload = { order_id: orderId };
+      this.commonService.createPayment(orderId).subscribe({
+        next: (paymentRes: any) => {
+          console.log('[Payment] Razorpay order created:', paymentRes);
+
+          const options = {
+            key: paymentRes.razorpay_key,
+            amount: paymentRes.amount,
+            currency: paymentRes.currency,
+            name: 'BookStore',
+            description: 'Book Purchase',
+            order_id: paymentRes.razorpay_order_id,
+            prefill: {
+              name: this.book?.author_name ?? 'Customer',
+              email: 'customer@email.com',
+              contact: '9999999999'
+            },
+            notes: { order_id: orderId.toString() },
+            theme: { color: '#3399cc' },
+            handler: (response: any) => {
+              console.log('[Payment] Payment success response:', response);
+
+              // Step 3: Verify Payment
+              this.verifyPayment(response);
+            }
+          };
+
+          console.log('[Payment] Razorpay options:', options);
+
+          const rzp = new Razorpay(options);
+
+          rzp.on('payment.failed', (response: any) => {
+            console.error('[Payment] Payment failed:', response);
+            alert(response.error.description);
+          });
+
+          console.log('[Payment] Opening Razorpay checkout');
+          rzp.open();
+        },
+        error: (err) => {
+          console.error('[Payment] Error creating Razorpay order:', err);
+        }
+      });
+    },
+    error: (err) => {
+      console.error('[Order] Error placing order:', err);
+    }
+  });
+}
+
+
+  verifyPayment(response: any) {
+    this.commonService
+      .verifyPayment({
+        razorpay_order_id: response.razorpay_order_id,
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_signature: response.razorpay_signature
+      })
+      .subscribe({
+        next: () => alert('Payment successful!'),
+        error: () => alert('Payment verification failed!')
+      });
   }
 }

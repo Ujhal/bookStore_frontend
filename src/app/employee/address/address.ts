@@ -4,6 +4,7 @@ import { MaterialModule } from '../../mat-element';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpHeaders } from '@angular/common/http';
 import { EmployeeService } from '../employee-service';
+import { CommonService } from '../../shared/shared_service/common.service';
 
 @Component({
   selector: 'app-address',
@@ -15,30 +16,57 @@ import { EmployeeService } from '../employee-service';
 
 export class Address implements OnInit {
   addresses: any[] = [];
+  states: any[] = [];
   addressForm!: FormGroup;
   showForm = false;
   editMode = false;
   editId: number | null = null;
-  userName = 'Ujhal Giri'; // can come from auth service
+  userName: string = '';
+  stateMap: { [key: number]: string } = {};
 
-  constructor(private fb: FormBuilder, private http: HttpClient,private employeeService: EmployeeService) {}
+
+  constructor(private fb: FormBuilder, private http: HttpClient,private employeeService: EmployeeService,private commonService: CommonService) {}
 
   ngOnInit(): void {
     this.initForm();
     this.loadAddresses();
+    this.loadStates();
+    this.loadusername()
   }
 
   initForm() {
-    this.addressForm = this.fb.group({
-      address_line_1: ['', Validators.required],
-      address_line_2: [''],
-      landmark: [''],
-      pincode: ['', Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      phone_number: ['', Validators.required]
-    });
+  const textPattern = /^[a-zA-Z0-9\s,.-]+$/; // no special characters
+
+  this.addressForm = this.fb.group({
+    address_line_1: ['', [
+      Validators.required,
+      Validators.pattern(textPattern)
+    ]],
+    address_line_2: ['', Validators.pattern(textPattern)],
+    landmark: ['', Validators.pattern(textPattern)],
+    city: ['', Validators.required],
+    state: ['', Validators.required],
+    pincode: ['', [
+      Validators.required,
+      Validators.pattern(/^[0-9]{6}$/)
+    ]],
+    phone_number: ['', [
+      Validators.required,
+      Validators.pattern(/^[0-9]{10}$/)
+    ]]
+  });
+}
+
+loadusername() {
+  const userStr = localStorage.getItem('user');
+
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    this.userName = `${user.first_name} ${user.last_name}`;
   }
+}
+
+
 
    loadAddresses() {
     this.employeeService.getAddresses().subscribe({
@@ -50,6 +78,24 @@ export class Address implements OnInit {
       }
     });
   }
+  
+   loadStates() {
+  this.commonService.getStates().subscribe({
+    next: (res) => {
+      this.states = res;
+
+      // Create ID → Name map
+      this.stateMap = {};
+      res.forEach((s: any) => {
+        this.stateMap[s.id] = s.name;
+      });
+    },
+    error: (err) => {
+      console.error('Error loading states', err);
+    }
+  });
+}
+
 
   openAddForm() {
     this.showForm = true;

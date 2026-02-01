@@ -1,68 +1,92 @@
 <div class="account-container">
+  <!-- Sidebar -->
   <div class="sidebar">
     <h2>Account</h2>
     <ul>
-      <li><a href="#">Overview</a></li>
-      <li><a href="#">Orders & Returns</a></li>
-      <li><a href="#">Saved Address</a></li>
+      <li><a href="/customer/my/account">Overview</a></li>
+      <li><a href="/customer/my/orders">Orders & Returns</a></li>
+      <li><a href="/customer/my/addresses">Saved Address</a></li>
+      <li><a href="/customer/my/cart">My Cart</a></li>
     </ul>
   </div>
 
+  <!-- Content -->
   <div class="content">
     <div class="header">
       <h2>My Orders</h2>
     </div>
 
-    <!-- Orders List -->
-    <div class="orders-list" *ngIf="orders.length > 0">
-      <div class="order-card" *ngFor="let order of orders">
-        <div class="order-main" (click)="viewOrderDetails(order)">
-          <p><strong>Order #:</strong> {{ order.id }}</p>
-          <p><strong>Status:</strong> {{ order.status }}</p>
-          <p><strong>Total:</strong> {{ order.total_amount }} {{ order.currency || 'USD' }}</p>
-          <p><strong>Date:</strong> {{ order.order_date | date:'medium' }}</p>
-        </div>
+    <!-- Orders Table -->
+    <div class="orders-wrapper">
+      <table mat-table [dataSource]="orders" class="orders-table mat-elevation-z2">
 
-        <!-- Sub-orders inside main order -->
-        <div class="sub-orders" *ngIf="order.sub_orders?.length > 0">
-          <h4>Sub-orders:</h4>
-          <div class="sub-order-card" *ngFor="let sub of order.sub_orders">
-            <p><strong>Publisher:</strong> {{ sub.publisher.username }}</p>
-            <p><strong>Status:</strong> {{ sub.status }}</p>
-            <div class="sub-order-items">
-              <p *ngFor="let item of sub.items">
-                {{ item.book__title }} x {{ item.quantity }} = {{ item.total_price }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+        <!-- Serial Number -->
+        <ng-container matColumnDef="serial">
+          <th mat-header-cell *matHeaderCellDef>Sl. No.</th>
+          <td mat-cell *matCellDef="let order; let i = index">
+            {{ i + 1 }}
+          </td>
+        </ng-container>
+
+        <!-- Order ID -->
+        <ng-container matColumnDef="order_id">
+          <th mat-header-cell *matHeaderCellDef>Order ID</th>
+          <td mat-cell *matCellDef="let order">
+            {{ order.order_id }}
+          </td>
+        </ng-container>
+
+        <!-- Date -->
+        <ng-container matColumnDef="order_date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let order">
+            {{ order.order_date | date:'medium' }}
+          </td>
+        </ng-container>
+
+        <!-- Status -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let order">
+            <span class="status-badge">{{ order.status }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Action -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let order">
+            <button mat-icon-button color="primary"
+              (click)="viewOrderDetails(order)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
     </div>
 
-    <!-- No orders -->
-    <div class="no-orders" *ngIf="orders.length === 0">
-      <p>You have no orders yet.</p>
+    <!-- Pagination -->
+    <div class="pagination-controls">
+      <button mat-raised-button (click)="loadPage(previous)" [disabled]="!previous">
+        Previous
+      </button>
+      <button mat-raised-button (click)="loadPage(next)" [disabled]="!next">
+        Next
+      </button>
     </div>
 
-    <!-- Selected Order Details Modal/Section -->
-    <div class="order-details" *ngIf="selectedOrder">
-      <button mat-button color="warn" (click)="closeOrderDetails()">Back</button>
-      <h3>Order #{{ selectedOrder.id }}</h3>
+    <!-- Order Details -->
+    <div class="order-details-card" *ngIf="selectedOrder">
+      <h3>Order Details</h3>
+      <p><strong>Order ID:</strong> {{ selectedOrder.order_id }}</p>
       <p><strong>Status:</strong> {{ selectedOrder.status }}</p>
-      <p><strong>Total Amount:</strong> {{ selectedOrder.total_amount }} {{ selectedOrder.currency || 'USD' }}</p>
-      <p><strong>Transaction ID:</strong> {{ selectedOrder.transaction_id }}</p>
-      <p><strong>Order Date:</strong> {{ selectedOrder.order_date | date:'medium' }}</p>
+      <p><strong>Transaction ID:</strong> {{ selectedOrder.transaction_id || 'N/A' }}</p>
+      <p><strong>Date:</strong> {{ selectedOrder.order_date | date:'medium' }}</p>
 
-      <h4>Sub-orders:</h4>
-      <div *ngFor="let sub of selectedOrder.sub_orders" class="sub-order-card">
-        <p><strong>Publisher:</strong> {{ sub.publisher.username }}</p>
-        <p><strong>Status:</strong> {{ sub.status }}</p>
-        <div class="sub-order-items">
-          <p *ngFor="let item of sub.items">
-            {{ item.book__title }} x {{ item.quantity }} = {{ item.total_price }}
-          </p>
-        </div>
-      </div>
+      <button mat-button color="warn" (click)="closeOrderDetails()">Close</button>
     </div>
   </div>
 </div>

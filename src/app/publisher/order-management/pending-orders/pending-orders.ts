@@ -11,8 +11,16 @@ import { CommonModule } from '@angular/common';
 })
 export class PendingOrders implements OnInit {
   orders: any[] = [];
-  displayedColumns: string[] = ['sl_no','id', 'transaction_id', 'status', 'order_date', 'actions'];
-
+displayedColumns: string[] = [
+  'sl_no',
+  'order_id',
+  'suborder_id',
+  'transaction_id',
+  'total_amount',
+  'status',
+  'order_date',
+  'actions'
+];
   constructor(private publisherService: PublisherService, private router: Router) {}
 
   ngOnInit(): void {
@@ -20,7 +28,7 @@ export class PendingOrders implements OnInit {
   }
 
   loadOrders(): void {
-    const status = 'Pending'; // Filter only pending orders
+    const status = 'Confirmed'; // Filter only confirmed orders
     this.publisherService.getSubOrderByStatus(status).subscribe({
       next: (data) => (this.orders = data),
       error: (err) => console.error('Error loading orders:', err)

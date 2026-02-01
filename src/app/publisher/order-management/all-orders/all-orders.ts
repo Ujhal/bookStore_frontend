@@ -1,11 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnInit,ViewChild} from '@angular/core';
+import { PublisherService } from '../../publisher.service';
+import { Router } from '@angular/router';
+import { MaterialModule } from '../../../mat-element';
+import { CommonModule } from '@angular/common';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
+import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-all-orders',
-  imports: [],
+  imports: [MaterialModule, CommonModule],
   templateUrl: './all-orders.html',
   styleUrl: './all-orders.css'
 })
-export class AllOrders {
+export class AllOrders implements OnInit {
+  orders: any[] = [];
+  currentPage = 1;
+  totalItems = 0;
+  displayedColumns: string[] = [
+  'sl_no',
+  'order_id',
+  'suborder_id',
+  'transaction_id',
+  'total_amount',
+  'status',
+  'order_date',
+ 
+];
+  dataSource = new MatTableDataSource<any>(this.orders);
+  
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+
+  constructor(private publisherService: PublisherService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.loadOrders();
+  }
+
+  loadOrders(): void {
+    this.publisherService.getAllSubOrder(this.currentPage).subscribe({
+       next: (response) => {
+        this.orders = response.results;
+        this.dataSource.data = this.orders;
+        this.totalItems = response.count;
+      },
+    })
+  }
+ pageChanged(event: any) {
+    this.currentPage = event.pageIndex + 1; // paginator is 0-indexed
+    this.loadOrders();
+  }
+  onEdit(order: any): void {
+    this.router.navigate(['/publisher/orders', order.id]);
+  }
 }
+

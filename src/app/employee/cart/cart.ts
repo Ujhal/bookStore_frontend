@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../mat-element';
@@ -6,6 +5,7 @@ import { EmployeeService } from '../employee-service';
 import { Router } from '@angular/router';
 import { Address, AddAddress } from '../../shared/add-address/add-address';
 import { CommonService } from '../../shared/shared_service/common.service'; // for placeOrder
+declare var Razorpay: any;
 
 
 @Component({
@@ -17,6 +17,8 @@ import { CommonService } from '../../shared/shared_service/common.service'; // f
 })
 export class Cart implements OnInit {cartItems: any[] = [];
   totalAmount: number = 0;
+   book: any;
+   quantity = 1;
 
   savedAddresses: Address[] = [];
   selectedAddress?: Address;
@@ -116,30 +118,77 @@ export class Cart implements OnInit {cartItems: any[] = [];
     this.showAddressSelector = false;
   }
 
-  placeOrder(): void {
-    if (!this.selectedAddress || this.cartItems.length === 0) {
-      alert('Please select an address and ensure your cart has items.');
-      return;
-    }
+ placeOrderAndPay(): void {
+  if (!this.selectedAddress) {
+    return alert('Please select an address!');
+  }
 
-    // Prepare payload for backend
-    const payload = {
-      address_id: this.selectedAddress.id,
-      items: this.cartItems.map(item => ({
-        book_id: item.book?.id || item.id,
-        quantity: item.quantity
-      }))
-    };
+  // Prepare payload for single API
+  const payload = {
+    address_id: this.selectedAddress.id,
+    items: this.cartItems.map(item => ({
+      book_id: item.book?.id || item.id,
+      quantity: item.quantity
+    }))
+  };
 
-    this.commonService.placeOrder(payload).subscribe({
-      next: (res) => {
-        alert('Order placed successfully!');
-        this.router.navigate(['/orders']); // redirect to orders page
-      },
-      error: (err) => {
-        console.error('Error placing order:', err);
-        alert('Failed to place order.');
-      }
-    });
+  console.log('[Order] Payload prepared for cart:', payload);
+
+  // Step 1: Create Order
+  this.commonService.placeOrder(payload).subscribe({
+    next: (res: any) => {
+      console.log('[Order] Order created successfully:', res);
+
+      const orderId = res.order_id;
+      const totalAmount = res.total_amount;
+
+      // Step 2: Create Razorpay Payment
+      this.commonService.createPayment(orderId).subscribe({
+        next: (paymentRes: any) => {
+          const options = {
+            key: paymentRes.razorpay_key,
+            amount: paymentRes.amount,
+            currency: paymentRes.currency,
+            name: 'ReadGoodBooks',
+            description: 'Cart Purchase',
+            order_id: paymentRes.razorpay_order_id,
+            prefill: {
+              name: 'Customer', // optionally get user name
+              email: 'customer@email.com',
+              contact: '9999999999'
+            },
+            notes: { order_id: orderId.toString() },
+            theme: { color: '#3399cc' },
+            handler: (response: any) => {
+              // Step 3: Verify Payment
+              this.verifyPayment(response);
+            }
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', (response: any) => {
+            alert(response.error.description);
+          });
+
+          rzp.open();
+        },
+        error: (err) => console.error('[Payment] Error creating Razorpay order:', err)
+      });
+    },
+    error: (err) => console.error('[Order] Error placing order:', err)
+  });
+}
+
+ verifyPayment(response: any) {
+    this.commonService
+      .verifyPayment({
+        razorpay_order_id: response.razorpay_order_id,
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_signature: response.razorpay_signature
+      })
+      .subscribe({
+        next: () => alert('Payment successful!'),
+        error: () => alert('Payment verification failed!')
+      });
   }
 }

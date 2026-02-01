@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../../admin-service';
+import { Component, OnInit,ViewChild} from '@angular/core';
+import { AdminService } from '../../admin-service'; 
 import { Router } from '@angular/router';
 import { MaterialModule } from '../../../mat-element';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-pending-orders',
@@ -11,39 +14,47 @@ import Swal from 'sweetalert2';
   templateUrl: './pending-orders.html',
   styleUrls: ['./pending-orders.css']
 })
-export class PendingOrders implements OnInit {
+export class PendingOrders  implements OnInit {
   orders: any[] = [];
-  displayedColumns: string[] = ['sl_no','id', 'transaction_id', 'total_amount', 'status', 'order_date', 'actions'];
-
-  currentPage = 1;
+    currentPage = 1;
   totalItems = 0;
+displayedColumns: string[] = [
+  'sl_no',
+  'order_id',
+  'suborder_id',
+  'transaction_id',
+  'total_amount',
+  'status',
+  'order_date',
+ 
+];
+  dataSource = new MatTableDataSource<any>(this.orders);
+  
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private adminService: AdminService, private router: Router) {}
+
+  constructor(private publisherService: AdminService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadOrders();
   }
 
-loadOrders(): void {
-  const status = 'Pending';
-
-  this.adminService.getOrderByStatus(status, this.currentPage).subscribe({
-    next: (res) => {
-      this.orders = res.results;     // ✅ actual data
-      this.totalItems = res.count;   // ✅ paginator length
-    },
-    error: (err) => console.error('Error loading orders:', err)
-  });
-}
-
-
-pageChanged(event: any) {
-  this.currentPage = event.pageIndex + 1; // paginator is 0-based
-  this.loadOrders();
-}
-
-
+  loadOrders(): void {
+    this.publisherService.getAllSubOrder(this.currentPage).subscribe({
+       next: (response) => {
+        this.orders = response.results;
+        this.dataSource.data = this.orders;
+        this.totalItems = response.count;
+      },
+    })
+  }
+ pageChanged(event: any) {
+    this.currentPage = event.pageIndex + 1; // paginator is 0-indexed
+    this.loadOrders();
+  }
   onEdit(order: any): void {
-    this.router.navigate(['/admin/orders', order.id]);
+    this.router.navigate(['/publisher/orders', order.id]);
   }
 }
+

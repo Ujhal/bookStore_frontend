@@ -35,11 +35,11 @@ export class DashboardComponent implements OnInit {
 
   orderMenu = [
     { label: 'All orders', icon: 'person', link: '/admin/orders/allOrders' },
-    { label: 'My Orders',  icon:'person',link:'/admin/orders/myOrders'},
-    { label: 'Pending Orders', icon: 'add_circle', link: '/admin/orders/pending-Orders' },
+    { label: 'Pending Orders',  icon:'person',link:'/admin/orders/myOrders'},
     { label: 'Shipped Orders', icon: 'add_circle', link: '/admin/orders/shipped-Orders' },
     { label: 'Delivered Orders', icon: 'add_circle', link: '/admin/orders/delivered-Orders' },
     { label: 'Cancelled Orders', icon: 'add_circle', link: '/admin/orders/cancelled-Orders' },
+    { label: 'My Orders', icon: 'add_circle', link: '/admin/orders/All-Orders' },
 
   ];
 

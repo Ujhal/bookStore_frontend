@@ -2,16 +2,21 @@
   <h3 class="heading">Shipped Orders List</h3>
 
   <table mat-table [dataSource]="orders" class="mat-elevation-z8 full-width-table">
-<ng-container matColumnDef="sl_no">
+
+    <!-- ID Column -->
+     <ng-container matColumnDef="sl_no">
       <th mat-header-cell *matHeaderCellDef> Sl. No. </th>
       <td mat-cell *matCellDef="let order; let i = index">
         {{ i + 1 }}
       </td>
     </ng-container>
-    <!-- ID Column -->
-    <ng-container matColumnDef="id">
+      <ng-container matColumnDef="order_id">
       <th mat-header-cell *matHeaderCellDef> Order ID </th>
-      <td mat-cell *matCellDef="let order"> {{ order.id }} </td>
+      <td mat-cell *matCellDef="let order"> {{ order.order_id }} </td>
+    </ng-container>
+    <ng-container matColumnDef="suborder_id">
+      <th mat-header-cell *matHeaderCellDef> Suborder ID </th>
+      <td mat-cell *matCellDef="let order"> {{ order.suborder_id }} </td>
     </ng-container>
 
     <!-- Transaction ID Column -->
@@ -35,7 +40,7 @@
     <!-- Order Date Column -->
     <ng-container matColumnDef="order_date">
       <th mat-header-cell *matHeaderCellDef> Order Date </th>
-      <td mat-cell *matCellDef="let order"> {{ order.order_date | date:'medium'}} </td>
+      <td mat-cell *matCellDef="let order"> {{ order.created_at  | date:'dd/MM/yyyy' }} </td>
     </ng-container>
 
     <!-- Actions Column -->
@@ -51,12 +56,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-   <mat-paginator
-  [length]="totalItems"
-  [pageSize]="10"
-  [pageSizeOptions]="[10]"
-  (page)="pageChanged($event)">
-</mat-paginator>
 </div>
 
 <!-- No Orders Fallback -->

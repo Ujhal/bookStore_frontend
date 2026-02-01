@@ -1,66 +1,133 @@
 <div class="account-container">
   <div class="sidebar">
     <h2>Account</h2>
-    <ul>
-      <li><a href="#">Overview</a></li>
-      <li><a href="#">Orders & Returns</a></li>
-      <li><a href="#">Saved Address</a></li>
-      
+     <ul>
+      <li><a href="/customer/my/account">Overview</a></li>
+      <li><a href="/customer/my/orders">Orders & Returns</a></li>
+      <li><a href="/customer/my/addresses">Saved Address</a></li>
+      <li><a href="/customer/my/cart">My Cart</a></li>
     </ul>
   </div>
 
   <div class="content">
     <div class="header">
       <h2>Saved Addresses</h2>
-      <button mat-raised-button color="primary" (click)="openAddForm()">+ Add New Address</button>
+      <button mat-raised-button color="primary" (click)="openAddForm()">
+        + Add New Address
+      </button>
     </div>
 
-    <!-- Address Form (Add/Edit) -->
+    <!-- Address Form -->
     <div class="form-container" *ngIf="showForm">
       <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+
         <div class="form-grid">
+
+          <!-- Address Line 1 -->
           <mat-form-field class="full-width">
-            <mat-label>Address Line 1</mat-label>
-            <input matInput formControlName="address_line_1" placeholder="Address Line 1" required />
+            <mat-label>Address Line 1 *</mat-label>
+            <input matInput formControlName="address_line_1" />
+            <mat-error *ngIf="addressForm.get('address_line_1')?.hasError('required')">
+              Address is required
+            </mat-error>
+            <mat-error *ngIf="addressForm.get('address_line_1')?.hasError('pattern')">
+              Special characters are not allowed
+            </mat-error>
           </mat-form-field>
 
+          <!-- Address Line 2 -->
           <mat-form-field class="full-width">
             <mat-label>Address Line 2</mat-label>
-            <input matInput formControlName="address_line_2" placeholder="Address Line 2" />
+            <input matInput formControlName="address_line_2" />
+            <mat-error *ngIf="addressForm.get('address_line_2')?.hasError('pattern')">
+              Special characters are not allowed
+            </mat-error>
           </mat-form-field>
 
+          <!-- Landmark -->
           <mat-form-field class="full-width">
             <mat-label>Landmark</mat-label>
-            <input matInput formControlName="landmark" placeholder="Landmark" />
+            <input matInput formControlName="landmark" />
+            <mat-error *ngIf="addressForm.get('landmark')?.hasError('pattern')">
+              Special characters are not allowed
+            </mat-error>
           </mat-form-field>
 
+          <!-- City -->
           <mat-form-field class="full-width">
-            <mat-label>City</mat-label>
-            <input matInput formControlName="city" placeholder="City" required />
+            <mat-label>City *</mat-label>
+            <input matInput formControlName="city" />
+            <mat-error *ngIf="addressForm.get('city')?.hasError('required')">
+              City is required
+            </mat-error>
           </mat-form-field>
 
+          <!-- State Dropdown -->
           <mat-form-field class="full-width">
-            <mat-label>State</mat-label>
-            <input matInput formControlName="state" placeholder="State" required />
+  <mat-label>State *</mat-label>
+  <mat-select formControlName="state">
+    <mat-option *ngFor="let s of states" [value]="s.id">
+      {{ s.name }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="addressForm.get('state')?.hasError('required')">
+    State is required
+  </mat-error>
+</mat-form-field>
+
+
+          <!-- Pincode -->
+          <mat-form-field class="full-width">
+            <mat-label>Pincode *</mat-label>
+            <input
+              matInput
+              formControlName="pincode"
+              maxlength="6"
+              inputmode="numeric"
+            />
+            <mat-error *ngIf="addressForm.get('pincode')?.hasError('required')">
+              Pincode is required
+            </mat-error>
+            <mat-error *ngIf="addressForm.get('pincode')?.hasError('pattern')">
+              Pincode must be exactly 6 digits
+            </mat-error>
           </mat-form-field>
 
+          <!-- Phone Number -->
           <mat-form-field class="full-width">
-            <mat-label>Pincode</mat-label>
-            <input matInput formControlName="pincode" placeholder="Pincode" required />
+            <mat-label>Phone Number *</mat-label>
+            <input
+              matInput
+              formControlName="phone_number"
+              maxlength="10"
+              inputmode="numeric"
+            />
+            <mat-error *ngIf="addressForm.get('phone_number')?.hasError('required')">
+              Phone number is required
+            </mat-error>
+            <mat-error *ngIf="addressForm.get('phone_number')?.hasError('pattern')">
+              Phone number must be exactly 10 digits
+            </mat-error>
           </mat-form-field>
 
-          <mat-form-field class="full-width">
-            <mat-label>Phone Number</mat-label>
-            <input matInput formControlName="phone_number" placeholder="Phone Number" required />
-          </mat-form-field>
         </div>
 
+        <!-- Form Actions -->
         <div class="form-actions">
-          <button mat-raised-button color="accent" type="submit" [disabled]="addressForm.invalid">
+          <button
+            mat-raised-button
+            color="accent"
+            type="submit"
+            [disabled]="addressForm.invalid"
+          >
             {{ editMode ? 'Update' : 'Save' }}
           </button>
-          <button mat-button type="button" (click)="cancelForm()">Cancel</button>
+
+          <button mat-button type="button" (click)="cancelForm()">
+            Cancel
+          </button>
         </div>
+
       </form>
     </div>
 
@@ -74,13 +141,13 @@
         <p>{{ addr.address_line_1 }}, {{ addr.address_line_2 }}</p>
         <p>{{ addr.landmark }}</p>
         <p>{{ addr.city }} - {{ addr.pincode }}</p>
-        <p>{{ addr.state }}</p>
+        <p>{{ stateMap[addr.state] }}</p>
         <p>Mobile: {{ addr.phone_number }}</p>
+
         <div class="actions">
           <button mat-icon-button (click)="editAddress(addr)">
             <mat-icon>edit</mat-icon>
           </button>
-         
         </div>
       </div>
     </div>
@@ -88,5 +155,6 @@
     <div class="no-address" *ngIf="addresses.length === 0 && !showForm">
       <p>No addresses saved yet.</p>
     </div>
+
   </div>
 </div>

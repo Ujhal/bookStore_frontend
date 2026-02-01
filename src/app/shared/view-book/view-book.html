@@ -4,86 +4,79 @@
   </div>
 
   <div class="book-info-container">
-    <div class="book-header">
-      <h1>{{ book?.title }}</h1>
-      <p class="author">by {{ book?.author_name }}</p>
-      <p class="category">Category: {{ book?.category_name }}</p>
-    </div>
+    <h1>{{ book?.title }}</h1>
+    <p class="author">by {{ book?.author_name }}</p>
 
     <div class="price-section">
-      <span class="price">Rs. {{ book?.price }}</span>
-      <span class="currency">{{ book?.currency }}</span>
-      <span class="sale-tag">Sale</span>
+      <strong>₹{{ book?.price }}</strong>
     </div>
 
-    <!-- Quantity Section -->
+    <!-- Quantity -->
     <div class="quantity-section">
-      <label>Quantity</label>
-      <div class="quantity-controls">
-        <button (click)="decreaseQty()">−</button>
-        <span>{{ quantity }}</span>
-        <button (click)="increaseQty()">+</button>
-      </div>
+      <button (click)="decreaseQty()">−</button>
+      <span>{{ quantity }}</span>
+      <button (click)="increaseQty()">+</button>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="actions">
-      <button 
-        class="place-order" 
-        *ngIf="isLoggedIn; else loginPrompt" 
-        (click)="placeOrder()">
-        Place Your Order
-      </button>
+    <p class="delivery-note">
+      ⚠️ ₹100 extra for delivery outside Sikkim (added at checkout)
+    </p>
 
-      <ng-template #loginPrompt>
-        <button class="place-order" (click)="openCheckoutForm()">Buy Now</button>
-      </ng-template>
-    </div>
+    <p class="total-price">
+      Total: ₹{{ book?.price * quantity }}
+    </p>
+
+    <button class="place-order" (click)="openCheckoutForm()">
+      Buy Now
+    </button>
 
     <hr />
 
-    <div class="description">
-      <h3>About the Book</h3>
-      <p>{{ book?.description }}</p>
-    </div>
-
-    <div class="author-info">
-      <h3>About the Author</h3>
-      <p>{{ book?.author_name }} is a renowned author in the field of {{ book?.subcategory_name }}.</p>
-    </div>
+    <h3>About the Book</h3>
+    <p>{{ book?.description }}</p>
   </div>
 </div>
 
-<!-- Checkout Popup -->
+<!-- ===================== -->
+<!-- CHECKOUT + REGISTER -->
+<!-- ===================== -->
+
 <div class="checkout-popup" *ngIf="showCheckoutForm">
   <div class="popup-content">
+    <h2>Register & Checkout</h2>
 
-    <h2>Complete Your Order</h2>
-
-    <form (ngSubmit)="placeOrderWithRegistration()">
+    <form (ngSubmit)="registerAndPay()">
 
       <h3>Personal Details</h3>
-      <input type="text" placeholder="First Name" [(ngModel)]="form.first_name" name="first_name" required />
-      <input type="text" placeholder="Last Name" [(ngModel)]="form.last_name" name="last_name" required />
+      <input required placeholder="First Name" [(ngModel)]="form.first_name" name="first_name" />
+      <input required placeholder="Last Name" [(ngModel)]="form.last_name" name="last_name" />
+      <input placeholder="Email" [(ngModel)]="form.email" name="email" />
+      <input required placeholder="Phone" [(ngModel)]="form.phone_number" name="phone_number" />
+      <input required type="password" placeholder="Password" [(ngModel)]="form.password" name="password" />
 
-      <input type="email" placeholder="Email" [(ngModel)]="form.email" name="email" />
-      <input type="text" placeholder="Phone Number" [(ngModel)]="form.phone_number" name="phone_number" required />
+      <h3>Address</h3>
+      <input required placeholder="Address Line 1" [(ngModel)]="form.address_line_1" name="address_line_1" />
+      <input placeholder="Address Line 2" [(ngModel)]="form.address_line_2" name="address_line_2" />
+      <input placeholder="Landmark" [(ngModel)]="form.landmark" name="landmark" />
+      <input required placeholder="City" [(ngModel)]="form.city" name="city" />
+      <input required placeholder="Pincode" [(ngModel)]="form.pincode" name="pincode" />
 
-      <input type="password" placeholder="Create Password" [(ngModel)]="form.password" name="password" required />
+      <!-- STATE SELECT -->
+      <select required [(ngModel)]="form.state" name="state">
+        <option value="">Select State</option>
+        <option *ngFor="let s of states" [value]="s.id">
+          {{ s.name }}
+        </option>
+      </select>
 
-      <h3>Address Details</h3>
-      <input type="text" placeholder="Address Line 1" [(ngModel)]="form.address_line_1" name="address_line_1" required />
-      <input type="text" placeholder="Address Line 2" [(ngModel)]="form.address_line_2" name="address_line_2" />
-      <input type="text" placeholder="Landmark" [(ngModel)]="form.landmark" name="landmark" />
-      <input type="text" placeholder="Pincode" [(ngModel)]="form.pincode" name="pincode" required />
-      <input type="text" placeholder="City" [(ngModel)]="form.city" name="city" required />
-      <input type="text" placeholder="State" [(ngModel)]="form.state" name="state" required />
+      <button type="submit" class="submit-btn">
+        Register & Pay
+      </button>
 
-      <br />
-      <button type="submit" class="submit-btn">Place Order & Register</button>
-      <button type="button" class="close-btn" (click)="closeCheckoutForm()">Cancel</button>
+      <button type="button" class="close-btn" (click)="closeCheckoutForm()">
+        Cancel
+      </button>
 
     </form>
-
   </div>
 </div>

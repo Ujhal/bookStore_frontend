@@ -1,7 +1,6 @@
 /* Page Layout */
 .book-details-page {
   display: flex;
-  flex-direction: row;
   min-height: 100vh;
   background-color: #ffffff;
   padding: 40px;
@@ -18,15 +17,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* ✅ Removes any scrollbars */
   background-color: #fff;
 }
 
 .book-image-container img {
   width: 100%;
-  height: auto;
   max-height: 90vh;
-  object-fit: contain; /* ✅ Makes sure image scales well */
+  object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
@@ -35,7 +32,7 @@
 .book-info-container {
   flex: 1.2;
   overflow-y: auto;
-  padding-right: 20px;
+  padding-right: 30px;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
 }
@@ -69,11 +66,11 @@
 
 /* Price Section */
 .price-section {
-  margin: 1.5rem 0;
+  margin: 1.2rem 0;
   font-size: 1.6rem;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .price {
@@ -89,24 +86,30 @@
   border-radius: 12px;
 }
 
-/* Quantity Selector */
+/* Quantity Section */
 .quantity-section {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.quantity-section label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
 }
 
 .quantity-controls {
   display: inline-flex;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  overflow: hidden;
+  background: #fafafa;
 }
 
 .quantity-controls button {
-  background: none;
+  background: #fff;
   border: none;
-  font-size: 1.3rem;
-  padding: 8px 16px;
+  font-size: 1.4rem;
+  padding: 8px 18px;
   cursor: pointer;
   color: #333;
 }
@@ -114,46 +117,67 @@
 .quantity-controls span {
   padding: 0 20px;
   font-weight: 600;
+  min-width: 30px;
+  text-align: center;
 }
 
-/* Buttons */
+/* Delivery Info */
+.delivery-note {
+  font-size: 13px;
+  color: #c0392b;
+  background: #fff3f3;
+  padding: 10px 12px;
+  border-left: 4px solid #c0392b;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* Total Price */
+.total-price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #222;
+}
+
+/* Action Buttons */
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
   margin-bottom: 2rem;
 }
 
-.add-cart {
+.add-to-cart {
   border: 2px solid #e6006a;
   background: white;
   color: #e6006a;
   padding: 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 1rem;
   transition: all 0.3s ease;
 }
 
-.add-cart:hover {
+.add-to-cart:hover {
   background: #e6006a;
   color: white;
 }
 
-.buy-now ,.place-order {
+.place-order {
   background: #e6006a;
   color: white;
   border: none;
   padding: 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 1rem;
   transition: background 0.3s ease;
 }
 
-.buy-now:hover {
+.place-order:hover {
   background: #c70057;
 }
 

@@ -27,11 +27,11 @@ export class Dashboard implements OnInit {
     { label: 'Add New Author', icon: 'add_circle', link: '/publisher/masters/add-authors' },
   ];
   orderMenu = [
-    { label: 'All orders', icon: 'person', link: '/publisher/orders/allOrders' },
+    { label: 'All orders', icon: 'person', link: '/publisher/orders/all-orders' },
     { label: 'Pending Orders', icon: 'add_circle', link: '/publisher/orders/pending-Orders' },
     { label: 'Shipped Orders', icon: 'add_circle', link: '/publisher/orders/shipped-Orders' },
     { label: 'Delivered Orders', icon: 'add_circle', link: '/publisher/orders/delivered-Orders' },
-    { label: 'Cancelled Orders', icon: 'add_circle', link: '/publisher/orders/cancelled-Orders' },
+   
 
   ];
 

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SainikFormComponent } from './sainik-form.component';
+import { DeliveredOrders } from './delivered-orders';
 
-describe('SainikFormComponent', () => {
-  let component: SainikFormComponent;
-  let fixture: ComponentFixture<SainikFormComponent>;
+describe('DeliveredOrders', () => {
+  let component: DeliveredOrders;
+  let fixture: ComponentFixture<DeliveredOrders>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SainikFormComponent]
+      imports: [DeliveredOrders]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SainikFormComponent);
+    fixture = TestBed.createComponent(DeliveredOrders);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,4 +1,6 @@
-/* Page Layout */
+/* =======================
+   Page Layout
+======================= */
 .book-details-page {
   display: flex;
   flex-direction: row;
@@ -9,7 +11,9 @@
   overflow: hidden;
 }
 
-/* Left Side - Static Image */
+/* =======================
+   Left Side - Image
+======================= */
 .book-image-container {
   flex: 1;
   position: sticky;
@@ -18,7 +22,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* ✅ Removes any scrollbars */
+  overflow: hidden;
   background-color: #fff;
 }
 
@@ -26,12 +30,14 @@
   width: 100%;
   height: auto;
   max-height: 90vh;
-  object-fit: contain; /* ✅ Makes sure image scales well */
+  object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Right Side - Scrollable Info */
+/* =======================
+   Right Side - Info
+======================= */
 .book-info-container {
   flex: 1.2;
   overflow-y: auto;
@@ -48,8 +54,11 @@
   border-radius: 3px;
 }
 
-/* Typography */
-.book-header h1 {
+/* =======================
+   Typography
+======================= */
+.book-header h1,
+.book-info-container h1 {
   font-size: 2.2rem;
   font-weight: 700;
   color: #111;
@@ -67,7 +76,9 @@
   margin-bottom: 1rem;
 }
 
-/* Price Section */
+/* =======================
+   Price Section
+======================= */
 .price-section {
   margin: 1.5rem 0;
   font-size: 1.6rem;
@@ -89,7 +100,9 @@
   border-radius: 12px;
 }
 
-/* Quantity Selector */
+/* =======================
+   Quantity
+======================= */
 .quantity-section {
   margin-bottom: 1.5rem;
 }
@@ -116,7 +129,24 @@
   font-weight: 600;
 }
 
-/* Buttons */
+/* =======================
+   Notes & Totals
+======================= */
+.delivery-note {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.total-price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* =======================
+   Buttons
+======================= */
 .actions {
   display: flex;
   flex-direction: column;
@@ -124,24 +154,8 @@
   margin-bottom: 2rem;
 }
 
-.add-cart {
-  border: 2px solid #e6006a;
-  background: white;
-  color: #e6006a;
-  padding: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.add-cart:hover {
-  background: #e6006a;
-  color: white;
-}
-
-.buy-now ,.place-order {
+.place-order,
+.buy-now {
   background: #e6006a;
   color: white;
   border: none;
@@ -153,11 +167,14 @@
   transition: background 0.3s ease;
 }
 
+.place-order:hover,
 .buy-now:hover {
   background: #c70057;
 }
 
-/* Description & Author Info */
+/* =======================
+   Description
+======================= */
 .description,
 .author-info {
   margin-bottom: 2rem;
@@ -175,6 +192,9 @@
   line-height: 1.6;
 }
 
+/* =======================
+   Checkout Popup
+======================= */
 .checkout-popup {
   position: fixed;
   top: 0;
@@ -197,29 +217,54 @@
   overflow-y: auto;
 }
 
-.popup-content input {
+/* 👇 Unified input + select styling */
+.popup-content input,
+.popup-content select {
   width: 100%;
   margin: 6px 0;
   padding: 10px;
   border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
 }
 
+.popup-content h3 {
+  margin-top: 15px;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+/* =======================
+   Popup Buttons
+======================= */
 .submit-btn {
   background: #4CAF50;
   color: white;
-  padding: 10px;
+  padding: 12px;
   width: 100%;
   border: none;
-  margin-top: 10px;
+  margin-top: 15px;
   cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.submit-btn:hover {
+  background: #43a047;
 }
 
 .close-btn {
-  background: red;
+  background: #e53935;
   color: white;
-  padding: 10px;
+  padding: 12px;
   width: 100%;
   border: none;
   margin-top: 10px;
   cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.close-btn:hover {
+  background: #c62828;
 }

@@ -4,79 +4,62 @@ import { CommonService } from '../shared_service/common.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 
+declare var Razorpay: any;
+
 @Component({
   selector: 'app-view-book',
   imports: [CommonModule,FormsModule],
   templateUrl: './view-book.html',
   styleUrls: ['./view-book.css']
 })
-export class ViewBook implements OnInit  {
+export class ViewBook implements OnInit {
+
   book: any;
   quantity = 1;
-  isLoggedIn: boolean = false;
-
   showCheckoutForm = false;
+  states: any[] = [];
 
   form = {
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_number: "",
-    password: "",
-    address_line_1: "",
-    address_line_2: "",
-    landmark: "",
-    pincode: "",
-    city: "",
-    state: ""
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: '',
+    password: '',
+    address_line_1: '',
+    address_line_2: '',
+    landmark: '',
+    city: '',
+    pincode: '',
+    state: ''
   };
 
   constructor(
-    private route: ActivatedRoute, 
-    private commonService: CommonService,
+    private route: ActivatedRoute,
+    private commonService: CommonService
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) {
-      this.loadBookDetails(id);
-    }
+    if (id) this.loadBook(id);
 
-    this.isLoggedIn = this.commonService.loggedIn.value;
+    this.loadStates();
   }
 
-  loadBookDetails(id: number): void {
-    this.commonService.getBookById(id).subscribe({
-      next: (data) => this.book = data,
-      error: (err) => console.error('Error loading book:', err)
-    });
+  loadBook(id: number) {
+    this.commonService.getBookById(id).subscribe(res => this.book = res);
   }
 
-  increaseQty(): void {
+  loadStates() {
+    this.commonService.getStates().subscribe(res => this.states = res);
+  }
+
+  increaseQty() {
     this.quantity++;
   }
 
-  decreaseQty(): void {
+  decreaseQty() {
     if (this.quantity > 1) this.quantity--;
   }
-
-  placeOrder(): void {
-    if (!this.book || !this.isLoggedIn) return;
-
-    const payload = {
-      book_id: this.book.id,
-      quantity: this.quantity,
-    };
-
-    this.commonService.placeOrder(payload).subscribe({
-      next: () => alert('Order placed successfully!'),
-      error: (err) => console.error('Error placing order', err)
-    });
-  }
-
-  // --------------------------
-  // NEW METHODS FOR POPUP FORM
-  // --------------------------
 
   openCheckoutForm() {
     this.showCheckoutForm = true;
@@ -86,30 +69,76 @@ export class ViewBook implements OnInit  {
     this.showCheckoutForm = false;
   }
 
-  placeOrderWithRegistration() {
+  // 🔥 MAIN FLOW: REGISTER → ORDER → PAY
+  registerAndPay() {
+
     const payload = {
       ...this.form,
-      book_id: this.book.id,
-      quantity: this.quantity,
+      state: Number(this.form.state),
+      items: [
+        {
+          book_id: this.book.id,
+          quantity: this.quantity
+        }
+      ]
     };
 
+    // STEP 1: REGISTER + CREATE ORDER
     this.commonService.checkoutAndRegister(payload).subscribe({
       next: (res: any) => {
-        alert("Account created & order placed successfully!");
 
-        const token = res.access_token ?? res.token;
-        if (token) {
-          localStorage.setItem("token", token);
-          this.commonService.loggedIn.next(true);
-        }
+        // Save JWT
+      localStorage.setItem('access_token', res.access_token);
+      localStorage.setItem('refresh_token', res.refresh_token);
 
-        this.closeCheckoutForm();
+        const orderId = res.order_id;
+
+        // STEP 2: CREATE RAZORPAY ORDER
+        this.commonService.createPaymentGuest(orderId, res.access_token).subscribe({
+          next: (payRes: any) => {
+            this.openRazorpay(payRes, orderId,res.access_token);
+          },
+          error: () => alert('Payment initiation failed')
+        });
       },
-
       error: (err) => {
-        console.error("Error:", err);
-        alert("Something went wrong!");
+        alert(err?.error?.error || 'Checkout failed');
       }
+    });
+  }
+
+  openRazorpay(paymentRes: any, orderId: number,token: string) {
+
+    const options = {
+      key: paymentRes.razorpay_key,
+      amount: paymentRes.amount,
+      currency: paymentRes.currency,
+      name: 'BookStore',
+      description: 'Book Purchase',
+      order_id: paymentRes.razorpay_order_id,
+      handler: (response: any) => {
+        this.verifyPayment(response, token);
+      },
+      theme: { color: '#3399cc' }
+    };
+
+    const rzp = new Razorpay(options);
+
+    rzp.on('payment.failed', (res: any) => {
+      alert(res.error.description);
+    });
+
+    rzp.open();
+  }
+
+  verifyPayment(response: any,token: string) {
+    this.commonService.verifyPaymentGuest({
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature
+    },token).subscribe({
+      next: () => alert('Payment successful!'),
+      error: () => alert('Payment verification failed')
     });
   }
 }

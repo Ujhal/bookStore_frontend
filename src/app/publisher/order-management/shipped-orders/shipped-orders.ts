@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../../admin-service';
+import { PublisherService } from '../../publisher.service';
 import { Router } from '@angular/router';
 import { MaterialModule } from '../../../mat-element';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
-
 @Component({
-  selector: 'app-myorders',
+  selector: 'app-shipped-orders',
   imports: [MaterialModule, CommonModule],
-  templateUrl: './myorders.html',
-  styleUrl: './myorders.css'
+  templateUrl: './shipped-orders.html',
+  styleUrl: './shipped-orders.css'
 })
-export class Myorders implements OnInit {
+export class ShippedOrders implements OnInit {
   orders: any[] = [];
 displayedColumns: string[] = [
   'sl_no',
@@ -23,22 +21,21 @@ displayedColumns: string[] = [
   'order_date',
   'actions'
 ];
-
-  constructor(private adminService: AdminService, private router: Router) {}
+  constructor(private publisherService: PublisherService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadOrders();
   }
 
   loadOrders(): void {
-    const status = 'Confirmed'; // Filter only pending orders
-    this.adminService.getSubOrderByStatus(status).subscribe({
+    const status = 'Shipped'; // Filter only confirmed orders
+    this.publisherService.getSubOrderByStatus(status).subscribe({
       next: (data) => (this.orders = data),
       error: (err) => console.error('Error loading orders:', err)
     });
   }
 
   onEdit(order: any): void {
-    this.router.navigate(['/admin/orders/my-orders/', order.suborder_id ]);
+    this.router.navigate(['/publisher/orders', order.suborder_id]);
   }
 }

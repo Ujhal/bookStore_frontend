@@ -31,7 +31,11 @@ const routes: Routes = [
       {
         path: 'my/addresses',  // /customer/my/addresses
         loadComponent: () => import('./address/address').then(m => m.Address)
-      }
+      },
+       {
+        path: 'orders/:id',  // /customer/my/orders
+        loadComponent: () => import('./order-detail/order-detail').then(m => m.OrderDetail)
+      },
     ]
   }
 ];

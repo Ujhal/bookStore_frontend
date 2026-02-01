@@ -100,7 +100,9 @@ getBookById(id: number) {
   return this.http.get(`${this.apiUrl}/api/books/${id}/`);
 }
 
-
+getAllSubOrder(page: number = 1): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/api/publisher/suborders/?page=${page}`);
+}
 getSubOrderByStatus(status: string): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/api/publisher/suborders/status/`, { params: { status } });
 }

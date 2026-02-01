@@ -12,6 +12,13 @@
     <!-- Order Summary -->
     <section class="card">
       <h3>Order Summary</h3>
+        <a 
+      *ngIf="order.invoice_pdf" 
+      [href]="order.invoice_pdf" 
+      download
+      class="download-btn">
+      Download Invoice
+    </a>
       <div class="info-row"><span>Transaction ID:</span><strong>{{ order.transaction_id }}</strong></div>
       <div class="info-row"><span>Status:</span><span class="status">{{ order.status }}</span></div>
       <div class="info-row"><span>Total Amount:</span><strong>₹{{ order.total_amount }}</strong></div>

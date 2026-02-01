@@ -1,0 +1,87 @@
+<div *ngIf="order" class="order-details-container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h2>Order #{{ order.id }}</h2>
+    <p>Placed on {{ order.order_date | date:'medium' }}</p>
+  </div>
+
+<!-- ORDER SUMMARY -->
+<section class="card">
+  <div class="summary-header">
+    <h3>Order Summary</h3>
+    <a 
+      *ngIf="order.invoice_pdf" 
+      [href]="order.invoice_pdf" 
+      download
+      class="download-btn">
+      Download Invoice
+    </a>
+  </div>
+
+  <div class="info-row">
+    <span>Transaction ID:</span>
+    <strong>{{ order.transaction_id || '—' }}</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Status:</span>
+    <span class="status">{{ order.status }}</span>
+  </div>
+
+  <div class="info-row">
+    <span>Total Amount:</span>
+    <strong>₹{{ order.total_amount }}</strong>
+  </div>
+
+  <div class="info-row" *ngIf="order.remarks">
+    <span>Remarks:</span>
+    <strong>{{ order.remarks }}</strong>
+  </div>
+</section>
+
+
+  <!-- SUB ORDERS / SHIPMENTS -->
+  <section class="card">
+    <h3>Shipments ({{ order.sub_orders.length }})</h3>
+
+    <div *ngFor="let sub of order.sub_orders; let i = index" class="sub-card">
+
+      <!-- Shipment Header -->
+      <div class="sub-header">
+        <h4>Shipment {{ i + 1 }}</h4>
+        <span class="status">{{ sub.status }}</span>
+      </div>
+
+      <div class="info-row">
+        <span>Tracking Number:</span>
+        <strong>{{ sub.tracking_number || 'Not assigned yet' }}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Created:</span>
+        <strong>{{ sub.created_at | date:'medium' }}</strong>
+      </div>
+
+      <!-- Items -->
+      <h5>Items ({{ sub.items.length }})</h5>
+
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Book</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of sub.items">
+            <td>{{ item.book__title }}</td>
+            <td>{{ item.quantity }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </section>
+
+</div>

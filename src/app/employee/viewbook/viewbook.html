@@ -26,21 +26,48 @@
       </div>
     </div>
 
+    <!-- ⚠️ Info Message ONLY (No calculation) -->
+    <p class="delivery-note">
+      ⚠️ You will be charged <strong>₹100 extra</strong> if the delivery location is
+      outside <strong>Sikkim</strong>. (Added at checkout)
+    </p>
+
+    <!-- Total Price (Quantity based ONLY) -->
+    <p class="total-price">
+      Total Amount:
+      <strong>₹{{ book?.price * quantity }}</strong>
+    </p>
+
     <!-- Action Buttons -->
-  <div class="actions">
-  <button class="add-to-cart" (click)="addToCart()">Add to Cart</button>
+    <div class="actions">
+      <button class="add-to-cart" (click)="addToCart()">
+        Add to Cart
+      </button>
 
-  <button *ngIf="!showAddressSelector && !isAddressSelected" class="place-order" (click)="openAddressSelector()">Place Your Order</button>
-  <button *ngIf="isAddressSelected" class="place-order" (click)="placeOrder()">Confirm Order</button>
-</div>
+      <button
+        *ngIf="!showAddressSelector && !isAddressSelected"
+        class="place-order"
+        (click)="openAddressSelector()"
+      >
+        Place Your Order
+      </button>
 
-    <!-- Address selector panel / modal -->
+      <button
+        *ngIf="isAddressSelected"
+        class="place-order"
+        (click)="placeOrderAndPay()"
+      >
+        Confirm & Pay
+      </button>
+    </div>
+
+    <!-- Address Selector -->
     <app-add-address
       *ngIf="showAddressSelector"
       [addresses]="savedAddresses"
       (select)="onAddressSelected($event)"
-      (cancel)="cancelAddressSelection()">
-    </app-add-address>
+      (cancel)="cancelAddressSelection()"
+    ></app-add-address>
 
     <hr />
 
@@ -51,7 +78,10 @@
 
     <div class="author-info">
       <h3>About the Author</h3>
-      <p>{{ book?.author_name }} is a renowned author in the field of {{ book?.subcategory_name }}.</p>
+      <p>
+        {{ book?.author_name }} is a renowned author in the field of
+        {{ book?.subcategory_name }}.
+      </p>
     </div>
   </div>
 </div>
