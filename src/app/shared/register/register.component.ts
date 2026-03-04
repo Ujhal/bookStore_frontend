@@ -15,13 +15,14 @@ import { CommonService } from '../shared_service/common.service';
   styleUrls: ['./register.component.css']
 })
 
+// register.component.ts
 export class RegisterComponent {
-
   form!: FormGroup;
-  selectedRole: number = 2;  // Default = Customer
+  selectedRole: number | null = null; // no default role
+  showForm: boolean = false;          // controls whether the full form is shown
 
-  isEmailRequired: boolean = true;
-  isPhoneRequired: boolean = true;
+  apiError: string = '';
+  registrationSuccess: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -42,44 +43,51 @@ export class RegisterComponent {
     });
   }
 
+  // Step 1: select role
   selectRole(role: number): void {
     this.selectedRole = role;
+    this.showForm = true; // show rest of the form
     console.log("Selected Role:", this.selectedRole);
   }
 
-  // Password match
-  passwordMatchValidator(group: FormGroup): ValidationErrors | null {
+  // Password match validator
+  passwordMatchValidator(group: FormGroup) {
     return group.get('password')?.value === group.get('confirmPassword')?.value
       ? null : { mismatch: true };
   }
 
   onSubmit(): void {
+    this.apiError = '';
+    if (!this.selectedRole) {
+      this.toaster.error('Please select a role first.');
+      return;
+    }
+
     if (this.form.valid) {
       const formData = this.form.value;
 
-      let registerData = {
+      const registerData = {
         first_name: formData.first_name,
+        middle_name: formData.middleName,
         last_name: formData.last_name,
-        middle_name: formData.middleName, // Not needed by backend but sent anyway
         email: formData.email || null,
         phone_number: formData.phone_number || null,
         password: formData.password,
         role: this.selectedRole
       };
 
-      console.log("Registration Payload:", registerData);
-
-      this.authService.register(registerData).subscribe(
-        () => {
-          this.toaster.success('Registration successful!');
-          this.router.navigate(['/login']);
+      this.authService.register(registerData).subscribe({
+        next: () => {
+          this.registrationSuccess = true;
+          setTimeout(() => this.router.navigate(['/login']), 3000);
         },
-        (error) => {
-          console.error("Registration error:", error);
-          this.toaster.error(error.error?.detail || 'Registration failed');
+        error: (err) => {
+          const errorData = err?.error;
+          if (errorData?.email?.length) this.apiError = errorData.email[0];
+          else if (errorData?.phone_number?.length) this.apiError = errorData.phone_number[0];
+          else this.apiError = 'Registration failed. Please try again.';
         }
-      );
-
+      });
     } else {
       this.toaster.error('Please fill out the form correctly.');
     }

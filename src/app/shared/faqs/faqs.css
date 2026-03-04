@@ -1,0 +1,79 @@
+/* Base Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f4f6f9, #e6ecf3);
+    color: #333;
+}
+.faqs-section {
+    padding: 60px 20px;
+}
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 42px;
+    color: #1a2a44;
+    position: relative;
+}
+
+h1::after {
+    content: "";
+    width: 80px;
+    height: 4px;
+    background: #0077cc;
+    display: block;
+    margin: 10px auto;
+    border-radius: 2px;
+}
+
+.info-card {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    line-height: 1.8;
+    font-size: 18px;
+}
+
+.info-card p {
+    margin-bottom: 20px;
+}
+
+.info-card strong {
+    color: #0077cc;
+}
+
+/* Section-Specific Classes for Color Variation */
+.payments-section h1::after {
+    background: #28a745; /* green for payments */
+}
+
+.returns-section h1::after {
+    background: #dc3545; /* red for returns/cancellation */
+}
+
+.faqs-section h1::after {
+    background: #ffc107; /* yellow for FAQs */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .info-card {
+        padding: 25px;
+        font-size: 16px;
+    }
+}

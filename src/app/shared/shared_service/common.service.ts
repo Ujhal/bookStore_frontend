@@ -135,26 +135,20 @@ checkoutAndRegister(data: any) {
   }
 
   register(registerData: any): Observable<any> {
-    console.log('Registering with data:', registerData);
-    return this.http.post<any>(`${this.apiUrl}/api/auth/register/`, registerData).pipe(
-      map(response => {
-        // If registration is successful, return the response message
-        if (response.message) {
-          return { success: true, message: response.message };
-        }
-        // If the response doesn't contain a success message, throw an error
-        throw new Error('Unexpected response structure');
-      }),
-      catchError(error => {
-        // Handle error in case of a failed registration attempt
-        console.error('Registration error:', error);
-        if (error.error && error.error.message) {
-          return throwError(() => new Error(error.error.message)); // Return the server message if available
-        }
-        return throwError(() => new Error('Registration failed. Please try again.'));
-      })
-    );
-  }
+  return this.http.post<any>(`${this.apiUrl}/api/auth/register/`, registerData).pipe(
+    map(response => {
+      if (response.message) {
+        return { success: true, message: response.message };
+      }
+      return response; // return full response if needed
+    }),
+    catchError(error => {
+      console.error('Registration error (HttpErrorResponse):', error);
+      // Pass the full error object to the component
+      return throwError(() => error);
+    })
+  );
+}
 
   resetPassword(old_password: string, new_password1: string, new_password2: string): Observable<any> {
     const payload = { old_password, new_password1, new_password2 };

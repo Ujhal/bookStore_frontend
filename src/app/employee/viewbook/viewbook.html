@@ -1,44 +1,39 @@
 <div class="book-details-page">
+  <!-- Left Image -->
   <div class="book-image-container">
     <img [src]="book?.cover_image" [alt]="book?.title" />
   </div>
 
+  <!-- Right Content -->
   <div class="book-info-container">
-    <div class="book-header">
-      <h1>{{ book?.title }}</h1>
-      <p class="author">by {{ book?.author_name }}</p>
-      <p class="category">Category: {{ book?.category_name }}</p>
-    </div>
+    <h1>{{ book?.title }}</h1>
+    <p class="author">by {{ book?.author_name }}</p>
+    <p class="category">Category: {{ book?.category_name }}</p>
 
+    <!-- Price -->
     <div class="price-section">
-      <span class="price">Rs. {{ book?.price }}</span>
-      <span class="currency">{{ book?.currency }}</span>
+      <strong>₹{{ book?.price }}</strong>
       <span class="sale-tag">Sale</span>
     </div>
 
-    <!-- Quantity Section -->
+    <!-- Quantity -->
     <div class="quantity-section">
-      <label>Quantity</label>
-      <div class="quantity-controls">
-        <button (click)="decreaseQty()">−</button>
-        <span>{{ quantity }}</span>
-        <button (click)="increaseQty()">+</button>
-      </div>
+      <button (click)="decreaseQty()">−</button>
+      <span>{{ quantity }}</span>
+      <button (click)="increaseQty()">+</button>
     </div>
 
-    <!-- ⚠️ Info Message ONLY (No calculation) -->
+    <!-- Delivery Note -->
     <p class="delivery-note">
-      ⚠️ You will be charged <strong>₹100 extra</strong> if the delivery location is
-      outside <strong>Sikkim</strong>. (Added at checkout)
+      ⚠️ ₹100 extra for delivery outside Sikkim (added at checkout)
     </p>
 
-    <!-- Total Price (Quantity based ONLY) -->
+    <!-- Total -->
     <p class="total-price">
-      Total Amount:
-      <strong>₹{{ book?.price * quantity }}</strong>
+      Total: ₹{{ book?.price * quantity }}
     </p>
 
-    <!-- Action Buttons -->
+    <!-- Buttons -->
     <div class="actions">
       <button class="add-to-cart" (click)="addToCart()">
         Add to Cart
@@ -71,17 +66,14 @@
 
     <hr />
 
-    <div class="description">
-      <h3>About the Book</h3>
-      <p>{{ book?.description }}</p>
-    </div>
+    <!-- Description -->
+    <h3>About the Book</h3>
+    <p>{{ book?.description }}</p>
 
-    <div class="author-info">
-      <h3>About the Author</h3>
-      <p>
-        {{ book?.author_name }} is a renowned author in the field of
-        {{ book?.subcategory_name }}.
-      </p>
-    </div>
+    <h3>About the Author</h3>
+    <p>
+      {{ book?.author_name }} is a renowned author in the field of
+      {{ book?.subcategory_name }}.
+    </p>
   </div>
 </div>

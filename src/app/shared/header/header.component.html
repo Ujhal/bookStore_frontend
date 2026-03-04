@@ -1,86 +1,72 @@
-<body>
-  <!-- Top Bar -->
-  <div class="top-bar">
-    <div class="social-icons">
-      <mat-icon>facebook</mat-icon>
-      <mat-icon>instagram</mat-icon>
-      <mat-icon>twitter</mat-icon>
-      <mat-icon>youtube</mat-icon>
-    </div>
-    <div class="helpline">
-      Helpline: 033-41802100
-    </div>
-  </div>
+<header class="main-header">
 
-  <!-- Main Header -->
-  <header class="main-header">
+  <div class="header-container">
+
+    <!-- Logo -->
     <div class="logo" (click)="home()">
-  <img src="../../../assets/images/Nedcs logo.png" class="logo-img" alt="Logo" />
-  <span class="logo-text">READGOOD<span class="blue">BOOKS</span></span>
-</div>
-
-
-    <div class="search-bar">
-      <input type="text" placeholder="Search for Books, publishers and anything" />
-      <mat-icon class="search-icon">search</mat-icon>
+      <img src="assets/images/Nedcs logo.png" class="logo-img" />
+      <span class="logo-text">
+        READGOOD<span class="blue">BOOKS</span>
+      </span>
     </div>
 
-    <div class="user-actions">
-      <!-- Conditionally show My Account icon and Add to Cart -->
-       <div *ngIf="isLoggedIn && isCustomer"
-          class="user-action-item"
-          (mouseenter)="showModal = true"
-          (mouseleave)="showModal = false"
-        >
-          <mat-icon>account_circle</mat-icon>
-          <span>My Account</span>
+    <!-- Right Side -->
+    <div class="right-section">
 
-          <div class="account-modal" *ngIf="showModal">
-            <div class="modal-content">
-              <ul>
-                <li (click)="goToOrders()">Orders</li>
-                <li (click)="goToAddresses()">Address</li>
-                <li (click)="goToAccount()">Account</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      
-       <div *ngIf="isLoggedIn && (isAdmin || isPublisher)"
-          class="user-action-item"
-          (click)="goToAccount()"
-        >
-          <mat-icon>account_circle</mat-icon>
-          <span>My Account</span>
-        </div>
-
-
-      <div *ngIf="isLoggedIn && showCartAndBooks" class="user-action-item" (click)="goToCart()">
-        <mat-icon>shopping_cart</mat-icon>
-        <span>Cart</span>
-      </div>
-
-     
-
-      <div *ngIf="isLoggedIn" class="user-action-item" (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
-        <span>Sign Out</span>
-      </div>
-
-      <div *ngIf="!isLoggedIn" (click)="login()" class="user-action-item">
+      <!-- Sign In -->
+      <div
+        *ngIf="!isLoggedIn"
+        class="user-action-item sign-in"
+        (click)="login()"
+      >
         <mat-icon>login</mat-icon>
         <span>Sign In</span>
       </div>
-    </div>
-  </header>
 
-  <!-- Navigation Bar -->
-  <nav class="nav-links">
-    <!-- Only show Books link for users with role 2 -->
-    <a *ngIf="showCartAndBooks" href="#" (click)="home()">
-      <mat-icon>book</mat-icon>
-      <p>Books</p>
-    </a>
-    <!-- Add more links here if needed -->
-  </nav>
-</body>
+      <!-- Logged In Menu -->
+      <div class="user-actions" *ngIf="isLoggedIn">
+
+        <ng-container *ngFor="let item of menuItems">
+
+          <!-- Normal Items -->
+          <div
+            *ngIf="isMenuItemVisible(item) && item.label !== 'My Account'"
+            class="user-action-item"
+            (click)="item.action()"
+          >
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+          </div>
+
+          <!-- My Account (Dropdown) -->
+        <div *ngIf="isMenuItemVisible(item) && item.label === 'My Account'"
+          class="user-action-item account-item"
+          (click)="userRole !== 2 ? goToAccount() : null"
+        >
+
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+
+          <!-- Dropdown only for Customer -->
+          <div
+            class="account-modal"
+            *ngIf="userRole === 2"
+          >
+            <ul>
+              <li (click)="goToOrders(); $event.stopPropagation()">Orders</li>
+              <li (click)="goToAddresses(); $event.stopPropagation()">Address</li>
+              <li (click)="goToAccount(); $event.stopPropagation()">Account</li>
+            </ul>
+          </div>
+
+        </div>
+
+        </ng-container>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>

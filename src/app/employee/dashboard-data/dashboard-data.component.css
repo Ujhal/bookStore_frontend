@@ -155,21 +155,53 @@ body {
 .blue { background: #5dade2; }
 .light-grey { background: #39c873; }
 
+
+
 /* ===================================== */
-/* FEATURES */
+/* FEATURES SECTION */
 /* ===================================== */
 .features-section {
-  margin-top: 3rem;
   display: flex;
-  background-color: #9fc1d8;
-  gap: 1rem;
-  padding:10px;
+  flex-wrap: wrap;       /* allows stacking on small screens */
+  gap: 1rem;             /* space between cards */
+  justify-content: center;
+  padding: 2rem 1rem;    /* top-bottom and sides padding */
+  background: linear-gradient(135deg, #a2d2f1, #f0f4f8);
 }
 
 .feature {
-  flex: 1;
-  background: #d4f0f9;
-  padding: 1rem;
-  border-radius: 8px;
+  flex: 1 1 220px;       /* grow, shrink, minimum width */
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
   text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.feature h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+.feature p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+}
+
+/* Responsive font for very small screens */
+@media (max-width: 480px) {
+  .feature h4 {
+    font-size: 1rem;
+  }
+  .feature p {
+    font-size: 0.85rem;
+  }
 }

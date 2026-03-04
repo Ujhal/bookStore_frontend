@@ -3,12 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonService } from '../shared_service/common.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
+import { MaterialModule } from '../../mat-element';
 
 declare var Razorpay: any;
 
 @Component({
   selector: 'app-view-book',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,MaterialModule],
   templateUrl: './view-book.html',
   styleUrls: ['./view-book.css']
 })
@@ -18,7 +19,7 @@ export class ViewBook implements OnInit {
   quantity = 1;
   showCheckoutForm = false;
   states: any[] = [];
-
+  apiError: string = '';
   form = {
     first_name: '',
     last_name: '',
@@ -72,40 +73,52 @@ export class ViewBook implements OnInit {
   // 🔥 MAIN FLOW: REGISTER → ORDER → PAY
   registerAndPay() {
 
-    const payload = {
-      ...this.form,
-      state: Number(this.form.state),
-      items: [
-        {
-          book_id: this.book.id,
-          quantity: this.quantity
-        }
-      ]
-    };
+  this.apiError = ''; // clear previous error
 
-    // STEP 1: REGISTER + CREATE ORDER
-    this.commonService.checkoutAndRegister(payload).subscribe({
-      next: (res: any) => {
+  const payload = {
+    ...this.form,
+    state: Number(this.form.state),
+    items: [
+      {
+        book_id: this.book.id,
+        quantity: this.quantity
+      }
+    ]
+  };
 
-        // Save JWT
+  this.commonService.checkoutAndRegister(payload).subscribe({
+    next: (res: any) => {
+
       localStorage.setItem('access_token', res.access_token);
       localStorage.setItem('refresh_token', res.refresh_token);
 
-        const orderId = res.order_id;
+      const orderId = res.order_id;
 
-        // STEP 2: CREATE RAZORPAY ORDER
-        this.commonService.createPaymentGuest(orderId, res.access_token).subscribe({
-          next: (payRes: any) => {
-            this.openRazorpay(payRes, orderId,res.access_token);
-          },
-          error: () => alert('Payment initiation failed')
-        });
-      },
-      error: (err) => {
-        alert(err?.error?.error || 'Checkout failed');
+      this.commonService.createPaymentGuest(orderId, res.access_token).subscribe({
+        next: (payRes: any) => {
+          this.openRazorpay(payRes, orderId, res.access_token);
+        },
+        error: () => {
+          this.apiError = 'Payment initiation failed. Please try again.';
+        }
+      });
+    },
+
+    error: (err) => {
+      const message = err?.error?.error;
+
+      if (message === 'Email already registered. Please login.') {
+        this.apiError = message;
+      } 
+      else if (message === 'Phone number already registered. Please login.') {
+        this.apiError = message;
+      } 
+      else {
+        this.apiError = 'Checkout failed. Please try again.';
       }
-    });
-  }
+    }
+  });
+}
 
   openRazorpay(paymentRes: any, orderId: number,token: string) {
 

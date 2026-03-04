@@ -4,20 +4,27 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
- 
+  min-height: 0;
+  width: 100%;
+  overflow-x: hidden; /* 🔥 Important */
 }
 
 mat-sidenav-content {
   flex-grow: 1;
-  overflow-y: hidden;
-  padding: 0; /* remove the gap */
+  overflow-x: hidden; /* 🔥 Prevent horizontal scroll */
+  overflow-y: auto;   /* allow vertical scroll */
+  padding: 0;
   min-height: 0;
 }
 /* styles.css or app.component.css */
 
+:host {
+  display: block;
+  overflow-x: hidden;
+}
+
 html, body {
-  height: auto;
-  min-height: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }

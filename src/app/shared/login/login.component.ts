@@ -14,8 +14,9 @@ import { CommonService } from '../shared_service/common.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+ export class LoginComponent {
   form: FormGroup;
+  errorMessage: string = ''; // for API errors
 
   constructor(
     private fb: FormBuilder,
@@ -23,75 +24,57 @@ export class LoginComponent {
     private toaster: ToastrService,
     private authService: CommonService
   ) {
-    // Form initialization with custom validation logic for email or phone
     this.form = this.fb.group({
-      username: ['', [
-        Validators.required, 
-        this.emailOrPhoneValidator
-      ]],
+      username: ['', [Validators.required, this.emailOrPhoneValidator]],
       password: ['', Validators.required]
     });
 
-    // Check if the user is already logged in when the component is initialized
     if (localStorage.getItem('isLoggedIn') === 'true') {
-      this.router.navigate(['/']);  // Redirect to homepage or dashboard if logged in
+      this.router.navigate(['/']);
     }
   }
 
-  // Custom Validator to validate either email or phone number
   private emailOrPhoneValidator(control: AbstractControl): ValidationErrors | null {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const phonePattern = /^[0-9]{10}$/;
     const value = control.value;
-
-    if (value && (emailPattern.test(value) || phonePattern.test(value))) {
-      return null;  // Valid input (either email or phone)
-    }
-
-    return { invalidEmailOrPhone: true };  // Invalid input
+    if (value && (emailPattern.test(value) || phonePattern.test(value))) return null;
+    return { invalidEmailOrPhone: true };
   }
 
-  // Submit form and handle login
   onSubmit(): void {
+    this.errorMessage = ''; // reset previous error
     if (this.form.valid) {
-      const formData = this.form.value;
-      const loginData = {
-        username: formData.username,
-        password: formData.password
-      };
+      const loginData = this.form.value;
 
-      this.authService.login(loginData).subscribe((response: any) => {
-  // Store the token for API calls
-  localStorage.setItem('token', response.access_token);
-  
-  // Store the whole user object
-  localStorage.setItem('user', JSON.stringify(response.user));
+      this.authService.login(loginData).subscribe({
+        next: (response: any) => {
+          localStorage.setItem('token', response.access_token);
+          localStorage.setItem('user', JSON.stringify(response.user));
 
-  // Navigate based on role
-  switch (response.user.role) {
-    case 1:
-      this.router.navigate(['/admin']);
-      break;
-    case 2:
-      this.router.navigate(['/customer']);
-      break;
-    case 3:
-      this.router.navigate(['/publisher']);
-      break;
-  }
-});
+          switch (response.user.role) {
+            case 1: this.router.navigate(['/admin']); break;
+            case 2: this.router.navigate(['/customer']); break;
+            case 3: this.router.navigate(['/publisher']); break;
+          }
+        },
+        error: (err) => {
+          // Assuming API returns JSON with non_field_errors array
+          if (err.error && err.error.non_field_errors && err.error.non_field_errors.length) {
+            this.errorMessage = err.error.non_field_errors[0]; // display first error
+          } else {
+            this.errorMessage = 'Something went wrong. Please try again.';
+          }
+        }
+      });
 
     } else {
-      console.log('Form is invalid');
+      this.errorMessage = 'Please fill in all fields correctly.';
     }
   }
 
-  // Redirect to Register page
-  register(): void {
-    this.router.navigate(['register']);
-  }
+  register(): void { this.router.navigate(['register']); }
 
-  // Optional: Method to log out and remove 'isLoggedIn' from localStorage
   logout(): void {
     localStorage.removeItem('isLoggedIn');
     this.router.navigate(['login']);
