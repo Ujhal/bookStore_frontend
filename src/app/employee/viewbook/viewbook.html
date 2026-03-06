@@ -10,17 +10,24 @@
     <p class="author">by {{ book?.author_name }}</p>
     <p class="category">Category: {{ book?.category_name }}</p>
 
+    <!-- STOCK STATUS -->
+    <p *ngIf="book?.stock_quantity === 0" class="stock-out">❌ Out of Stock</p>
+    <p *ngIf="book?.stock_quantity > 0 && book?.stock_quantity <= 5" class="stock-low">
+      ⚠️ Only {{ book?.stock_quantity }} left in stock
+    </p>
+    <p *ngIf="book?.stock_quantity > 5" class="stock-available">✅ In Stock</p>
+
     <!-- Price -->
     <div class="price-section">
       <strong>₹{{ book?.price }}</strong>
-      <span class="sale-tag">Sale</span>
+      <span class="sale-tag" *ngIf="book?.on_sale">Sale</span>
     </div>
 
     <!-- Quantity -->
-    <div class="quantity-section">
-      <button (click)="decreaseQty()">−</button>
+    <div class="quantity-section" *ngIf="book?.stock_quantity > 0">
+      <button (click)="decreaseQty()" [disabled]="quantity === 1">−</button>
       <span>{{ quantity }}</span>
-      <button (click)="increaseQty()">+</button>
+      <button (click)="increaseQty()" [disabled]="quantity >= book?.stock_quantity">+</button>
     </div>
 
     <!-- Delivery Note -->
@@ -35,7 +42,11 @@
 
     <!-- Buttons -->
     <div class="actions">
-      <button class="add-to-cart" (click)="addToCart()">
+      <button
+        class="add-to-cart"
+        (click)="addToCart()"
+        [disabled]="book?.stock_quantity === 0"
+      >
         Add to Cart
       </button>
 
@@ -43,8 +54,9 @@
         *ngIf="!showAddressSelector && !isAddressSelected"
         class="place-order"
         (click)="openAddressSelector()"
+        [disabled]="book?.stock_quantity === 0"
       >
-        Place Your Order
+        {{ book?.stock_quantity === 0 ? 'Out of Stock' : 'Place Your Order' }}
       </button>
 
       <button

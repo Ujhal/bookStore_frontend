@@ -54,17 +54,32 @@ export class ViewBook implements OnInit {
     this.commonService.getStates().subscribe(res => this.states = res);
   }
 
-  increaseQty() {
+ increaseQty() {
+
+  if (this.quantity < this.book.stock_quantity) {
     this.quantity++;
   }
 
-  decreaseQty() {
-    if (this.quantity > 1) this.quantity--;
+}
+
+decreaseQty() {
+
+  if (this.quantity > 1) {
+    this.quantity--;
   }
 
+}
+
   openCheckoutForm() {
-    this.showCheckoutForm = true;
+
+  if (this.book.stock_quantity === 0) {
+    alert('This book is currently out of stock.');
+    return;
   }
+
+  this.showCheckoutForm = true;
+
+}
 
   closeCheckoutForm() {
     this.showCheckoutForm = false;

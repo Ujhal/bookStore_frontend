@@ -88,12 +88,16 @@ export class Viewbook implements OnInit {
   }
 
   increaseQty(): void {
+  if (this.book?.stock_quantity && this.quantity < this.book.stock_quantity) {
     this.quantity++;
+  } else if (this.book?.stock_quantity && this.quantity >= this.book.stock_quantity) {
+    alert(`Cannot order more than ${this.book.stock_quantity} items!`);
   }
+}
 
-  decreaseQty(): void {
-    if (this.quantity > 1) this.quantity--;
-  }
+decreaseQty(): void {
+  if (this.quantity > 1) this.quantity--;
+}
 
   // 🔥 NEW METHOD: Place order AND trigger Razorpay
  placeOrderAndPay(): void {

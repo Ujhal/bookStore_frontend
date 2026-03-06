@@ -7,28 +7,68 @@
     <h1>{{ book?.title }}</h1>
     <p class="author">by {{ book?.author_name }}</p>
 
-    <div class="price-section">
-      <strong>₹{{ book?.price }}</strong>
-    </div>
+   <div class="price-section">
+  <strong>₹{{ book?.price }}</strong>
+</div>
 
-    <!-- Quantity -->
-    <div class="quantity-section">
-      <button (click)="decreaseQty()">−</button>
-      <span>{{ quantity }}</span>
-      <button (click)="increaseQty()">+</button>
-    </div>
+<!-- STOCK STATUS -->
 
-    <p class="delivery-note">
-      ⚠️ ₹100 extra for delivery outside Sikkim (added at checkout)
-    </p>
+<!-- OUT OF STOCK -->
+<p *ngIf="book?.stock_quantity === 0" class="stock-out">
+  ❌ Out of Stock
+</p>
 
-    <p class="total-price">
-      Total: ₹{{ book?.price * quantity }}
-    </p>
+<!-- LOW STOCK -->
+<p *ngIf="book?.stock_quantity > 0 && book?.stock_quantity <= 5" class="stock-low">
+  ⚠️ Only {{ book?.stock_quantity }} left in stock
+</p>
 
-    <button class="place-order" (click)="openCheckoutForm()">
-      Buy Now
-    </button>
+<!-- NORMAL STOCK -->
+<p *ngIf="book?.stock_quantity > 5" class="stock-available">
+  ✅ In Stock
+</p>
+
+
+<!-- QUANTITY SELECTOR -->
+
+<div class="quantity-section" *ngIf="book?.stock_quantity > 0">
+
+  <button 
+    (click)="decreaseQty()" 
+    [disabled]="quantity === 1">
+    −
+  </button>
+
+  <span>{{ quantity }}</span>
+
+  <button 
+    (click)="increaseQty()" 
+    [disabled]="quantity >= book?.stock_quantity">
+    +
+  </button>
+
+</div>
+
+
+<p class="delivery-note" *ngIf="book?.stock_quantity > 0">
+  ⚠️ ₹100 extra for delivery outside Sikkim (added at checkout)
+</p>
+
+
+<p class="total-price" *ngIf="book?.stock_quantity > 0">
+  Total: ₹{{ book?.price * quantity }}
+</p>
+
+
+<!-- BUY BUTTON -->
+
+<button class="place-order"
+        (click)="openCheckoutForm()"
+        [disabled]="book?.stock_quantity === 0">
+
+  {{ book?.stock_quantity === 0 ? 'Out of Stock' : 'Buy Now' }}
+
+</button>
 
     <hr />
 
@@ -121,14 +161,30 @@
     </mat-error>
   </mat-form-field>
 
-  <h3>Address</h3>
+  <h3>Delivery Address</h3>
 
+
+   <mat-form-field appearance="outline" class="full-width">
+    <mat-label>State *</mat-label>
+    <mat-select required
+                [(ngModel)]="form.state"
+                name="state"
+                #state="ngModel">
+      <mat-option value="">Select State</mat-option>
+      <mat-option *ngFor="let s of states" [value]="s.id">
+        {{ s.name }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="state.invalid && state.touched">
+      Please select a state
+    </mat-error>
+  </mat-form-field>
   <!-- Address Line 1 -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Address Line 1 *</mat-label>
     <input matInput
            required
-           pattern="^[a-zA-Z0-9 ]+$"
+           pattern="^[a-zA-Z0-9, ]+$"
            [(ngModel)]="form.address_line_1"
            name="address_line_1"
            #address1="ngModel">
@@ -142,7 +198,7 @@
     <mat-label>Address Line 2 *</mat-label>
     <input matInput
            required
-           pattern="^[a-zA-Z0-9 ]+$"
+           pattern="^[a-zA-Z0-9, ]+$"
            [(ngModel)]="form.address_line_2"
            name="address_line_2"
            #address2="ngModel">
@@ -195,21 +251,7 @@
   </mat-form-field>
 
   <!-- State -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>State *</mat-label>
-    <mat-select required
-                [(ngModel)]="form.state"
-                name="state"
-                #state="ngModel">
-      <mat-option value="">Select State</mat-option>
-      <mat-option *ngFor="let s of states" [value]="s.id">
-        {{ s.name }}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="state.invalid && state.touched">
-      Please select a state
-    </mat-error>
-  </mat-form-field>
+ 
 <div *ngIf="apiError" class="api-error">
   {{ apiError }}
 </div>

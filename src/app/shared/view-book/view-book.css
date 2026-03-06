@@ -39,6 +39,9 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .author {
@@ -57,10 +60,37 @@
 }
 
 /* =======================
+   Stock Status
+======================= */
+.stock-out {
+  color: #e53935; /* red */
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.stock-low {
+  color: #ff9800; /* orange */
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.stock-available {
+  color: #2e7d32; /* green */
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+/* =======================
    Quantity
 ======================= */
 .quantity-section {
   margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .quantity-section button {
@@ -69,11 +99,26 @@
   border: 1px solid #ccc;
   background: white;
   cursor: pointer;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+.quantity-section button:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .quantity-section span {
   padding: 0 15px;
   font-weight: 600;
+}
+
+/* Optional warning when max quantity reached */
+.quantity-warning {
+  font-size: 0.85rem;
+  color: #ff9800;
+  margin-top: 5px;
 }
 
 /* =======================
@@ -107,6 +152,11 @@
 
 .place-order:hover {
   background: #c70057;
+}
+
+.place-order:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
 }
 
 /* =======================
@@ -198,6 +248,10 @@ button:disabled {
     padding: 15px;
   }
 }
+
+/* =======================
+   API Error Styling
+======================= */
 .api-error {
   background-color: #ffe6e6;
   color: #d32f2f;
@@ -205,14 +259,4 @@ button:disabled {
   margin-bottom: 10px;
   border-radius: 4px;
   font-size: 14px;
-}
-
-.book-info-container h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-
-  line-height: 1.3;          /* 🔥 Important */
-  word-wrap: break-word;     /* Prevent overflow */
-  overflow-wrap: break-word; /* Modern support */
 }

@@ -87,8 +87,9 @@ getAuthorById(id: number) {
     return this.http.post(`${this.apiUrl}/api/admin/books/create/`, data);
   }
 
- deleteBook(id: number) {
-  return this.http.delete(`${this.apiUrl}/api/books/${id}/`);
+
+deleteBook(id: number) {
+  return this.http.delete(`${this.apiUrl}/api/admin/books/${id}/`);
 }
 updateBook(id: number, data: any) {
   return this.http.put(`${this.apiUrl}/api/admin/books/${id}/update/`, data);
