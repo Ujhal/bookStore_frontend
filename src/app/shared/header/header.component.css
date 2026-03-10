@@ -1,44 +1,50 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.main-header {
-  width: 100%;
-  background: #ffffff;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-/* Layout */
-.header-container {
+.main-toolbar {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  color: #000;
+  padding: 0 16px;
+  height: 64px;
+}
+
+.spacer {
+  flex: 1 1 auto; /* This pushes the right-section to the end */
+}
+
+.right-section {
+  display: flex;
   align-items: center;
 }
 
-/* Logo */
+.desktop-menu {
+  display: flex; /* Fixes the 'only one item showing' issue */
+  flex-direction: row;
+  align-items: center;
+}
+
+.desktop-menu button, .sign-in-btn {
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.sign-in-btn {
+  color: #007bff;
+  font-weight: 600;
+}
+
 .logo {
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.logo:hover {
-  transform: scale(1.05);
 }
 
 .logo-img {
-  height: 55px;
+  height: 45px;
   margin-right: 10px;
 }
 
 .logo-text {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
 }
 
@@ -46,119 +52,19 @@
   color: #007bff;
 }
 
-/* Right section */
-.right-section {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-/* User Actions */
-.user-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-/* Item */
-.user-action-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-  padding: 0.3rem 0.5rem;
-  border-radius: 8px;
-  transition: 0.3s ease;
-}
-
-.user-action-item:hover {
-  background: #f2f6ff;
-}
-
-.user-action-item mat-icon {
-  font-size: 26px;
-  transition: 0.3s ease;
-}
-
-.user-action-item span {
-  font-size: 0.85rem;
-  margin-top: 4px;
-}
-
-.user-action-item:hover mat-icon,
-.user-action-item:hover span {
-  color: #007bff;
-}
-
-/* Sign In */
-.sign-in mat-icon,
-.sign-in span {
-  color: #007bff;
-  font-weight: 600;
-}
-
-/* Dropdown */
-.account-item {
-  position: relative;
-}
-
-.account-modal {
-  position: absolute;
-  top: 110%;
-  right: 0;
-  background: #ffffff;
-  width: 200px;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  padding: 0.5rem 0;
-  display: none;
-  z-index: 999;
-}
-
-.account-item:hover .account-modal {
-  display: block;
-}
-
-.account-modal ul {
-  list-style: none;
-}
-
-.account-modal li {
-  padding: 0.7rem 1rem;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: 0.2s ease;
-}
-
-.account-modal li:hover {
-  background: #f2f6ff;
-  color: #007bff;
-}
-
-/* ========================= */
-/* RESPONSIVE DESIGN */
-/* ========================= */
-
-@media (max-width: 768px) {
-
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+/* Match Angular Flex Layout lt-md breakpoint (959px) */
+/* Update your CSS media query */
+@media (max-width: 959px) {
+  .desktop-menu {
+    display: none !important;
   }
-
-  .right-section {
-    width: 100%;
-    justify-content: space-between;
+  .mobile-menu {
+    display: block !important;
   }
+}
 
-  .user-actions {
-    width: 100%;
-    justify-content: space-around;
-  }
-
-  .user-action-item {
-    flex-direction: column;
+@media (min-width: 960px) {
+  .mobile-menu {
+    display: none !important;
   }
 }

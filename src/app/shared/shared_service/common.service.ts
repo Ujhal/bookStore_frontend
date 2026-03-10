@@ -271,4 +271,10 @@ getCart() {
 getStates(): Observable<any> {
     return this.http.get(`${this.apiUrl}/api/auth/states/`);
   }
+  forgotPassword(data: { username: string }) {
+  return this.http.post(`${this.apiUrl}/api/auth/forgot-password/`, data);
+}
+changePassword(data: any) {
+  return this.http.post('/api/auth/change-password/', data,);
+}
 }

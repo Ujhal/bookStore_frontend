@@ -21,6 +21,14 @@ const routes: Routes = [
         path: 'view-book/:id',
         loadComponent: () => import('./view-book/view-book').then(m => m.ViewBook)
       },
+       {
+        path: 'forgot-password', 
+        loadComponent: () => import('./forgotpassword/forgotpassword').then(m => m.Forgotpassword)
+      },
+       {
+        path: 'reset-password', 
+        loadComponent: () => import('./resetpasssword/resetpasssword').then(m => m.Resetpasssword)
+      },
       {
         path: 'about', 
         loadComponent: () => import('./about/about.component').then(m => m.AboutComponent)

@@ -1,0 +1,23 @@
+<div class="login-container">
+  <h2>Change Password</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="password" placeholder="Old Password" formControlName="old_password">
+    <input type="password" placeholder="New Password" formControlName="new_password">
+    <input type="password" placeholder="Confirm New Password" formControlName="confirm_password">
+
+    <!-- API or validation error -->
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <!-- Success message -->
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+
+    <button type="submit" [disabled]="form.invalid">
+      Change Password
+    </button>
+  </form>
+
+  <div class="bottom-text">
+    <a (click)="backToProfile()">Back to Profile</a>
+  </div>
+</div>

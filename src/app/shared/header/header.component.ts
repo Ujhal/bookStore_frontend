@@ -58,8 +58,9 @@ export class HeaderComponent implements OnInit {
   }
 
   /** Initialize menu items based on role */
+ /** Initialize menu items based on role */
   private initMenuItems() {
-    this.menuItems = [
+    const allItems = [
       {
         label: 'My Account',
         icon: 'account_circle',
@@ -69,7 +70,7 @@ export class HeaderComponent implements OnInit {
       {
         label: 'Cart',
         icon: 'shopping_cart',
-        roles: [Role.Customer],
+        roles: [Role.Customer], // Only Customer sees Cart
         action: () => this.goToCart()
       },
       {
@@ -79,6 +80,9 @@ export class HeaderComponent implements OnInit {
         action: () => this.logout()
       }
     ];
+
+    // Filter items based on the logged-in user's role
+    this.menuItems = allItems.filter(item => this.userRole && item.roles.includes(this.userRole));
   }
 
   /** Compute home route based on role */

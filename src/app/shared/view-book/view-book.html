@@ -84,6 +84,11 @@
 <div class="checkout-popup" *ngIf="showCheckoutForm">
   <div class="popup-content">
     <h2>Register & Checkout</h2>
+    <p>If registered proceed to login<a href="/login"> here</a></p>
+
+    <div *ngIf="paymentSuccessMessage" class="payment-success">
+      {{ paymentSuccessMessage }}
+    </div>
 
     <form #checkoutForm="ngForm" (ngSubmit)="registerAndPay()" class="checkout-form">
 
@@ -254,6 +259,11 @@
  
 <div *ngIf="apiError" class="api-error">
   {{ apiError }}
+  <div *ngIf="showLoginLink">
+    <a href="/login" class="login-link">
+      👉 Proceed to Login
+    </a>
+  </div>
 </div>
   <!-- Submit Button -->
   <button mat-raised-button

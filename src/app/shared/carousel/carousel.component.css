@@ -158,12 +158,13 @@ body {
     height: 200px;
   }
 
-  .features-section {
+   .features-section {
     flex-direction: column;
+    width: 90%;
   }
 
   .feature {
-    width: 100%;
+    width: 90%;
   }
 }
 
@@ -178,5 +179,14 @@ body {
   .book-image-container {
     height: 180px;
   }
+  .features-section {
+    flex-direction: column;
+    width: 90%;
+  }
+
+  .feature {
+    width: 90%;
+  }
+
 
 }

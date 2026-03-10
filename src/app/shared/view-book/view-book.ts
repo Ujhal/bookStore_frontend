@@ -4,6 +4,7 @@ import { CommonService } from '../shared_service/common.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { MaterialModule } from '../../mat-element';
+import { NgZone } from '@angular/core';
 
 declare var Razorpay: any;
 
@@ -20,6 +21,8 @@ export class ViewBook implements OnInit {
   showCheckoutForm = false;
   states: any[] = [];
   apiError: string = '';
+  showLoginLink = false;
+  paymentSuccessMessage: string = '';
   form = {
     first_name: '',
     last_name: '',
@@ -36,13 +39,14 @@ export class ViewBook implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private ngZone: NgZone
+
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) this.loadBook(id);
-
     this.loadStates();
   }
 
@@ -55,7 +59,6 @@ export class ViewBook implements OnInit {
   }
 
  increaseQty() {
-
   if (this.quantity < this.book.stock_quantity) {
     this.quantity++;
   }
@@ -63,11 +66,9 @@ export class ViewBook implements OnInit {
 }
 
 decreaseQty() {
-
   if (this.quantity > 1) {
     this.quantity--;
   }
-
 }
 
   openCheckoutForm() {
@@ -124,9 +125,13 @@ decreaseQty() {
 
       if (message === 'Email already registered. Please login.') {
         this.apiError = message;
+        this.showLoginLink = true;
+
       } 
       else if (message === 'Phone number already registered. Please login.') {
         this.apiError = message;
+        this.showLoginLink = true;
+
       } 
       else {
         this.apiError = 'Checkout failed. Please try again.';
@@ -158,15 +163,46 @@ decreaseQty() {
 
     rzp.open();
   }
+verifyPayment(response: any, token: string) {
+  this.commonService.verifyPaymentGuest({
+    razorpay_order_id: response.razorpay_order_id,
+    razorpay_payment_id: response.razorpay_payment_id,
+    razorpay_signature: response.razorpay_signature
+  }, token).subscribe({
+    next: () => {
+      // Run inside NgZone to ensure Angular detects the changes
+      this.ngZone.run(() => {
 
-  verifyPayment(response: any,token: string) {
-    this.commonService.verifyPaymentGuest({
-      razorpay_order_id: response.razorpay_order_id,
-      razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_signature: response.razorpay_signature
-    },token).subscribe({
-      next: () => alert('Payment successful!'),
-      error: () => alert('Payment verification failed')
-    });
-  }
+        // Show success message briefly
+        this.paymentSuccessMessage = '✅ Order Successful!';
+
+        // Close the checkout form
+        this.showCheckoutForm = false;
+
+        // Reset the form fields
+        this.form = {
+          first_name: '',
+          last_name: '',
+          email: '',
+          phone_number: '',
+          password: '',
+          address_line_1: '',
+          address_line_2: '',
+          landmark: '',
+          city: '',
+          pincode: '',
+          state: ''
+        };
+
+        // Clear success message after 2–3 seconds
+        setTimeout(() => {
+          this.paymentSuccessMessage = '';
+        }, 3000);
+
+      });
+    },
+    error: () => alert('Payment verification failed')
+  });
+}
+
 }
