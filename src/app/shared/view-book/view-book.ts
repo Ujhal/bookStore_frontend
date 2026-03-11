@@ -79,11 +79,13 @@ decreaseQty() {
   }
 
   this.showCheckoutForm = true;
+  document.body.classList.add('no-scroll');
 
 }
 
   closeCheckoutForm() {
     this.showCheckoutForm = false;
+    document.body.classList.remove('no-scroll');
   }
 
   // 🔥 MAIN FLOW: REGISTER → ORDER → PAY

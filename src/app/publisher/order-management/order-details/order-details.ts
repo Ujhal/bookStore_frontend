@@ -63,7 +63,7 @@ export class OrderDetails implements OnInit {
     doc.text(`Address Line 2: ${address.address_line_2}`, 20, 50);
     doc.text(`Landmark: ${address.landmark}`, 20, 60);
     doc.text(`City: ${address.city}`, 20, 70);
-    doc.text(`State: ${address.state}`, 20, 80);
+    doc.text(`State: ${address.state_name}`, 20, 80);
     doc.text(`Pincode: ${address.pincode}`, 20, 90);
     doc.text(`Phone: ${address.phone_number}`, 20, 100);
 

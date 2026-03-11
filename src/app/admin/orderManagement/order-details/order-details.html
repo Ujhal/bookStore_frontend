@@ -45,10 +45,15 @@
       <p>{{ order.shipping_address.address_line_1 }}</p>
       <p>{{ order.shipping_address.address_line_2 || '' }}</p>
       <p>{{ order.shipping_address.landmark }}</p>
-      <p>{{ order.shipping_address.city }}, {{ order.shipping_address.state }}</p>
+      <p>{{ order.shipping_address.city }}, {{ order.shipping_address.state_name }}</p>
       <p><strong>Pincode:</strong> {{ order.shipping_address.pincode }}</p>
       <p><strong>Phone:</strong> {{ order.shipping_address.phone_number }}</p>
     </div>
+     <div class="info-row">
+    <button mat-raised-button color="accent" (click)="printShippingAddress()">
+      Print Shipping Address
+    </button>
+  </div>
   </section>
 
   <!-- SUB ORDERS -->

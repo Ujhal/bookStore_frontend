@@ -4,6 +4,7 @@ import { CommonService } from '../../shared/shared_service/common.service';
 import { CommonModule } from '@angular/common';
 import { Address, AddAddress } from '../../shared/add-address/add-address';
 import { EmployeeService } from '../../employee/employee-service';
+import { Router } from '@angular/router';
 
 declare var Razorpay: any;
 
@@ -25,7 +26,9 @@ export class Viewbook implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private commonService: CommonService,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private router: Router
+
   ) {}
 
   ngOnInit(): void {
@@ -188,15 +191,23 @@ decreaseQty(): void {
 
 
   verifyPayment(response: any) {
-    this.commonService
-      .verifyPayment({
-        razorpay_order_id: response.razorpay_order_id,
-        razorpay_payment_id: response.razorpay_payment_id,
-        razorpay_signature: response.razorpay_signature
-      })
-      .subscribe({
-        next: () => alert('Payment successful!'),
-        error: () => alert('Payment verification failed!')
-      });
-  }
+  this.commonService
+    .verifyPayment({
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature
+    })
+    .subscribe({
+      next: (res: any) => {
+        alert('Payment successful!');
+
+        // Assuming your backend returns the order id
+        const orderId = res.order_id || this.book?.id; 
+
+        // Redirect to order page
+        this.router.navigate([`/customer/orders/${orderId}`]);
+      },
+      error: () => alert('Payment verification failed!')
+    });
+}
 }
