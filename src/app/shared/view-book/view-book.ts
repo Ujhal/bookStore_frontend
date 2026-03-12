@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
 import { CommonService } from '../shared_service/common.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
@@ -23,6 +23,8 @@ export class ViewBook implements OnInit {
   apiError: string = '';
   showLoginLink = false;
   paymentSuccessMessage: string = '';
+  // Inside your export class ...
+  activeTab: string = 'book'; 
   form = {
     first_name: '',
     last_name: '',
@@ -40,7 +42,8 @@ export class ViewBook implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private commonService: CommonService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+     private router: Router
 
   ) {}
 
@@ -177,6 +180,7 @@ verifyPayment(response: any, token: string) {
 
         // Show success message briefly
         this.paymentSuccessMessage = '✅ Order Successful!';
+        this.router.navigate([`/customer`]);
 
         // Close the checkout form
         this.showCheckoutForm = false;

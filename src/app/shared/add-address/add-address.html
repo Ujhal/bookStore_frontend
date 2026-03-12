@@ -8,8 +8,9 @@
         <div class="addr-details">
           <strong>{{ a.line1 }}</strong>
           <div *ngIf="a.line2">{{ a.line2 }}</div>
-          <div>{{ a.city }}{{ a.state ? ', ' + a.state : '' }} {{ a.zip || '' }}</div>
-        </div>
+<div>
+  {{ a.city }}<span *ngIf="a.state_name ">, {{ a.state_name }}</span><span *ngIf="a.zip"> {{ a.zip }}</span>
+</div>        </div>
       </label>
 
       <div class="actions">

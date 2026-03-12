@@ -72,8 +72,32 @@
 
     <hr />
 
-    <h3>About the Book</h3>
-    <p>{{ book?.description }}</p>
+<div class="tabs-container">
+  <button 
+    class="tab-btn" 
+    [class.active]="activeTab === 'book'" 
+    (click)="activeTab = 'book'">
+    About the Book
+  </button>
+  <button 
+    class="tab-btn" 
+    [class.active]="activeTab === 'author'" 
+    (click)="activeTab = 'author'">
+    About the Author
+  </button>
+</div>
+
+<hr class="tab-divider" />
+
+<div class="tab-content" *ngIf="activeTab === 'book'">
+  <h3>Description</h3>
+  <p>{{ book?.description }}</p>
+</div>
+
+<div class="tab-content" *ngIf="activeTab === 'author'">
+  <h3>About {{ book?.author_name }}</h3>
+  <p>{{ book?.author_bio || 'No author information available.' }}</p>
+</div>
   </div>
 </div>
 

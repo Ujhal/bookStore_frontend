@@ -49,6 +49,7 @@ getBookById(id: number) {
   addToCart(payload: { book_id: number; quantity: number }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/cart/`, payload);
   }
+ 
 
   removeFromCart(book_id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/api/cart/remove/${book_id}/`);

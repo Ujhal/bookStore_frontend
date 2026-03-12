@@ -8,6 +8,7 @@ export interface Address {
   line2?: string;
   city: string;
   state?: string;
+  state_name?: string;
   zip?: string;
   phone_number?: string;
 }

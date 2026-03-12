@@ -17,11 +17,13 @@ declare var Razorpay: any;
 export class Viewbook implements OnInit {
   book: any;
   quantity = 1;
+  isAddedToCart: boolean = false;
 
   savedAddresses: Address[] = [];
   selectedAddress?: Address;
   showAddressSelector: boolean = false;
   isAddressSelected: boolean = false;
+  activeTab: string = 'book'; 
 
   constructor(
     private route: ActivatedRoute,
@@ -54,6 +56,7 @@ export class Viewbook implements OnInit {
           line2: a.address_line_2,
           city: a.city,
           state: a.state,
+          state_name: a.state_name,
           zip: a.pincode,
           phone_number: a.phone_number
         }))),
@@ -61,19 +64,22 @@ export class Viewbook implements OnInit {
     });
   }
 
-  addToCart(): void {
-    if (!this.book) return alert('No book selected!');
+ addToCart(): void {
+  if (!this.book) return alert('No book selected!');
 
-    this.employeeService
-      .addToCart({ book_id: this.book.id, quantity: this.quantity })
-      .subscribe({
-        next: () => alert(`${this.book.title} added to cart successfully!`),
-        error: (err) => {
-          console.error(err);
-          alert('Failed to add book to cart.');
-        }
-      });
-  }
+  this.employeeService
+    .addToCart({ book_id: this.book.id, quantity: this.quantity })
+    .subscribe({
+      next: () => {
+        this.isAddedToCart = true;   // ✅ change button state
+        alert(`${this.book.title} added to cart successfully!`);
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Failed to add book to cart.');
+      }
+    });
+}
 
   openAddressSelector() {
     if (this.savedAddresses.length) this.showAddressSelector = true;
@@ -209,5 +215,8 @@ decreaseQty(): void {
       },
       error: () => alert('Payment verification failed!')
     });
+}
+goToCart(): void {
+  this.router.navigate(['/customer/my/cart']);
 }
 }

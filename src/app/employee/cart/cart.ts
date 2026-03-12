@@ -44,6 +44,7 @@ export class Cart implements OnInit {cartItems: any[] = [];
         line2: a.address_line_2,
         city: a.city,
         state: a.state,
+        state_name: a.state_name ,
         zip: a.pincode,
         phone_number: a.phone_number
       })),
@@ -179,16 +180,39 @@ export class Cart implements OnInit {cartItems: any[] = [];
   });
 }
 
- verifyPayment(response: any) {
-    this.commonService
-      .verifyPayment({
-        razorpay_order_id: response.razorpay_order_id,
-        razorpay_payment_id: response.razorpay_payment_id,
-        razorpay_signature: response.razorpay_signature
-      })
-      .subscribe({
-        next: () => alert('Payment successful!'),
-        error: () => alert('Payment verification failed!')
-      });
-  }
+verifyPayment(response: any) {
+  this.commonService
+    .verifyPayment({
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature
+    })
+    .subscribe({
+      next: (res: any) => { // Access the response from your backend here
+        alert('Payment successful!');
+        
+        // 1. Clear the local cart state
+        this.cartItems = [];
+        this.totalAmount = 0;
+
+        // 2. Navigate using the ID returned from your backend
+        // Assuming your backend returns { order_id: 123 } or similar
+        const orderId = res.order_id || res.id; 
+        
+        if (orderId) {
+          this.router.navigate(['/customer', 'orders', orderId]);
+        } else {
+          console.error('Order ID not found in verification response');
+          this.router.navigate(['/customer/orders']); // Fallback to list
+        }
+      },
+      error: (err) => {
+        console.error('Verification failed', err);
+        alert('Payment verification failed!');
+      }
+    });
+}
+continueShopping(): void {
+  this.router.navigate(['/customer']);  
+}
 }

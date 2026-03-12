@@ -5,7 +5,26 @@
   font-family: "Poppins", sans-serif;
   margin: 20px;
 }
+.cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
 
+.continue-btn {
+  background-color: transparent;
+  color: #3399cc;
+  border: 1px solid #3399cc;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.continue-btn:hover {
+  background-color: #f0f8ff;
+}
 /* Sidebar */
 .sidebar {
   width: 220px;
