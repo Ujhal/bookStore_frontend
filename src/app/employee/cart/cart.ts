@@ -5,13 +5,14 @@ import { EmployeeService } from '../employee-service';
 import { Router } from '@angular/router';
 import { Address, AddAddress } from '../../shared/add-address/add-address';
 import { CommonService } from '../../shared/shared_service/common.service'; // for placeOrder
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 declare var Razorpay: any;
 
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, MaterialModule, AddAddress],
+  imports: [CommonModule, MaterialModule, AddAddress,ReactiveFormsModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css'
 })
@@ -21,19 +22,30 @@ export class Cart implements OnInit {cartItems: any[] = [];
    quantity = 1;
 
   savedAddresses: Address[] = [];
+    states: any[] = [];
+
   selectedAddress?: Address;
   showAddressSelector: boolean = false;  
-  isAddressSelected: boolean = false;  
+  isAddressSelected: boolean = false;
+  showQuickAddressForm: boolean = false;
+  quickAddressForm!: FormGroup;
+  stateMap: { [key: number]: string } = {};
+
 
   constructor(
     private employeeService: EmployeeService, 
     private commonService: CommonService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder,
+
   ) {}
 
   ngOnInit(): void {
     this.loadCart();
     this.loadAddresses();
+    this.initQuickForm();
+    this.loadStates();
+
   }
 
   loadAddresses(): void {
@@ -101,14 +113,29 @@ export class Cart implements OnInit {cartItems: any[] = [];
   }
 
   /*** Checkout & Address Selection ***/
-  openAddressSelector(): void {
-    if (this.savedAddresses.length > 0) {
-      this.showAddressSelector = true;
-    } else {
-      alert('Please add an address to proceed!');
-    }
+ openAddressSelector(): void {
+  if (this.savedAddresses.length > 0) {
+    this.showAddressSelector = true;
+  } else {
+    this.showQuickAddressForm = true; // 🔥 FIX
   }
+}
+  loadStates() {
+  this.commonService.getStates().subscribe({
+    next: (res) => {
+      this.states = res;
 
+      // Create ID → Name map
+      this.stateMap = {};
+      res.forEach((s: any) => {
+        this.stateMap[s.id] = s.name;
+      });
+    },
+    error: (err) => {
+      console.error('Error loading states', err);
+    }
+  });
+}
   cancelAddressSelection(): void {
     this.showAddressSelector = false;
   }
@@ -214,5 +241,40 @@ verifyPayment(response: any) {
 }
 continueShopping(): void {
   this.router.navigate(['/customer']);  
+}
+initQuickForm() {
+  this.quickAddressForm = this.fb.group({
+    address_line_1: ['', Validators.required],
+    address_line_2: [''],
+    landmark: [''],
+    city: ['', Validators.required],
+    state: ['', Validators.required],
+    pincode: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
+    phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
+  });
+}
+saveQuickAddress() {
+  if (this.quickAddressForm.invalid) return;
+
+  this.employeeService.saveAddress(this.quickAddressForm.value).subscribe({
+    next: (res: any) => {
+      // 🔥 auto select
+      this.selectedAddress = {
+        id: String(res.id),
+        line1: res.address_line_1,
+        line2: res.address_line_2,
+        city: res.city,
+        state: res.state,
+        zip: res.pincode,
+        phone_number: res.phone_number
+      };
+
+      this.isAddressSelected = true;
+      this.showQuickAddressForm = false;
+
+      alert('Address added successfully!');
+    },
+    error: () => alert('Failed to save address')
+  });
 }
 }

@@ -5,12 +5,14 @@ import { CommonModule } from '@angular/common';
 import { Address, AddAddress } from '../../shared/add-address/add-address';
 import { EmployeeService } from '../../employee/employee-service';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators ,ReactiveFormsModule } from '@angular/forms';
+
 
 declare var Razorpay: any;
 
 @Component({
   selector: 'app-viewbook',
-  imports: [CommonModule, AddAddress],
+  imports: [CommonModule, AddAddress,ReactiveFormsModule],
   templateUrl: './viewbook.html',
   styleUrl: './viewbook.css'
 })
@@ -18,26 +20,33 @@ export class Viewbook implements OnInit {
   book: any;
   quantity = 1;
   isAddedToCart: boolean = false;
+  quickAddressForm!: FormGroup;
 
   savedAddresses: Address[] = [];
+  states: any[] = [];
+  stateMap: { [key: number]: string } = {};
+
   selectedAddress?: Address;
   showAddressSelector: boolean = false;
   isAddressSelected: boolean = false;
   activeTab: string = 'book'; 
+  showQuickAddressForm: boolean = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private commonService: CommonService,
-    private employeeService: EmployeeService,
-    private router: Router
-
-  ) {}
+ constructor(
+  private fb: FormBuilder,
+  private route: ActivatedRoute,
+  private commonService: CommonService,
+  private employeeService: EmployeeService,
+  private router: Router
+) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) this.loadBookDetails(id);
 
     this.loadAddresses();
+    this.initQuickForm();
+    this.loadStates();
   }
 
   loadBookDetails(id: number): void {
@@ -63,6 +72,22 @@ export class Viewbook implements OnInit {
       error: (err) => console.error(err)
     });
   }
+  loadStates() {
+  this.commonService.getStates().subscribe({
+    next: (res) => {
+      this.states = res;
+
+      // Create ID → Name map
+      this.stateMap = {};
+      res.forEach((s: any) => {
+        this.stateMap[s.id] = s.name;
+      });
+    },
+    error: (err) => {
+      console.error('Error loading states', err);
+    }
+  });
+}
 
  addToCart(): void {
   if (!this.book) return alert('No book selected!');
@@ -81,10 +106,13 @@ export class Viewbook implements OnInit {
     });
 }
 
-  openAddressSelector() {
-    if (this.savedAddresses.length) this.showAddressSelector = true;
-    else alert('Please add an address to proceed!');
+ openAddressSelector(): void {
+  if (this.savedAddresses.length > 0) {
+    this.showAddressSelector = true;
+  } else {
+    this.showQuickAddressForm = true; // 🔥 NO ALERT
   }
+}
 
   cancelAddressSelection() {
     this.showAddressSelector = false;
@@ -219,4 +247,38 @@ decreaseQty(): void {
 goToCart(): void {
   this.router.navigate(['/customer/my/cart']);
 }
+initQuickForm() {
+  this.quickAddressForm = this.fb.group({
+    address_line_1: ['', Validators.required],
+    city: ['', Validators.required],
+    state: ['', Validators.required],
+    pincode: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
+    phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
+  });
+}
+saveQuickAddress() {
+  if (this.quickAddressForm.invalid) return;
+
+  this.employeeService.saveAddress(this.quickAddressForm.value).subscribe({
+    next: (res: any) => {
+      // 🔥 auto select
+      this.selectedAddress = {
+        id: String(res.id),
+        line1: res.address_line_1,
+        line2: res.address_line_2,
+        city: res.city,
+        state: res.state,
+        zip: res.pincode,
+        phone_number: res.phone_number
+      };
+
+      this.isAddressSelected = true;
+      this.showQuickAddressForm = false;
+
+      alert('Address added successfully!');
+    },
+    error: () => alert('Failed to save address')
+  });
+}
+
 }

@@ -36,19 +36,58 @@
   <h3>Total: Rs. {{ totalAmount | number: '1.2-2' }}</h3>
 
   <!-- Show "Select Address" if not yet selected -->
-  <button *ngIf="!showAddressSelector && !isAddressSelected" class="checkout-btn" (click)="openAddressSelector()">Checkout</button>
-
+        <button
+  *ngIf="!showAddressSelector && !isAddressSelected && !showQuickAddressForm"
+  class="checkout-btn"
+  (click)="openAddressSelector()">
+          Checkout
+        </button>
   <!-- Show "Confirm Order" if address selected -->
   <button *ngIf="isAddressSelected" class="checkout-btn" (click)="placeOrderAndPay()">Confirm Order</button>
   <button class="continue-btn" (click)="continueShopping()">Continue Shopping</button>
 </div>
     </div>
 
+     <!-- ADDRESS SELECTOR -->
     <app-add-address
-  *ngIf="showAddressSelector"
-  [addresses]="savedAddresses"
-  (select)="onAddressSelected($event)"
-  (cancel)="cancelAddressSelection()">
-</app-add-address>
+      *ngIf="showAddressSelector"
+      [addresses]="savedAddresses"
+      (select)="onAddressSelected($event)"
+      (cancel)="cancelAddressSelection()">
+    </app-add-address>
+
+    <!-- 🔥 QUICK ADDRESS FORM -->
+    <div *ngIf="showQuickAddressForm" class="quick-address-form">
+
+      <h3>📍 Add Delivery Address</h3>
+
+      <form [formGroup]="quickAddressForm" (ngSubmit)="saveQuickAddress()">
+
+        <div class="form-grid">
+          <input placeholder="Address Line 1" formControlName="address_line_1" />
+          <input placeholder="Address Line 2" formControlName="address_line_2" />
+          <input placeholder="LandMark" formControlName="landmark" />
+
+          <input placeholder="City" formControlName="city" />
+          <select formControlName="state" class="state-select">
+            <option value="" disabled="" selected="">State</option>
+            <option *ngFor="let s of states" [value]="s.id">{{ s.name }}</option>
+          </select>
+          <input placeholder="Pincode" formControlName="pincode" />
+          <input placeholder="Phone Number" formControlName="phone_number" />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="quickAddressForm.invalid">
+            Save & Continue
+          </button>
+
+          <button type="button" class="cancel-btn" (click)="showQuickAddressForm=false">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
   </div>
 </div>
