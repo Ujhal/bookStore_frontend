@@ -160,12 +160,10 @@ export class Cart implements OnInit {cartItems: any[] = [];
     }))
   };
 
-  console.log('[Order] Payload prepared for cart:', payload);
 
   // Step 1: Create Order
   this.commonService.placeOrder(payload).subscribe({
     next: (res: any) => {
-      console.log('[Order] Order created successfully:', res);
 
       const orderId = res.order_id;
       const totalAmount = res.total_amount;

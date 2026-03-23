@@ -1,4 +1,8 @@
 <div class="book-details-page">
+
+  <!-- ===================== -->
+  <!-- BOOK DETAILS -->
+  <!-- ===================== -->
   <div class="book-image-container">
     <img [src]="book?.cover_image" [alt]="book?.title" />
   </div>
@@ -7,302 +11,226 @@
     <h1>{{ book?.title }}</h1>
     <p class="author">by {{ book?.author_name }}</p>
 
-   <div class="price-section">
-  <strong>₹{{ book?.price }}</strong>
-</div>
+    <div class="price-section">
+      <strong>₹{{ book?.price }}</strong>
+    </div>
 
-<!-- STOCK STATUS -->
+    <!-- STOCK STATUS -->
+    <p *ngIf="book?.stock_quantity === 0" class="stock-out">
+      ❌ Out of Stock
+    </p>
 
-<!-- OUT OF STOCK -->
-<p *ngIf="book?.stock_quantity === 0" class="stock-out">
-  ❌ Out of Stock
-</p>
+    <p *ngIf="book?.stock_quantity > 0 && book?.stock_quantity <= 5" class="stock-low">
+      ⚠️ Only {{ book?.stock_quantity }} left in stock
+    </p>
 
-<!-- LOW STOCK -->
-<p *ngIf="book?.stock_quantity > 0 && book?.stock_quantity <= 5" class="stock-low">
-  ⚠️ Only {{ book?.stock_quantity }} left in stock
-</p>
+    <p *ngIf="book?.stock_quantity > 5" class="stock-available">
+      ✅ In Stock
+    </p>
 
-<!-- NORMAL STOCK -->
-<p *ngIf="book?.stock_quantity > 5" class="stock-available">
-  ✅ In Stock
-</p>
+    <!-- QUANTITY -->
+    <div class="quantity-section" *ngIf="book?.stock_quantity > 0">
+      <button (click)="decreaseQty()" [disabled]="quantity === 1">−</button>
+      <span>{{ quantity }}</span>
+      <button (click)="increaseQty()" [disabled]="quantity >= book?.stock_quantity">+</button>
+    </div>
 
+    <p class="delivery-note" *ngIf="book?.stock_quantity > 0">
+      ⚠️ ₹100 extra for delivery outside Sikkim (added at checkout)
+    </p>
 
-<!-- QUANTITY SELECTOR -->
+    <p class="total-price" *ngIf="book?.stock_quantity > 0">
+      Total: ₹{{ book?.price * quantity }}
+    </p>
 
-<div class="quantity-section" *ngIf="book?.stock_quantity > 0">
-
-  <button 
-    (click)="decreaseQty()" 
-    [disabled]="quantity === 1">
-    −
-  </button>
-
-  <span>{{ quantity }}</span>
-
-  <button 
-    (click)="increaseQty()" 
-    [disabled]="quantity >= book?.stock_quantity">
-    +
-  </button>
-
-</div>
-
-
-<p class="delivery-note" *ngIf="book?.stock_quantity > 0">
-  ⚠️ ₹100 extra for delivery outside Sikkim (added at checkout)
-</p>
-
-
-<p class="total-price" *ngIf="book?.stock_quantity > 0">
-  Total: ₹{{ book?.price * quantity }}
-</p>
-
-
-<!-- BUY BUTTON -->
-
-<button class="place-order"
-        (click)="openCheckoutForm()"
-        [disabled]="book?.stock_quantity === 0">
-
-  {{ book?.stock_quantity === 0 ? 'Out of Stock' : 'Buy Now' }}
-
-</button>
+    <!-- BUY BUTTON -->
+    <button class="place-order"
+            (click)="openCheckoutForm()"
+            [disabled]="book?.stock_quantity === 0">
+      {{ book?.stock_quantity === 0 ? 'Out of Stock' : 'Buy Now' }}
+    </button>
 
     <hr />
 
-<div class="tabs-container">
-  <button 
-    class="tab-btn" 
-    [class.active]="activeTab === 'book'" 
-    (click)="activeTab = 'book'">
-    About the Book
-  </button>
-  <button 
-    class="tab-btn" 
-    [class.active]="activeTab === 'author'" 
-    (click)="activeTab = 'author'">
-    About the Author
-  </button>
-</div>
-
-<hr class="tab-divider" />
-
-<div class="tab-content" *ngIf="activeTab === 'book'">
-  <h3>Description</h3>
-  <p>{{ book?.description }}</p>
-</div>
-
-<div class="tab-content" *ngIf="activeTab === 'author'">
-  <h3>About {{ book?.author_name }}</h3>
-  <p>{{ book?.author_bio || 'No author information available.' }}</p>
-</div>
-  </div>
-</div>
-
-<!-- ===================== -->
-<!-- CHECKOUT + REGISTER -->
-<!-- ===================== -->
-
-<div class="checkout-popup" *ngIf="showCheckoutForm">
-  <div class="popup-content">
-    <h2>Register & Checkout</h2>
-    <p>If registered proceed to login<a href="/login"> here</a></p>
-
-    <div *ngIf="paymentSuccessMessage" class="payment-success">
-      {{ paymentSuccessMessage }}
+    <!-- TABS -->
+    <div class="tabs-container">
+      <button class="tab-btn"
+              [class.active]="activeTab === 'book'"
+              (click)="activeTab = 'book'">
+        About the Book
+      </button>
+      <button class="tab-btn"
+              [class.active]="activeTab === 'author'"
+              (click)="activeTab = 'author'">
+        About the Author
+      </button>
     </div>
 
-    <form #checkoutForm="ngForm" (ngSubmit)="registerAndPay()" class="checkout-form">
+    <hr class="tab-divider" />
 
-  <h3>Personal Details</h3>
+    <div class="tab-content" *ngIf="activeTab === 'book'">
+      <h3>Description</h3>
+      <p>{{ book?.description }}</p>
+    </div>
 
-  <!-- First Name -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>First Name *</mat-label>
-    <input matInput
-           required
-           pattern="^[a-zA-Z]+$"
-           [(ngModel)]="form.first_name"
-           name="first_name"
-           #firstName="ngModel">
-    <mat-error *ngIf="firstName.invalid && firstName.touched">
-      Only letters (A–Z) allowed
-    </mat-error>
-  </mat-form-field>
+    <div class="tab-content" *ngIf="activeTab === 'author'">
+      <h3>About {{ book?.author_name }}</h3>
+      <p>{{ book?.author_bio || 'No author information available.' }}</p>
+    </div>
 
-  <!-- Last Name -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Last Name *</mat-label>
-    <input matInput
-           required
-           pattern="^[a-zA-Z]+$"
-           [(ngModel)]="form.last_name"
-           name="last_name"
-           #lastName="ngModel">
-    <mat-error *ngIf="lastName.invalid && lastName.touched">
-      Only letters (A–Z) allowed
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Email -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Email *</mat-label>
-    <input matInput
-           required
-           email
-           [(ngModel)]="form.email"
-           name="email"
-           #email="ngModel">
-    <mat-error *ngIf="email.invalid && email.touched">
-      Enter valid email (example@mail.com)
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Phone -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Phone *</mat-label>
-    <input matInput
-           required
-           pattern="^[0-9]{10}$"
-           maxlength="10"
-           [(ngModel)]="form.phone_number"
-           name="phone_number"
-           #phone="ngModel">
-    <mat-error *ngIf="phone.invalid && phone.touched">
-      Phone must be exactly 10 digits
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Password -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Password *</mat-label>
-    <input matInput
-           type="password"
-           required
-           minlength="6"
-           [(ngModel)]="form.password"
-           name="password"
-           #password="ngModel">
-    <mat-error *ngIf="password.invalid && password.touched">
-      Minimum 6 characters required
-    </mat-error>
-  </mat-form-field>
-
-  <h3>Delivery Address</h3>
-
-
-   <mat-form-field appearance="outline" class="full-width">
-    <mat-label>State *</mat-label>
-    <mat-select required
-                [(ngModel)]="form.state"
-                name="state"
-                #state="ngModel">
-      <mat-option value="">Select State</mat-option>
-      <mat-option *ngFor="let s of states" [value]="s.id">
-        {{ s.name }}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="state.invalid && state.touched">
-      Please select a state
-    </mat-error>
-  </mat-form-field>
-  <!-- Address Line 1 -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Address Line 1 *</mat-label>
-    <input matInput
-           required
-           pattern="^[a-zA-Z0-9, ]+$"
-           [(ngModel)]="form.address_line_1"
-           name="address_line_1"
-           #address1="ngModel">
-    <mat-error *ngIf="address1.invalid && address1.touched">
-      Only letters and numbers allowed
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Address Line 2 -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Address Line 2 *</mat-label>
-    <input matInput
-           required
-           pattern="^[a-zA-Z0-9, ]+$"
-           [(ngModel)]="form.address_line_2"
-           name="address_line_2"
-           #address2="ngModel">
-    <mat-error *ngIf="address2.invalid && address2.touched">
-      Only letters and numbers allowed
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Landmark -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Landmark *</mat-label>
-    <input matInput
-           required
-           pattern="^[a-zA-Z0-9 ]+$"
-           [(ngModel)]="form.landmark"
-           name="landmark"
-           #landmark="ngModel">
-    <mat-error *ngIf="landmark.invalid && landmark.touched">
-      Only letters and numbers allowed
-    </mat-error>
-  </mat-form-field>
-
-  <!-- City -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>City *</mat-label>
-    <input matInput
-           required
-           pattern="^[a-zA-Z ]+$"
-           [(ngModel)]="form.city"
-           name="city"
-           #city="ngModel">
-    <mat-error *ngIf="city.invalid && city.touched">
-      Only letters allowed
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Pincode -->
-  <mat-form-field appearance="outline" class="-width">
-    <mat-label>Pincode *</mat-label>
-    <input matInput
-           required
-           pattern="^[0-9]{6}$"
-           maxlength="6"
-           [(ngModel)]="form.pincode"
-           name="pincode"
-           #pincode="ngModel">
-    <mat-error *ngIf="pincode.invalid && pincode.touched">
-      Pincode must be 6 digits
-    </mat-error>
-  </mat-form-field>
-
-  <!-- State -->
- 
-<div *ngIf="apiError" class="api-error">
-  {{ apiError }}
-  <div *ngIf="showLoginLink">
-    <a href="/login" class="login-link">
-      👉 Proceed to Login
-    </a>
   </div>
 </div>
-  <!-- Submit Button -->
-  <button mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="checkoutForm.invalid">
-    Register & Pay
-  </button>
 
-  <button mat-button
-          type="button"
-          (click)="closeCheckoutForm()">
-    Cancel
-  </button>
 
-</form>
+<!-- ===================== -->
+<!-- INLINE CHECKOUT SECTION -->
+<!-- ===================== -->
+<div class="checkout-section" *ngIf="showCheckoutForm">
+
+  <h2>Register & Checkout</h2>
+  <p>If registered proceed to login <a href="/login">here</a></p>
+
+  <div *ngIf="paymentSuccessMessage" class="payment-success">
+    {{ paymentSuccessMessage }}
   </div>
+
+  <form #checkoutForm="ngForm"
+        (ngSubmit)="registerAndPay()"
+        class="checkout-form">
+
+    <h3>Personal Details</h3>
+
+    <!-- First Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>First Name *</mat-label>
+      <input matInput required pattern="^[a-zA-Z]+$"
+             [(ngModel)]="form.first_name"
+             name="first_name"
+             #firstName="ngModel">
+      <mat-error *ngIf="firstName.invalid && firstName.touched">
+        Only letters allowed
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Last Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Last Name *</mat-label>
+      <input matInput required pattern="^[a-zA-Z]+$"
+             [(ngModel)]="form.last_name"
+             name="last_name"
+             #lastName="ngModel">
+      <mat-error *ngIf="lastName.invalid && lastName.touched">
+        Only letters allowed
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email *</mat-label>
+      <input matInput required email
+             [(ngModel)]="form.email"
+             name="email"
+             #email="ngModel">
+      <mat-error *ngIf="email.invalid && email.touched">
+        Enter valid email
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Phone -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Phone *</mat-label>
+      <input matInput required pattern="^[0-9]{10}$" maxlength="10"
+             [(ngModel)]="form.phone_number"
+             name="phone_number"
+             #phone="ngModel">
+      <mat-error *ngIf="phone.invalid && phone.touched">
+        Must be 10 digits
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password *</mat-label>
+      <input matInput type="password" required minlength="6"
+             [(ngModel)]="form.password"
+             name="password"
+             #password="ngModel">
+      <mat-error *ngIf="password.invalid && password.touched">
+        Minimum 6 characters
+      </mat-error>
+    </mat-form-field>
+
+    <h3>Delivery Address</h3>
+
+    <!-- State -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>State *</mat-label>
+      <mat-select required [(ngModel)]="form.state" name="state" #state="ngModel">
+        <mat-option value="">Select State</mat-option>
+        <mat-option *ngFor="let s of states" [value]="s.id">
+          {{ s.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Address Line 1 -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Address Line 1 *</mat-label>
+      <input matInput required pattern="^[a-zA-Z0-9, ]+$"
+             [(ngModel)]="form.address_line_1"
+             name="address_line_1">
+    </mat-form-field>
+
+    <!-- Address Line 2 -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Address Line 2 *</mat-label>
+      <input matInput required pattern="^[a-zA-Z0-9, ]+$"
+             [(ngModel)]="form.address_line_2"
+             name="address_line_2">
+    </mat-form-field>
+
+    <!-- Landmark -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Landmark *</mat-label>
+      <input matInput required pattern="^[a-zA-Z0-9 ]+$"
+             [(ngModel)]="form.landmark"
+             name="landmark">
+    </mat-form-field>
+
+    <!-- City -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>City *</mat-label>
+      <input matInput required pattern="^[a-zA-Z ]+$"
+             [(ngModel)]="form.city"
+             name="city">
+    </mat-form-field>
+
+    <!-- Pincode -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Pincode *</mat-label>
+      <input matInput required pattern="^[0-9]{6}$" maxlength="6"
+             [(ngModel)]="form.pincode"
+             name="pincode">
+    </mat-form-field>
+
+    <!-- API ERROR -->
+    <div *ngIf="apiError" class="api-error">
+      {{ apiError }}
+      <div *ngIf="showLoginLink">
+        <a href="/login">👉 Proceed to Login</a>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <button mat-raised-button color="primary"
+            type="submit"
+            [disabled]="checkoutForm.invalid">
+      Register & Pay
+    </button>
+
+    <button mat-button type="button" (click)="closeCheckoutForm()">
+      Cancel
+    </button>
+
+  </form>
 </div>

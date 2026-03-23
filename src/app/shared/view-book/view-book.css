@@ -213,36 +213,29 @@
 }
 
 /* =======================
-   Checkout Popup
+   Inline Checkout Section
 ======================= */
-.checkout-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  z-index: 999;
+.checkout-section {
+
+  margin-top: 40px;
+  padding: 25px;
+  background: #fafafa;
+  border-top: 1px solid #ddd;
+  border-radius: 8px;
+}
+.checkout-section {
+  max-width: 600px;
+  margin: 40px auto 0;
 }
 
-.popup-content {
-  background: white;
-  width: 100%;
-  max-width: 420px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 20px;
-  border-radius: 10px;
-  overscroll-behavior: contain; 
-  -webkit-overflow-scrolling: touch;
+.checkout-section h2 {
+  margin-bottom: 10px;
 }
-.no-scroll {
-  overflow: hidden;
-  height: 100vh;
+
+.checkout-section h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #333;
 }
 /* =======================
    Angular Material Fields

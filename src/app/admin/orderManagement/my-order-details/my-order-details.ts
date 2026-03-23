@@ -49,24 +49,38 @@ export class MyOrderDetails implements OnInit {
     });
   }
 printShippingAddress() {
-    if (!this.subOrder || !this.subOrder.shipping_address) return;
+  if (!this.subOrder || !this.subOrder.shipping_address) return;
 
-    const doc = new jsPDF();
+  const doc = new jsPDF();
+  const address = this.subOrder.shipping_address;
 
-    doc.setFontSize(16);
-    doc.text('Shipping Address', 20, 20);
+  const customerName = address.name || 
+    (this.subOrder.user?.first_name + ' ' + this.subOrder.user?.last_name);
 
-    const address = this.subOrder.shipping_address;
-    doc.setFontSize(12);
-    doc.text(`Address Line 1: ${address.address_line_1}`, 20, 40);
-    doc.text(`Address Line 2: ${address.address_line_2}`, 20, 50);
-    doc.text(`Landmark: ${address.landmark}`, 20, 60);
-    doc.text(`City: ${address.city}`, 20, 70);
-    doc.text(`State: ${address.state_name}`, 20, 80);
-    doc.text(`Pincode: ${address.pincode}`, 20, 90);
-    doc.text(`Phone: ${address.phone_number}`, 20, 100);
+  doc.setFontSize(16);
+  doc.text('Shipping Address', 20, 20);
 
-    doc.save(`Shipping_Address_${this.subOrder.id}.pdf`);
-  }
+  doc.setFontSize(12);
+
+  let y = 30;
+
+  const addLine = (label: string, value: any) => {
+    if (value !== null && value !== undefined && value !== '') {
+      doc.text(`${label}: ${value}`, 20, y);
+      y += 10;
+    }
+  };
+
+  addLine('Name', customerName);
+  addLine('Address Line 1', address.address_line_1);
+  addLine('Address Line 2', address.address_line_2);
+  addLine('Landmark', address.landmark);
+  addLine('City', address.city);
+  addLine('State', address.state_name);
+  addLine('Pincode', address.pincode);
+  addLine('Phone', address.phone_number);
+
+  doc.save(`Shipping_Address_${this.subOrder.id}.pdf`);
+}
 }
 

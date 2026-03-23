@@ -8,7 +8,9 @@
 
     <div *ngIf="cartItems.length === 0" class="empty-cart">
       <p>Your cart is empty.</p>
-      <button routerLink="/">Continue Shopping</button>
+      <button type="button" class="continue-btn" (click)="continueShopping()">
+        Continue Shopping
+      </button>
     </div>
 
     <div *ngIf="cartItems.length > 0" class="cart-list">
@@ -44,8 +46,10 @@
         </button>
   <!-- Show "Confirm Order" if address selected -->
   <button *ngIf="isAddressSelected" class="checkout-btn" (click)="placeOrderAndPay()">Confirm Order</button>
-  <button class="continue-btn" (click)="continueShopping()">Continue Shopping</button>
-</div>
+        <button type="button" class="continue-btn" (click)="continueShopping()">
+          Continue Shopping
+        </button>
+      </div>
     </div>
 
      <!-- ADDRESS SELECTOR -->
@@ -82,9 +86,9 @@
             Save & Continue
           </button>
 
-          <button type="button" class="cancel-btn" (click)="showQuickAddressForm=false">
-            Cancel
-          </button>
+          <button type="button" class="continue-btn" (click)="continueShopping()">
+    Continue Shopping
+</button>
         </div>
 
       </form>

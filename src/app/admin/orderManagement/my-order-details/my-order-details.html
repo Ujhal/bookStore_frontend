@@ -30,13 +30,25 @@
 
   </section>
 
+   <section class="card">
+      <h3>Customer Details</h3>
+      <div class="info-row"><span>Username:</span><strong>{{ subOrder.user.username }}</strong></div>
+      <div class="info-row"><span>Email:</span><strong>{{ subOrder.user.email }}</strong></div>
+      <div class="info-row"><span>Phone:</span><strong>{{ subOrder.user.phone_number || '—' }}</strong></div>
+      <div class="info-row"><span>Name:</span><strong>{{ subOrder.user.first_name +" "+ subOrder.user.last_name }}</strong></div>
+    </section>
+
+
   <!-- SHIPPING ADDRESS -->
   <section class="card">
     <h3>Shipping Address</h3>
-
+   
     <div class="info-row">
+    
       <span>Address:</span>
+
       <strong>
+       
         {{ subOrder.shipping_address.address_line_1 }},
         {{ subOrder.shipping_address.address_line_2 }}
       </strong>

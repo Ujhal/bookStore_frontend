@@ -74,22 +74,39 @@ decreaseQty() {
   }
 }
 
-  openCheckoutForm() {
-
+openCheckoutForm() {
   if (this.book.stock_quantity === 0) {
     alert('This book is currently out of stock.');
     return;
   }
 
   this.showCheckoutForm = true;
-  document.body.classList.add('no-scroll');
 
+  // optional smooth scroll
+  setTimeout(() => {
+    document.querySelector('.checkout-section')?.scrollIntoView({
+      behavior: 'smooth'
+    });
+  }, 100);
 }
 
-  closeCheckoutForm() {
-    this.showCheckoutForm = false;
-    document.body.classList.remove('no-scroll');
-  }
+ closeCheckoutForm() {
+  this.showCheckoutForm = false;
+
+  this.form = {
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: '',
+    password: '',
+    address_line_1: '',
+    address_line_2: '',
+    landmark: '',
+    city: '',
+    pincode: '',
+    state: ''
+  };
+}
 
   // 🔥 MAIN FLOW: REGISTER → ORDER → PAY
   registerAndPay() {
@@ -180,7 +197,7 @@ verifyPayment(response: any, token: string) {
 
         // Show success message briefly
         this.paymentSuccessMessage = '✅ Order Successful!';
-        this.router.navigate([`/customer`]);
+        this.router.navigate([`/`]);
 
         // Close the checkout form
         this.showCheckoutForm = false;
