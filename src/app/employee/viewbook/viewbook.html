@@ -44,12 +44,12 @@
     <div class="actions">
 
       <button
-        *ngIf="!isAddedToCart"
-        class="add-to-cart"
-        (click)="addToCart()"
-        [disabled]="book?.stock_quantity === 0">
-        Add to Cart
-      </button>
+  *ngIf="!isAddedToCart"
+  class="add-to-cart"
+  (click)="addToCart()"
+  [disabled]="book?.stock_quantity === 0 || isAdding">
+  Add to Cart
+</button>
 
       <button *ngIf="isAddedToCart" class="added-to-cart" disabled>
         ✓ Added to Cart

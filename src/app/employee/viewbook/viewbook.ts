@@ -89,19 +89,22 @@ export class Viewbook implements OnInit {
   });
 }
 
- addToCart(): void {
-  if (!this.book) return alert('No book selected!');
+ isAdding = false;
+
+addToCart(): void {
+  if (this.isAdding) return;
+
+  this.isAdding = true;
 
   this.employeeService
     .addToCart({ book_id: this.book.id, quantity: this.quantity })
     .subscribe({
       next: () => {
-        this.isAddedToCart = true;   // ✅ change button state
-        alert(`${this.book.title} added to cart successfully!`);
+        this.isAddedToCart = true;
+        this.isAdding = false;
       },
-      error: (err) => {
-        console.error(err);
-        alert('Failed to add book to cart.');
+      error: () => {
+        this.isAdding = false;
       }
     });
 }
