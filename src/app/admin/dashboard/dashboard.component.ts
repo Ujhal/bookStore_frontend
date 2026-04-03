@@ -36,6 +36,8 @@ export class DashboardComponent implements OnInit {
   orderMenu = [
     { label: 'All orders', icon: 'person', link: '/admin/orders/allOrders' },
     { label: 'Pending Orders',  icon:'person',link:'/admin/orders/myOrders'},
+    { label: 'Processing Orders', icon: 'add_circle', link: '/admin/orders/processing-orders' },
+
     { label: 'Shipped Orders', icon: 'add_circle', link: '/admin/orders/shipped-Orders' },
     { label: 'Delivered Orders', icon: 'add_circle', link: '/admin/orders/delivered-Orders' },
     { label: 'Cancelled Orders', icon: 'add_circle', link: '/admin/orders/cancelled-Orders' },

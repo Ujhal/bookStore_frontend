@@ -120,9 +120,7 @@ getOrderByStatus(status: string, page: number): Observable<any> {
 getSubOrderByStatus(status: string): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/api/publisher/suborders/status/`, { params: { status } });
 }
-updateOrderStatus(orderId: number, payload: any): Observable<any> {
-  return this.http.patch<any>(`${this.apiUrl}/api/admin/order-update/${orderId}/`, payload);
-}
+
 forwardOrderToPublisher(orderId: number): Observable<any> {
   return this.http.post<any>(`${this.apiUrl}/api/admin/orders/${orderId}/forward/`, {});
 }
