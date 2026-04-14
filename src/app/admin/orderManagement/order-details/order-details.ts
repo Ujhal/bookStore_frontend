@@ -42,7 +42,11 @@ export class OrderDetails implements OnInit {
     doc.text('Shipping Address', 20, 20);
 
     const address = this.order.shipping_address;
+    const customerName = address.name || 
+    (this.order.user?.first_name + ' ' + this.order.user?.last_name);
     doc.setFontSize(12);
+
+    doc.text(`Name: ${customerName}`, 20, 30);
     doc.text(`Address Line 1: ${address.address_line_1}`, 20, 40);
     doc.text(`Address Line 2: ${address.address_line_2}`, 20, 50);
     doc.text(`Landmark: ${address.landmark}`, 20, 60);
